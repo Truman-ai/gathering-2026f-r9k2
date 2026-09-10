@@ -59,7 +59,7 @@ window.APP_CONFIG = {
     enabled: true,
     /* 배열로 주면 줄바꿈되어 표시됩니다. 비우면 숨김 */
     prayerText: "",
-    title: "집회 비용 안내",
+    title: "집회 참가비용 안내",
     leadText: "정해진 회비는 없습니다. 아래 비용을 참고하시어 헌금으로 자유롭게 부담해 주시면 감사하겠습니다.",
     /* 비용 묶음: name(묶음 제목) + rows[{ icon, label, unit, amount }] */
     groups: [
