@@ -71,7 +71,7 @@ window.APP_CONFIG = {
       ] },
       { name: "", rows: [
         { icon: "🛏️", label: "숙박료", unit: "1인 1박", amount: "4만원" },
-        { icon: "🍚", label: "식사",   unit: "한 끼",   amount: "9천원" },
+        { icon: "🍚", label: "식사",   unit: "한 끼",   amount: "7천원" },
       ] },
     ],
     closingText: "정해진 회비는 없습니다. 위 비용을 참고하시어 헌금으로 자유롭게 부담해 주시면 감사하겠습니다.",
