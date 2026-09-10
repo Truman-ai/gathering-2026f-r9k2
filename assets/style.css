@@ -16,6 +16,11 @@
 
 * { box-sizing: border-box; }
 
+/* iOS Safari 더블탭 확대 방지 (핀치 확대·스크롤은 그대로) */
+html, body, button, input, select, textarea, a, label, .btn, .check, .stepper, .stepper button {
+  touch-action: manipulation;
+}
+
 body {
   margin: 0;
   background: var(--bg);

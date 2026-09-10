@@ -147,19 +147,19 @@
     var list = filtered();
 
     // 통계
-    var stat = { count: list.length, people: 0, meals: 0, stay: 0, bus: 0 };
+    var stat = { count: list.length, people: 0, meals: 0, stayCases: 0, bus: 0 };
     list.forEach(function (r) {
       stat.people += toInt(r.totalCount);
       stat.meals += toInt(r.mealTotal);
-      stat.stay += toInt(r.lodgingTotal);
+      if (toInt(r.lodgingTotal) > 0) stat.stayCases += 1;
       if (/탑승/.test(r.transport || "")) stat.bus += toInt(r.totalCount);
     });
     $("statRow").innerHTML = [
       statCard("접수 건수", stat.count + " 건"),
       statCard("총 참석 인원", stat.people + " 명"),
-      statCard("식사 신청(연인원)", stat.meals + " 명"),
-      statCard("숙박 신청(연박)", stat.stay + " 명"),
-      statCard("차량 탑승 예상", stat.bus + " 명"),
+      statCard("식사 신청(끼니 계)", stat.meals + " 회"),
+      statCard("숙박 신청", stat.stayCases + " 건"),
+      statCard("차량 운행 필요 인원", stat.bus + " 명"),
     ].join("");
 
     // 헤더
