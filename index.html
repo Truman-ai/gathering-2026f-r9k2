@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="robots" content="noindex, nofollow, noarchive" />
+  <meta name="referrer" content="no-referrer" />
+  <title>집회 참가 접수</title>
+  <link rel="stylesheet" href="assets/style.css" />
+</head>
+<body class="wizard-body">
+  <div class="app" id="app">
+    <div class="fs-control" role="group" aria-label="글씨 크기 조절">
+      <button type="button" id="fsDown" aria-label="글씨 작게">A−</button>
+      <button type="button" id="fsReset" aria-label="글씨 기본 크기">A</button>
+      <button type="button" id="fsUp" aria-label="글씨 크게">A+</button>
+    </div>
+    <div class="progress"><div class="progress__bar" id="progressBar"></div></div>
+
+    <main class="stage" id="stage"><!-- 단계별 화면이 여기에 렌더링됩니다 --></main>
+
+    <footer class="nav" id="nav" hidden>
+      <button type="button" class="btn btn--ghost" id="prevBtn">이전</button>
+      <div class="nav__meta" id="navMeta"></div>
+      <button type="button" class="btn" id="nextBtn">다음</button>
+    </footer>
+  </div>
+
+  <script src="assets/config.js"></script>
+  <script src="assets/app.js"></script>
+</body>
+</html>

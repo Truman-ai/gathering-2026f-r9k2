@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="robots" content="noindex, nofollow, noarchive" />
+  <meta name="referrer" content="no-referrer" />
+  <title>접수 현황 (관리자)</title>
+  <link rel="stylesheet" href="assets/style.css" />
+</head>
+<body>
+  <!-- 암호 입력 -->
+  <div class="wrap" id="gateView">
+    <div class="card gate">
+      <div class="section-title" style="margin-top:0;padding-top:0;border-top:0">관리자 확인</div>
+      <div class="field">
+        <label class="lbl" for="pass">암호</label>
+        <input type="password" id="pass" autocomplete="off" />
+      </div>
+      <button type="button" class="btn btn--block" id="enterBtn">들어가기</button>
+      <div class="msg" id="gateMsg"></div>
+      <div class="foot"><a href="index.html">← 접수 폼으로</a></div>
+    </div>
+  </div>
+
+  <!-- 현황 -->
+  <div class="wrap wrap--wide" id="dashView" hidden>
+    <header class="hero">
+      <h1 id="dashTitle">접수 현황</h1>
+      <div class="sub" id="dashSub"></div>
+    </header>
+
+    <div class="stat-row" id="statRow"></div>
+
+    <div class="toolbar">
+      <select id="schedFilter"><option value="">전체 일정</option></select>
+      <input type="text" id="search" placeholder="이름 / 동반자 검색" style="max-width:240px" />
+      <span class="sp"></span>
+      <button type="button" class="btn btn--ghost" id="refreshBtn">새로고침</button>
+      <button type="button" class="btn" id="csvBtn">CSV 내보내기</button>
+    </div>
+
+    <div class="table-scroll">
+      <div class="spin" id="spin">불러오는 중...</div>
+      <table id="tbl" hidden>
+        <thead id="thead"></thead>
+        <tbody id="tbody"></tbody>
+      </table>
+      <div class="empty" id="emptyMsg" hidden>접수된 내역이 없습니다.</div>
+    </div>
+
+    <div class="foot">
+      <span id="sheetLink"></span> · <a href="index.html">접수 폼</a>
+    </div>
+  </div>
+
+  <script src="assets/config.js"></script>
+  <script src="assets/admin.js"></script>
+</body>
+</html>
