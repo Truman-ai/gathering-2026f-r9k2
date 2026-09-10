@@ -6,7 +6,7 @@
   <meta name="robots" content="noindex, nofollow, noarchive" />
   <meta name="referrer" content="no-referrer" />
   <title>접수 현황 (관리자)</title>
-  <link rel="stylesheet" href="assets/style.css" />
+  <link rel="stylesheet" href="assets/style.css?v=20260911" />
 </head>
 <body>
   <!-- 암호 입력 -->
@@ -23,38 +23,37 @@
     </div>
   </div>
 
-  <!-- 현황 -->
+  <!-- 현황 (단계형) -->
   <div class="wrap wrap--wide" id="dashView" hidden>
-    <header class="hero">
-      <h1 id="dashTitle">접수 현황</h1>
-      <div class="sub" id="dashSub"></div>
+    <header class="hero hero--row">
+      <div>
+        <h1 id="dashTitle">접수 현황</h1>
+        <div class="sub" id="dashSub"></div>
+      </div>
+      <button type="button" class="btn btn--ghost btn--sm" id="refreshBtn">새로고침</button>
     </header>
 
-    <div class="stat-row" id="statRow"></div>
+    <div class="progress" style="margin-top:14px"><div class="progress__bar" id="progressBar"></div></div>
 
-    <div class="toolbar">
-      <select id="schedFilter"><option value="">전체 일정</option></select>
-      <input type="text" id="search" placeholder="이름 / 동반자 검색" style="max-width:240px" />
-      <span class="sp"></span>
-      <button type="button" class="btn btn--ghost" id="refreshBtn">새로고침</button>
-      <button type="button" class="btn" id="csvBtn">CSV 내보내기</button>
+    <div class="adm-head">
+      <h2 class="section-title" id="pageTitle" style="margin:0;border:0;padding:0"></h2>
     </div>
 
-    <div class="table-scroll">
-      <div class="spin" id="spin">불러오는 중...</div>
-      <table id="tbl" hidden>
-        <thead id="thead"></thead>
-        <tbody id="tbody"></tbody>
-      </table>
-      <div class="empty" id="emptyMsg" hidden>접수된 내역이 없습니다.</div>
-    </div>
+    <div class="spin" id="spin">불러오는 중...</div>
+    <main id="admStage"></main>
+
+    <footer class="adm-nav">
+      <button type="button" class="btn btn--ghost" id="prevBtn">이전</button>
+      <div class="adm-nav__meta" id="navMeta"></div>
+      <button type="button" class="btn" id="nextBtn">다음</button>
+    </footer>
 
     <div class="foot">
       <span id="sheetLink"></span> · <a href="index.html">접수 폼</a>
     </div>
   </div>
 
-  <script src="assets/config.js"></script>
-  <script src="assets/admin.js"></script>
+  <script src="assets/config.js?v=20260911"></script>
+  <script src="assets/admin.js?v=20260911"></script>
 </body>
 </html>
