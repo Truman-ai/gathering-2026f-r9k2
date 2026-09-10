@@ -220,8 +220,10 @@ textarea { min-height: 96px; resize: vertical; }
 .notice__title { text-align: center; font-size: 1.35em; font-weight: 800; margin: 0 0 4px; }
 .notice__lead { text-align: center; color: var(--ink-soft); font-size: .9em; margin: 0 0 18px; }
 
-.cost-group { margin-bottom: 14px; }
+.cost-group { margin-bottom: 6px; }
 .cost-group:last-of-type { margin-bottom: 0; }
+.cost-group__name + .cost-row { margin-top: 0; }
+.cost-group:has(.cost-group__name) { margin-bottom: 14px; }
 .cost-group__name {
   font-weight: 700;
   font-size: .84em;

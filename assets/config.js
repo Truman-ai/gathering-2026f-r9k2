@@ -66,10 +66,10 @@ window.APP_CONFIG = {
     leadText: "",
     /* 비용 묶음: name(묶음 제목) + rows[{ icon, label, unit, amount }] */
     groups: [
-      { name: "공통 비용", rows: [
+      { name: "", rows: [
         { icon: "🏢", label: "집회실", unit: "1일", amount: "40만원" },
       ] },
-      { name: "개인 비용", rows: [
+      { name: "", rows: [
         { icon: "🛏️", label: "숙박료", unit: "1인 1박", amount: "4만원" },
         { icon: "🍚", label: "식사",   unit: "한 끼",   amount: "9천원" },
       ] },
