@@ -197,7 +197,10 @@
         [].concat(c.prayerText).map(function (ln) { return esc(ln); }).join("<br>") +
         "</p>";
     h += '<h1 class="notice__title">' + esc(c.title || "집회 비용 안내") + "</h1>";
-    if (c.leadText) h += '<p class="notice__lead">' + esc(c.leadText) + "</p>";
+    if (c.leadText && [].concat(c.leadText).join("").trim())
+      h += '<p class="notice__lead">' +
+        [].concat(c.leadText).map(function (ln) { return esc(ln); }).join("<br>") +
+        "</p>";
 
     (c.groups || []).forEach(function (g) {
       h += '<div class="cost-group">';
