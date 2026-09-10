@@ -207,6 +207,55 @@ textarea { min-height: 96px; resize: vertical; }
 }
 .intro__cta { margin-top: 22px; }
 
+/* ---------- 비용 안내 (인트로 다음) ---------- */
+.notice { animation: fade .22s ease; padding: 6px 0 4px; }
+.notice__prayer {
+  text-align: center;
+  color: var(--brand);
+  font-weight: 600;
+  margin: 6px 0 20px;
+  font-size: .96em;
+}
+.notice__title { text-align: center; font-size: 1.35em; font-weight: 800; margin: 0 0 4px; }
+.notice__lead { text-align: center; color: var(--ink-soft); font-size: .9em; margin: 0 0 18px; }
+
+.cost-group { margin-bottom: 14px; }
+.cost-group:last-of-type { margin-bottom: 0; }
+.cost-group__name {
+  font-weight: 700;
+  font-size: .84em;
+  color: var(--ink-soft);
+  margin-bottom: 6px;
+}
+.cost-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 12px;
+  padding: 11px 13px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  margin-bottom: 6px;
+}
+.cost-row:last-child { margin-bottom: 0; }
+.cost-row__label { font-weight: 600; }
+.cost-row__icon { margin-right: 7px; font-size: 1.1em; }
+.cost-row__unit { color: var(--ink-soft); font-weight: 400; font-size: .88em; }
+.cost-row__amount { font-weight: 800; color: var(--brand); white-space: nowrap; }
+
+.notice__closing { font-size: .9em; margin: 16px 0 0; color: var(--ink-soft); }
+
+.account-box {
+  margin-top: 16px;
+  background: var(--brand-soft);
+  border-radius: 10px;
+  padding: 14px;
+}
+.account-box__label { font-weight: 700; font-size: .82em; color: var(--brand); margin-bottom: 6px; }
+.account-box__row { display: flex; align-items: center; gap: 10px; }
+.account-box__value { flex: 1; font-weight: 700; font-size: .95em; word-break: keep-all; }
+.account-box__row .btn { flex: none; }
+
 /* ---------- 체크박스 목록 ---------- */
 .checks { display: grid; gap: 8px; }
 .check {

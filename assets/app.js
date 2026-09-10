@@ -12,6 +12,7 @@
   var VALIDATE = false;
 
   var comp = CFG.companions || { askAdultChild: true };
+  var costNotice = CFG.costNotice || { enabled: false };
   var meals = CFG.meals || { enabled: false };
   var lodge = CFG.lodging || { enabled: false };
   var tp = CFG.transport || { enabled: false };
@@ -59,6 +60,8 @@
 
   /* --------------------------------------------------------- 단계 정의 */
   var steps = [{ id: "intro", intro: true }];
+  if (costNotice.enabled)
+    steps.push({ id: "costNotice", notice: true });
   steps.push({ id: "applicant", title: "신청자 정보", desc: "신청자 정보를 입력해 주세요.",
     render: renderApplicant, bind: bindApplicant, validate: valApplicant });
   if (SCHEDULES.length)
@@ -85,13 +88,19 @@
   var LAST = steps.length - 1;
   var idx = 0;
 
+  /* 인트로·안내 화면은 STEP 번호에서 제외하고, 입력 단계만 1..N 으로 센다 */
+  var stepNo = {}, stepTotal = 0;
+  steps.forEach(function (s, i) {
+    if (!s.intro && !s.notice) { stepTotal++; stepNo[i] = stepTotal; }
+  });
+
   /* --------------------------------------------------------- 렌더 엔진 */
   function render() {
     var step = steps[idx];
     var stage = $("stage");
-    $("progressBar").style.width = (idx / LAST * 100) + "%";
 
     if (step.intro) {
+      $("progressBar").style.width = "0%";
       stage.innerHTML = introHTML();
       $("nav").hidden = true;
       var sb = $("startBtn");
@@ -99,9 +108,22 @@
       return;
     }
 
+    if (step.notice) {
+      $("progressBar").style.width = "0%";
+      stage.innerHTML = noticeHTML();
+      $("nav").hidden = false;
+      $("prevBtn").classList.remove("is-hidden");
+      $("navMeta").textContent = "";
+      $("nextBtn").textContent = "다음";
+      bindNotice(stage);
+      $("stage").scrollTop = 0;
+      return;
+    }
+
+    $("progressBar").style.width = (stepNo[idx] / stepTotal * 100) + "%";
     stage.innerHTML =
       '<section class="step">' +
-        '<div class="step__eyebrow">STEP ' + idx + " / " + LAST + "</div>" +
+        '<div class="step__eyebrow">STEP ' + stepNo[idx] + " / " + stepTotal + "</div>" +
         '<h1 class="step__title">' + esc(step.title) + "</h1>" +
         (step.desc ? '<p class="step__desc">' + esc(step.desc) + "</p>" : "") +
         '<div class="step__body" id="stepBody"></div>' +
@@ -111,7 +133,7 @@
 
     $("nav").hidden = false;
     $("prevBtn").classList.toggle("is-hidden", idx <= 0);
-    $("navMeta").textContent = idx + " / " + LAST;
+    $("navMeta").textContent = stepNo[idx] + " / " + stepTotal;
     $("nextBtn").textContent = (idx === LAST) ? "제출하기" : "다음";
     $("stage").scrollTop = 0;
   }
@@ -164,6 +186,77 @@
         '" target="_blank" rel="noopener">' + esc(addr) + "</a>"
       : '<span class="intro__addr">' + esc(addr) + "</span>";
     return (name ? name + "<br>" : "") + addrHTML;
+  }
+
+  /* --------------------------------------------------- 비용 안내 화면 */
+  function noticeHTML() {
+    var c = costNotice || {};
+    var h = '<section class="notice">';
+    if (c.prayerText) h += '<p class="notice__prayer">' + esc(c.prayerText) + "</p>";
+    h += '<h1 class="notice__title">' + esc(c.title || "집회 비용 안내") + "</h1>";
+    if (c.leadText) h += '<p class="notice__lead">' + esc(c.leadText) + "</p>";
+
+    (c.groups || []).forEach(function (g) {
+      h += '<div class="cost-group">';
+      if (g.name) h += '<div class="cost-group__name">' + esc(g.name) + "</div>";
+      (g.rows || []).forEach(function (r) {
+        h += '<div class="cost-row">' +
+          '<span class="cost-row__label">' +
+          (r.icon ? '<span class="cost-row__icon" aria-hidden="true">' + esc(r.icon) + "</span>" : "") +
+          esc(r.label) +
+          (r.unit ? ' <span class="cost-row__unit">· ' + esc(r.unit) + "</span>" : "") +
+          "</span>" +
+          '<span class="cost-row__amount">' + esc(r.amount) + "</span>" +
+        "</div>";
+      });
+      h += "</div>";
+    });
+
+    if (c.closingText) h += '<p class="notice__closing">' + esc(c.closingText) + "</p>";
+
+    if (c.account) {
+      h += '<div class="account-box">' +
+        '<div class="account-box__label">' + esc(c.accountLabel || "헌금 계좌") + "</div>" +
+        '<div class="account-box__row">' +
+          '<span class="account-box__value" id="acctValue">' + esc(c.account) + "</span>" +
+          '<button type="button" class="btn btn--ghost btn--sm" id="acctCopy">복사</button>' +
+        "</div>" +
+      "</div>";
+    }
+    h += "</section>";
+    return h;
+  }
+
+  function bindNotice(root) {
+    var btn = root.querySelector("#acctCopy");
+    if (!btn) return;
+    btn.addEventListener("click", function () {
+      var val = root.querySelector("#acctValue");
+      var txt = (val ? val.textContent : "").trim();
+      var ok = function () {
+        btn.textContent = "복사됨 ✓";
+        setTimeout(function () { btn.textContent = "복사"; }, 1500);
+      };
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(txt).then(ok, function () { fallbackCopy(txt, ok); });
+      } else {
+        fallbackCopy(txt, ok);
+      }
+    });
+  }
+
+  function fallbackCopy(txt, done) {
+    try {
+      var ta = document.createElement("textarea");
+      ta.value = txt;
+      ta.style.position = "fixed";
+      ta.style.opacity = "0";
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand("copy");
+      document.body.removeChild(ta);
+      if (done) done();
+    } catch (e) {}
   }
 
   /* --------------------------------------------------------- 1) 신청자 정보 */
