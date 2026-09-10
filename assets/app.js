@@ -8,8 +8,9 @@
   var PREVIEW = !CFG.scriptUrl;
   var $ = function (id) { return document.getElementById(id); };
 
-  /* 양식 다듬는 동안 필수값 검사를 끔. 완성되면 true 로 되돌리세요. */
-  var VALIDATE = false;
+  /* 필수 입력 검증. config.js 의 validation 블록으로 항목별 on/off */
+  var V = CFG.validation || {};
+  var VALIDATE = V.enabled === true;
 
   var comp = CFG.companions || { askAdultChild: true };
   var costNotice = CFG.costNotice || { enabled: false };
@@ -65,16 +66,17 @@
   steps.push({ id: "applicant", title: "신청자 정보", desc: "신청자 정보를 입력해 주세요.",
     render: renderApplicant, bind: bindApplicant, validate: valApplicant });
   if (SCHEDULES.length)
-    steps.push({ id: "schedules", title: "참석 일정", desc: "참석하실 세션을 모두 선택하세요.",
+    steps.push({ id: "schedules", title: "참석 일정", req: V.schedules !== false,
+      desc: "참석하실 세션을 모두 선택하세요.",
       render: renderSchedules, bind: bindSchedules, validate: valSchedules });
   if (meals.enabled)
-    steps.push({ id: "meals", title: meals.label || "식사 신청",
+    steps.push({ id: "meals", title: meals.label || "식사 신청", req: !!V.meals,
       desc: "식사 별 신청 인원을 입력해 주세요",
-      render: renderMeals, bind: bindMeals });
+      render: renderMeals, bind: bindMeals, validate: valMeals });
   if (lodge.enabled)
-    steps.push({ id: "lodging", title: lodge.label || "숙박 신청",
+    steps.push({ id: "lodging", title: lodge.label || "숙박 신청", req: !!V.lodging,
       desc: lodge.desc || "숙박하실 날짜별 인원을 입력해 주세요",
-      render: renderLodging, bind: bindLodging });
+      render: renderLodging, bind: bindLodging, validate: valLodging });
   if (tp.enabled)
     steps.push({ id: "transport", title: tp.label || "차량", desc: tp.desc || "차량 이용 여부를 선택하세요.",
       render: renderTransport, bind: bindTransport });
@@ -124,12 +126,15 @@
     stage.innerHTML =
       '<section class="step">' +
         '<div class="step__eyebrow">STEP ' + stepNo[idx] + " / " + stepTotal + "</div>" +
-        '<h1 class="step__title">' + esc(step.title) + "</h1>" +
+        '<h1 class="step__title">' + esc(step.title) +
+          (VALIDATE && step.req ? ' <span class="req">*</span>' : "") + "</h1>" +
         (step.desc ? '<p class="step__desc">' + esc(step.desc) + "</p>" : "") +
         '<div class="step__body" id="stepBody"></div>' +
         '<div class="msg" id="stepMsg"></div>' +
       "</section>";
     refreshBody();
+    $("stepBody").addEventListener("input", clearInvalid, true);
+    $("stepBody").addEventListener("change", clearInvalid, true);
 
     $("nav").hidden = false;
     $("prevBtn").classList.toggle("is-hidden", idx <= 0);
@@ -149,11 +154,49 @@
     var step = steps[idx];
     if (VALIDATE && d > 0 && step.validate) {
       var err = step.validate();
-      if (err) { showMsg(err); return; }
+      if (err) { failStep(err); return; }
     }
-    if (d > 0 && idx === LAST) { submit(); return; }
+    if (d > 0 && idx === LAST) {
+      var fe = VALIDATE ? firstError() : null;
+      if (fe) { idx = fe.at; render(); failStep(fe.err); return; }
+      submit();
+      return;
+    }
     idx = Math.max(0, Math.min(LAST, idx + d));
     render();
+  }
+
+  /* 모든 단계의 검증을 순서대로 돌려 첫 실패를 돌려준다 (제출 직전 재검증용) */
+  function firstError() {
+    for (var i = 0; i < steps.length; i++) {
+      if (steps[i].validate) {
+        var e = steps[i].validate();
+        if (e) return { at: i, err: e };
+      }
+    }
+    return null;
+  }
+
+  /* err: 문자열, 또는 { msg, invalid: [CSS 선택자...] } */
+  function failStep(err) {
+    showMsg(typeof err === "string" ? err : err.msg);
+    var body = $("stepBody");
+    if (!body || !err || !err.invalid) return;
+    var first = null;
+    err.invalid.forEach(function (sel) {
+      body.querySelectorAll(sel).forEach(function (el) {
+        el.classList.add("is-invalid");
+        if (!first) first = el;
+      });
+    });
+    if (first && first.focus) { try { first.focus({ preventScroll: false }); } catch (e) { first.focus(); } }
+  }
+
+  function clearInvalid(e) {
+    var t = e.target;
+    if (t && t.classList) t.classList.remove("is-invalid");
+    var el = $("stepMsg");
+    if (el && el.textContent) { el.className = "msg"; el.textContent = ""; }
   }
 
   /* --------------------------------------------------------- 인트로 */
@@ -313,7 +356,8 @@
 
     if (count === 0) { box.innerHTML = ""; return; }
     box.innerHTML =
-      '<label class="lbl" style="margin-top:10px">동반자 이름</label>' +
+      '<label class="lbl" style="margin-top:10px">동반자 이름' +
+        (VALIDATE && V.companionNames ? ' <span class="req">*</span>' : "") + "</label>" +
       '<div class="companion-names">' +
       state.names.map(function (nm, i) {
         return '<input type="text" class="cn-input" data-i="' + i +
@@ -336,7 +380,16 @@
       : "총 참석 인원 본인 1명";
   }
   function valApplicant() {
-    if (!state.name.trim()) return "이름을 입력해 주세요.";
+    if (V.name !== false && !state.name.trim())
+      return { msg: "이름을 입력해 주세요.", invalid: ["#f_name"] };
+    if (V.companionNames) {
+      var need = companionCount();
+      var empties = [];
+      for (var i = 0; i < need; i++)
+        if (!(state.names[i] || "").trim()) empties.push('.cn-input[data-i="' + i + '"]');
+      if (empties.length)
+        return { msg: "동반자 이름을 모두 입력해 주세요.", invalid: empties };
+    }
     return null;
   }
 
@@ -374,7 +427,22 @@
     });
   }
   function valSchedules() {
+    if (V.schedules === false) return null;
     return state.scheds.length ? null : "참석 일정을 하나 이상 선택해 주세요.";
+  }
+
+  function valMeals() {
+    if (!V.meals) return null;
+    var total = 0;
+    mealItems.forEach(function (m) { total += n(state.meals[m.label]); });
+    return total > 0 ? null : "식사 신청 인원을 한 끼 이상 입력해 주세요.";
+  }
+
+  function valLodging() {
+    if (!V.lodging) return null;
+    var total = 0;
+    lodgeNights.forEach(function (b) { total += n(state.lodging[b.label]); });
+    return total > 0 ? null : "숙박 신청 인원을 입력해 주세요.";
   }
 
   /* --------------------------------------------------------- 3) 식사 */

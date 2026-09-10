@@ -52,6 +52,14 @@ input:focus, select:focus, textarea:focus {
   outline: 2px solid var(--brand-soft);
   border-color: var(--brand);
 }
+input.is-invalid, select.is-invalid, textarea.is-invalid {
+  border-color: var(--danger);
+  background: #fdf2f1;
+}
+input.is-invalid:focus, select.is-invalid:focus, textarea.is-invalid:focus {
+  outline-color: #fde8e6;
+  border-color: var(--danger);
+}
 textarea { min-height: 96px; resize: vertical; }
 
 .btn {

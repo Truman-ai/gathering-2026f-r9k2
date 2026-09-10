@@ -105,6 +105,7 @@ sheetUrl:  "https://docs.google.com/spreadsheets/d/....../edit", // (선택) 2-1
 | 차량 | `transport.desc` / `transport.options` | 안내 문구 / 이용·탑승 위치 선택지 |
 | 동반 인원 | `companions.askAdultChild` | 성인·어린이 나눠 받기 여부. **입력한 수만큼 ‘동반자 이름’ 칸이 자동 생성** |
 | 기타 요청사항 | `showNotes` | 표시 여부 |
+| 필수 입력 검증 | `validation` | `enabled:false` 면 전부 자유 입력. 개별 항목(`name`/`schedules`/`companionNames`/`meals`/`lodging`)을 `false` 로 두면 그 항목만 필수 해제. 통과 못 하면 빨간 문구 + 빈 칸 빨간 테두리, ‘다음’·제출 차단 |
 
 일정을 하나도 안 두면 참석 일정 선택이 사라지진 않으니, 단일 집회면
 `schedules` 를 한 개만 남기세요.
