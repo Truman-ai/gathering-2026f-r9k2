@@ -276,8 +276,9 @@
 
   /* --------------------------------------------------------- 3) 식사 */
   function renderMeals() {
+    var cap = totalCount();
     var h = '<div class="inline-actions">' +
-      '<button type="button" class="btn btn--ghost btn--sm" id="mealAll">전체 인원(' + totalCount() + "명) 일괄 적용</button>" +
+      '<button type="button" class="btn btn--ghost btn--sm" id="mealAll">전체 인원(' + cap + "명) 일괄 적용</button>" +
       '<button type="button" class="btn btn--ghost btn--sm" id="mealClear">초기화</button></div>';
     mealDays.forEach(function (d) {
       h += '<div class="meal-day">';
@@ -285,8 +286,10 @@
       h += '<div class="mini-grid">';
       d.meals.forEach(function (m) {
         var label = (d.date ? d.date + " " : "") + m.label;
+        var cur = Math.min(cap, n(state.meals[label]));
+        state.meals[label] = cur;
         h += "<div><label>" + esc(m.label) + "</label>" +
-          stepper("meal::" + label, state.meals[label] || 0) + "</div>";
+          stepper("meal::" + label, cur, cap) + "</div>";
       });
       h += "</div></div>";
     });
@@ -306,13 +309,16 @@
 
   /* --------------------------------------------------------- 3-1) 숙박 */
   function renderLodging() {
+    var cap = totalCount();
     var h = '<div class="inline-actions">' +
-      '<button type="button" class="btn btn--ghost btn--sm" id="stayAll">전체 인원(' + totalCount() + "명) 일괄 적용</button>" +
+      '<button type="button" class="btn btn--ghost btn--sm" id="stayAll">전체 인원(' + cap + "명) 일괄 적용</button>" +
       '<button type="button" class="btn btn--ghost btn--sm" id="stayClear">초기화</button></div>';
     h += '<div class="mini-grid">';
     lodgeNights.forEach(function (b) {
+      var cur = Math.min(cap, n(state.lodging[b.label]));
+      state.lodging[b.label] = cur;
       h += "<div><label>" + esc(b.label) + "</label>" +
-        stepper("stay::" + b.label, state.lodging[b.label] || 0) + "</div>";
+        stepper("stay::" + b.label, cur, cap) + "</div>";
     });
     h += "</div>";
     return h;
@@ -488,10 +494,13 @@
   }
 
   /* --------------------------------------------------------- 공통 위젯 */
-  function stepper(key, val) {
-    return '<div class="stepper" data-key="' + esc(key) + '">' +
+  function stepper(key, val, max) {
+    var hasMax = typeof max === "number" && isFinite(max);
+    return '<div class="stepper" data-key="' + esc(key) + '"' +
+      (hasMax ? ' data-max="' + max + '"' : "") + ">" +
       '<button type="button" data-d="-1" aria-label="빼기">−</button>' +
-      '<input type="number" min="0" inputmode="numeric" value="' + n(val) + '">' +
+      '<input type="number" min="0"' + (hasMax ? ' max="' + max + '"' : "") +
+      ' inputmode="numeric" value="' + n(val) + '">' +
       '<button type="button" data-d="1" aria-label="더하기">+</button>' +
       "</div>";
   }
@@ -499,8 +508,10 @@
     root.querySelectorAll(".stepper").forEach(function (st) {
       var key = st.getAttribute("data-key");
       var input = st.querySelector("input");
+      var max = st.hasAttribute("data-max") ? parseInt(st.getAttribute("data-max"), 10) : Infinity;
       function commit(v) {
         v = Math.max(0, parseInt(v, 10) || 0);
+        if (isFinite(max)) v = Math.min(max, v);
         input.value = v;
         setModel(key, v);
         refreshTotalLine();
