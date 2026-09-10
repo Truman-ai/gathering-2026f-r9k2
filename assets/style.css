@@ -104,12 +104,12 @@ textarea { min-height: 96px; resize: vertical; }
 /* ---------- 글씨 크기 조절 ---------- */
 .fs-control {
   position: absolute;
-  top: 8px;
-  right: 8px;
+  top: 7px;
+  right: 7px;
   z-index: 20;
   display: flex;
-  gap: 2px;
-  padding: 2px;
+  gap: 3px;
+  padding: 3px;
   background: rgba(255, 255, 255, .88);
   -webkit-backdrop-filter: blur(4px);
   backdrop-filter: blur(4px);
@@ -121,8 +121,8 @@ textarea { min-height: 96px; resize: vertical; }
   border: 0;
   background: transparent;
   cursor: pointer;
-  min-width: 30px;
-  height: 26px;
+  min-width: 36px;
+  height: 31px;
   border-radius: 999px;
   font-weight: 800;
   line-height: 1;
@@ -130,9 +130,9 @@ textarea { min-height: 96px; resize: vertical; }
 }
 .fs-control button:hover { background: var(--brand-soft); color: var(--brand); }
 .fs-control button:disabled { opacity: .32; cursor: default; background: transparent; color: var(--ink-soft); }
-.fs-control #fsDown { font-size: .78rem; }
-.fs-control #fsReset { font-size: .92rem; }
-.fs-control #fsUp { font-size: 1.05rem; }
+.fs-control #fsDown { font-size: .94rem; }
+.fs-control #fsReset { font-size: 1.1rem; }
+.fs-control #fsUp { font-size: 1.26rem; }
 
 .progress { flex: none; height: 4px; background: var(--line); }
 .progress__bar { height: 100%; width: 0; background: var(--brand); transition: width .3s ease; }

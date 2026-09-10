@@ -541,7 +541,7 @@
 
   /* --------------------------------------------------- 글씨 크기 조절 */
   var FS_LEVELS = [0.88, 1, 1.12, 1.28, 1.45];
-  var fsIdx = 1;
+  var fsIdx = 4; // 처음 열릴 때 기본 배율 = 5단계(1.45x)
   try {
     var stored = localStorage.getItem("mtg_fs");
     if (stored !== null) fsIdx = Math.min(FS_LEVELS.length - 1, Math.max(0, parseInt(stored, 10) || 0));
