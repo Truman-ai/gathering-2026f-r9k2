@@ -14,7 +14,7 @@ window.APP_CONFIG = {
   eventPeriod: "10월 8일(목) ~ 11일(일)",
   eventPlace: "한국야쿠르트 인재개발원",
   eventPlaceAddress: "양평군 단월면 한서로 1468",
-  eventPlaceMapUrl: "https://naver.me/5l73Ng6n",
+  eventPlaceMapUrl: "https://naver.me/FEglFADE",
   contactInfo: "문의: 010-5777-4054 (박주찬 형제)",
 
   /* 접수 마감 안내 문구 (표시만, 실제 차단은 안 함). 비우면 숨김 */
@@ -57,9 +57,9 @@ window.APP_CONFIG = {
    * ----------------------------------------------------------------- */
   costNotice: {
     enabled: true,
-    prayerText: "아버지께서 아들을 통하여 풍성히 말씀하여 주시는 집회가 되기를 기도합니다.",
+    prayerText: "아버지께서 아들을 통해 풍성히 말씀하시는 집회가 되기를 기도합니다.",
     title: "집회 비용 안내",
-    leadText: "이번 집회의 비용을 안내드립니다.",
+    leadText: "",
     /* 비용 묶음: name(묶음 제목) + rows[{ icon, label, unit, amount }] */
     groups: [
       { name: "공통 비용", rows: [
@@ -72,7 +72,11 @@ window.APP_CONFIG = {
     ],
     closingText: "정해진 회비는 없습니다. 위 비용을 참고하시어 헌금으로 자유롭게 부담해 주시면 감사하겠습니다.",
     accountLabel: "헌금 계좌",
-    account: "국민은행 294701-00-036977 손동준(춘천교회)",
+    /* 배열로 주면 줄바꿈되어 표시됩니다. 복사 버튼은 한 줄로 합쳐서 복사 */
+    account: [
+      "국민은행 294701-00-036977",
+      "손동준(춘천교회)",
+    ],
   },
 
   /* -----------------------------------------------------------------

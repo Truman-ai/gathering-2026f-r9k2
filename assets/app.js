@@ -215,10 +215,14 @@
     if (c.closingText) h += '<p class="notice__closing">' + esc(c.closingText) + "</p>";
 
     if (c.account) {
+      var acctLines = [].concat(c.account);
+      var acctCopy = acctLines.join(" ");
       h += '<div class="account-box">' +
         '<div class="account-box__label">' + esc(c.accountLabel || "헌금 계좌") + "</div>" +
         '<div class="account-box__row">' +
-          '<span class="account-box__value" id="acctValue">' + esc(c.account) + "</span>" +
+          '<span class="account-box__value" id="acctValue" data-copy="' + esc(acctCopy) + '">' +
+            acctLines.map(function (ln) { return esc(ln); }).join("<br>") +
+          "</span>" +
           '<button type="button" class="btn btn--ghost btn--sm" id="acctCopy">복사</button>' +
         "</div>" +
       "</div>";
@@ -232,7 +236,7 @@
     if (!btn) return;
     btn.addEventListener("click", function () {
       var val = root.querySelector("#acctValue");
-      var txt = (val ? val.textContent : "").trim();
+      var txt = (val ? (val.getAttribute("data-copy") || val.textContent) : "").trim();
       var ok = function () {
         btn.textContent = "복사됨 ✓";
         setTimeout(function () { btn.textContent = "복사"; }, 1500);
