@@ -192,7 +192,10 @@
   function noticeHTML() {
     var c = costNotice || {};
     var h = '<section class="notice">';
-    if (c.prayerText) h += '<p class="notice__prayer">' + esc(c.prayerText) + "</p>";
+    if (c.prayerText && [].concat(c.prayerText).join("").trim())
+      h += '<p class="notice__prayer">' +
+        [].concat(c.prayerText).map(function (ln) { return esc(ln); }).join("<br>") +
+        "</p>";
     h += '<h1 class="notice__title">' + esc(c.title || "집회 비용 안내") + "</h1>";
     if (c.leadText) h += '<p class="notice__lead">' + esc(c.leadText) + "</p>";
 

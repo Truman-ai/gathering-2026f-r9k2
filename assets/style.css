@@ -208,12 +208,13 @@ textarea { min-height: 96px; resize: vertical; }
 .intro__cta { margin-top: 22px; }
 
 /* ---------- 비용 안내 (인트로 다음) ---------- */
-.notice { animation: fade .22s ease; padding: 6px 0 4px; }
+/* 상단 여백: 우측 상단 글자크기 조절 버튼과 겹치지 않도록 넉넉히 */
+.notice { animation: fade .22s ease; padding: 34px 0 4px; }
 .notice__prayer {
   text-align: center;
   color: var(--brand);
   font-weight: 600;
-  margin: 6px 0 20px;
+  margin: 0 0 20px;
   font-size: .96em;
 }
 .notice__title { text-align: center; font-size: 1.35em; font-weight: 800; margin: 0 0 4px; }
