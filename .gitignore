@@ -1,1 +1,4 @@
 .DS_Store
+
+# Apps Script 코드는 공개 저장소에 올리지 않음 (ADMIN_PASS 포함). 로컬 + Google 편집기에만 보관.
+apps-script/
