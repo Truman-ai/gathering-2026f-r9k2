@@ -282,7 +282,7 @@
       '<button type="button" class="btn btn--ghost btn--sm" id="mealClear">초기화</button></div>';
     mealDays.forEach(function (d) {
       h += '<div class="meal-day">';
-      if (d.date) h += '<div class="meal-day__date">' + esc(d.date) + "</div>";
+      if (d.date) h += '<div class="meal-day__date">' + esc(d.date + (d.dow ? " " + d.dow : "")) + "</div>";
       h += '<div class="mini-grid">';
       d.meals.forEach(function (m) {
         var label = (d.date ? d.date + " " : "") + m.label;

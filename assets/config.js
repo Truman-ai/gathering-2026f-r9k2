@@ -59,15 +59,16 @@ window.APP_CONFIG = {
     label: "식사 신청",
     /* 날짜(행)별로 끼니를 묶어서 표시. 하루에 한 끼만 있어도 됩니다.
      * (구버전처럼 items: [{id,label}] 평면 목록을 써도 동작합니다) */
+    /* dow(요일)는 스텝 3 날짜 머리글 표시용. 저장 값·집계 키에는 영향 없음 */
     days: [
-      { date: "10월 8일", meals: [{ id: "m1", label: "저녁" }] },
-      { date: "10월 9일", meals: [
+      { date: "10월 8일", dow: "목요일", meals: [{ id: "m1", label: "저녁" }] },
+      { date: "10월 9일", dow: "금요일", meals: [
         { id: "m2", label: "아침" }, { id: "m3", label: "점심" }, { id: "m4", label: "저녁" },
       ] },
-      { date: "10월 10일", meals: [
+      { date: "10월 10일", dow: "토요일", meals: [
         { id: "m5", label: "아침" }, { id: "m6", label: "점심" }, { id: "m7", label: "저녁" },
       ] },
-      { date: "10월 11일", meals: [
+      { date: "10월 11일", dow: "일요일", meals: [
         { id: "m8", label: "아침" }, { id: "m9", label: "점심" },
       ] },
     ],
