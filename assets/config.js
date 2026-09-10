@@ -57,13 +57,10 @@ window.APP_CONFIG = {
    * ----------------------------------------------------------------- */
   costNotice: {
     enabled: true,
-    /* 배열로 주면 줄바꿈되어 표시됩니다 */
-    prayerText: [
-      "아버지께서 아들을 통해",
-      "말씀하시는 집회가 되기를 기도합니다.",
-    ],
+    /* 배열로 주면 줄바꿈되어 표시됩니다. 비우면 숨김 */
+    prayerText: "",
     title: "집회 비용 안내",
-    leadText: "",
+    leadText: "정해진 회비는 없습니다. 아래 비용을 참고하시어 헌금으로 자유롭게 부담해 주시면 감사하겠습니다.",
     /* 비용 묶음: name(묶음 제목) + rows[{ icon, label, unit, amount }] */
     groups: [
       { name: "", rows: [
@@ -74,7 +71,7 @@ window.APP_CONFIG = {
         { icon: "🍚", label: "식사",   unit: "한 끼",   amount: "7천원" },
       ] },
     ],
-    closingText: "정해진 회비는 없습니다. 위 비용을 참고하시어 헌금으로 자유롭게 부담해 주시면 감사하겠습니다.",
+    closingText: "",
     accountLabel: "헌금 계좌",
     /* 배열로 주면 줄바꿈되어 표시됩니다. 복사 버튼은 한 줄로 합쳐서 복사 */
     account: [
