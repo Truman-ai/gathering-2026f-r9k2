@@ -61,8 +61,6 @@
 
   /* --------------------------------------------------------- 단계 정의 */
   var steps = [{ id: "intro", intro: true }];
-  if (costNotice.enabled)
-    steps.push({ id: "costNotice", notice: true });
   steps.push({ id: "applicant", title: "신청자 정보", desc: "신청자 정보를 입력해 주세요.",
     render: renderApplicant, bind: bindApplicant, validate: valApplicant });
   if (SCHEDULES.length)
@@ -78,11 +76,15 @@
       desc: lodge.desc || "숙박하실 날짜별 인원을 입력해 주세요",
       render: renderLodging, bind: bindLodging, validate: valLodging });
   if (tp.enabled)
-    steps.push({ id: "transport", title: tp.label || "차량", desc: tp.desc || "차량 이용 여부를 선택하세요.",
-      render: renderTransport, bind: bindTransport });
+    steps.push({ id: "transport", title: tp.label || "차량", req: !!V.transport,
+      desc: tp.desc || "차량 이용 여부를 선택하세요.",
+      render: renderTransport, bind: bindTransport, validate: valTransport });
   if (CFG.showNotes)
-    steps.push({ id: "notes", title: "기타 요청사항", desc: "없으면 비워두셔도 됩니다.",
+    steps.push({ id: "notes", title: "기타 요청사항", desc: "요청사항이 없으시면 비워두셔도 됩니다.",
       render: renderNotes, bind: bindNotes });
+  /* 비용 안내: 입력 단계를 모두 마친 맨 마지막(확인 화면 직전)에 표시 */
+  if (costNotice.enabled)
+    steps.push({ id: "costNotice", notice: true });
   steps.push({ id: "review", title: "입력 확인",
     desc: "아래 내용으로 접수합니다. 고칠 항목이 있으면 '이전'을 누르세요.",
     render: renderReview });
@@ -128,7 +130,11 @@
         '<div class="step__eyebrow">STEP ' + stepNo[idx] + " / " + stepTotal + "</div>" +
         '<h1 class="step__title">' + esc(step.title) +
           (VALIDATE && step.req ? ' <span class="req">*</span>' : "") + "</h1>" +
-        (step.desc ? '<p class="step__desc">' + esc(step.desc) + "</p>" : "") +
+        (step.desc && [].concat(step.desc).join("").trim()
+          ? '<p class="step__desc">' +
+            [].concat(step.desc).map(function (l) { return esc(l); }).join("<br>") +
+            "</p>"
+          : "") +
         '<div class="step__body" id="stepBody"></div>' +
         '<div class="msg" id="stepMsg"></div>' +
       "</section>";
@@ -201,6 +207,7 @@
 
   /* --------------------------------------------------------- 인트로 */
   function introHTML() {
+    var contact = CFG.contactInfo ? linkifyPhone(CFG.contactInfo) : { html: "", hasPhone: false };
     return (
       '<div class="intro">' +
         (PREVIEW
@@ -211,10 +218,12 @@
         "<dl>" +
           "<dt>일시</dt><dd>" + esc(CFG.eventPeriod || "-") + "</dd>" +
           "<dt>장소</dt><dd>" + placeHTML() + "</dd>" +
+          (CFG.contactInfo ? "<dt>문의</dt><dd>" + contact.html +
+            (contact.hasPhone ? '<div class="intro__note">* 번호를 누르면 전화 연결로 이동합니다</div>' : "") +
+            "</dd>" : "") +
         "</dl>" +
-        (CFG.contactInfo ? '<div class="hint">' + esc(CFG.contactInfo) + "</div>" : "") +
         (CFG.deadlineNotice ? '<div class="intro__deadline">' + esc(CFG.deadlineNotice) + "</div>" : "") +
-        '<div class="intro__cta"><button type="button" class="btn btn--block" id="startBtn">등록하기</button></div>' +
+        '<div class="intro__cta"><button type="button" class="btn btn--block" id="startBtn">접수하기</button></div>' +
         '<div class="tiny-link"><a href="admin.html">관리자 화면 →</a></div>' +
       "</div>"
     );
@@ -224,11 +233,23 @@
     var name = CFG.eventPlace ? esc(CFG.eventPlace) : "";
     var addr = CFG.eventPlaceAddress || "";
     if (!addr) return name || "-";
-    var addrHTML = CFG.eventPlaceMapUrl
+    var linked = !!CFG.eventPlaceMapUrl;
+    var addrHTML = linked
       ? '<a class="intro__addr" href="' + esc(CFG.eventPlaceMapUrl) +
         '" target="_blank" rel="noopener">' + esc(addr) + "</a>"
       : '<span class="intro__addr">' + esc(addr) + "</span>";
-    return (name ? name + "<br>" : "") + addrHTML;
+    var note = linked ? '<div class="intro__note">* 주소를 누르면 내비게이션으로 이동합니다</div>' : "";
+    return (name ? name + "<br>" : "") + addrHTML + note;
+  }
+
+  /* 문의 문구 속 전화번호(010-1234-5678 형태)를 tel: 링크로 자동 변환 */
+  function linkifyPhone(s) {
+    var hasPhone = false;
+    var html = esc(s).replace(/01[0-9]-\d{3,4}-\d{4}/g, function (m) {
+      hasPhone = true;
+      return '<a class="tel-link" href="tel:' + m.replace(/-/g, "") + '">' + m + "</a>";
+    });
+    return { html: html, hasPhone: hasPhone };
   }
 
   /* --------------------------------------------------- 비용 안내 화면 */
@@ -242,7 +263,7 @@
     h += '<h1 class="notice__title">' + esc(c.title || "집회 비용 안내") + "</h1>";
     if (c.leadText && [].concat(c.leadText).join("").trim())
       h += '<p class="notice__lead">' +
-        [].concat(c.leadText).map(function (ln) { return esc(ln); }).join("<br>") +
+        [].concat(c.leadText).map(function (ln) { return richText(ln); }).join("<br>") +
         "</p>";
 
     (c.groups || []).forEach(function (g) {
@@ -540,6 +561,12 @@
       state.departure = d.value;
     });
   }
+  function valTransport() {
+    if (!V.transport) return null;
+    return state.transport
+      ? null
+      : { msg: "차량 이용 여부를 선택해 주세요.", invalid: ["#f_tp"] };
+  }
 
   /* --------------------------------------------------------- 5) 기타 */
   function renderNotes() {
@@ -657,9 +684,18 @@
       '<div class="done">' +
         '<div class="ico">' + (preview ? "👀" : "✅") + "</div>" +
         "<h2>" + (preview ? "미리보기 — 저장되지 않았습니다" : "접수가 완료되었습니다") + "</h2>" +
-        "<p>" + esc(payload.name) + " 님, 총 " + payload.totalCount + "명<br>" +
-          esc(payload.schedules) + "</p>" +
+        "<p>" + esc(payload.name) + " 님, 총 " + payload.totalCount + "명</p>" +
         '<button type="button" class="btn btn--ghost" id="againBtn" style="margin-top:18px">다른 사람 추가 접수</button>' +
+        (CFG.kakaoOpenChatUrl
+          ? '<div class="done__kakao">' +
+              (CFG.kakaoOpenChatNotice && [].concat(CFG.kakaoOpenChatNotice).join("").trim()
+                ? '<p class="done__kakao-desc">' +
+                  [].concat(CFG.kakaoOpenChatNotice).map(function (ln) { return esc(ln); }).join("<br>") +
+                  "</p>"
+                : "") +
+              '<a class="btn btn--block btn--kakao" href="' + esc(CFG.kakaoOpenChatUrl) + '" target="_blank" rel="noopener">입장하기</a>' +
+            "</div>"
+          : "") +
       "</div>";
     $("againBtn").addEventListener("click", function () { location.reload(); });
   }
@@ -715,6 +751,12 @@
     return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) {
       return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c];
     });
+  }
+  /* "**강조**" 를 굵게+밑줄로. 그 외에는 esc()와 동일하게 이스케이프 */
+  function richText(s) {
+    return String(s == null ? "" : s).split(/\*\*(.+?)\*\*/).map(function (part, i) {
+      return i % 2 === 1 ? "<strong><u>" + esc(part) + "</u></strong>" : esc(part);
+    }).join("");
   }
   function showMsg(m) {
     var el = $("stepMsg");

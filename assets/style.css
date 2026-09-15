@@ -190,7 +190,8 @@ textarea { min-height: 96px; resize: vertical; }
 /* ---------- 인트로 ---------- */
 .intro { flex: 1; display: flex; flex-direction: column; justify-content: center; text-align: center; }
 .intro__badge { color: var(--brand); font-weight: 700; font-size: 1.64em; letter-spacing: .04em; }
-.intro__addr { color: #1a73e8; text-decoration: underline; }
+.intro__addr, .tel-link { color: #1a73e8; text-decoration: underline; }
+.intro__note { font-weight: 400; font-size: .78em; color: var(--ink-soft); margin-top: 3px; }
 .intro__title { font-size: 1.7em; font-weight: 800; margin: 6px 0 14px; line-height: 1.3; }
 .intro dl {
   display: grid;
@@ -247,12 +248,13 @@ textarea { min-height: 96px; resize: vertical; }
   border: 1px solid var(--line);
   border-radius: 8px;
   margin-bottom: 6px;
+  font-size: .49em; /* 집회실·숙박료·식사 항목 글자 크기: 기존의 70%(0.7em) 에서 다시 70% */
 }
 .cost-row:last-child { margin-bottom: 0; }
-.cost-row__label { font-weight: 600; }
+.cost-row__label { font-weight: 400; }
 .cost-row__icon { margin-right: 7px; font-size: 1.1em; }
 .cost-row__unit { color: var(--ink-soft); font-weight: 400; font-size: .88em; }
-.cost-row__amount { font-weight: 800; color: var(--brand); white-space: nowrap; }
+.cost-row__amount { font-weight: 400; color: var(--brand); white-space: nowrap; }
 
 .notice__closing { font-size: .9em; margin: 16px 0 0; color: var(--ink-soft); }
 
@@ -350,6 +352,17 @@ textarea { min-height: 96px; resize: vertical; }
 .done .ico { font-size: 3em; }
 .done h2 { margin: 12px 0 6px; }
 .done p { color: var(--ink-soft); max-width: 340px; }
+
+.done__kakao {
+  margin-top: 26px;
+  padding-top: 22px;
+  border-top: 1px solid var(--line);
+  width: 100%;
+  max-width: 300px;
+}
+.done__kakao-desc { color: var(--ink-soft); font-size: .86em; margin: 0 0 12px; }
+.btn--kakao { background: #fee500; color: #191919; border-color: #fee500; }
+.btn--kakao:hover { filter: brightness(.97); }
 
 /* ---------- 알림 ---------- */
 .msg { margin-top: 14px; padding: 11px 13px; border-radius: 8px; font-weight: 600; font-size: .9em; display: none; }

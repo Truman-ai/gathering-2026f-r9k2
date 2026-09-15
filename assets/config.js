@@ -15,10 +15,18 @@ window.APP_CONFIG = {
   eventPlace: "한국야쿠르트 인재개발원",
   eventPlaceAddress: "양평군 단월면 한서로 1468",
   eventPlaceMapUrl: "https://naver.me/FEglFADE",
-  contactInfo: "문의: 010-5777-4054 (박주찬 형제)",
+  contactInfo: "010-5777-4054 (박주찬 형제)", // "문의" 라벨이 화면에서 자동으로 붙으므로 "문의:" 는 쓰지 않음
 
   /* 접수 마감 안내 문구 (표시만, 실제 차단은 안 함). 비우면 숨김 */
-  deadlineNotice: "접수 마감: 2026년 9월 28일(일)",
+  deadlineNotice: "2026년 9월 28일 일요일까지 접수를 부탁드립니다.",
+
+  /* 접수 완료 화면의 카카오톡 오픈채팅 안내. kakaoOpenChatUrl 을 비우면 숨김 */
+  /* 배열로 주면 줄바꿈되어 표시됩니다 */
+  kakaoOpenChatNotice: [
+    "집회 공지사항이 전달되는 카카오톡 채팅방이 있습니다.",
+    "아래 버튼을 눌러 채팅방에 들어오세요.",
+  ],
+  kakaoOpenChatUrl: "https://open.kakao.com/o/gH6RJLNi",
 
   /* -----------------------------------------------------------------
    * 2) Google Apps Script 웹앱 URL
@@ -60,9 +68,10 @@ window.APP_CONFIG = {
     /* 배열로 주면 줄바꿈되어 표시됩니다. 비우면 숨김 */
     prayerText: "",
     title: "집회 참가비용 안내",
+    /* **텍스트** 로 감싸면 굵게+밑줄로 강조됩니다 */
     leadText: [
-      "정해진 회비는 없습니다.",
-      "아래 비용을 참고하시어 헌금으로 자유롭게 부담해 주시면 감사하겠습니다.",
+      "**정해진 회비는 없습니다.**",
+      "아래 비용을 참고하시어 **헌금으로 자유롭게 부담**해 주시면 감사하겠습니다.",
     ],
     /* 비용 묶음: name(묶음 제목) + rows[{ icon, label, unit, amount }] */
     groups: [
@@ -127,12 +136,15 @@ window.APP_CONFIG = {
   transport: {
     enabled: true,
     label: "차량",
-    desc: "양평역 및 양평 버스터미널에서 집회장소까지 차량을 운행합니다. 차량 이용 여부를 선택해주세요",
+    /* 배열로 주면 줄바꿈되어 표시됩니다 */
+    desc: [
+      "춘천 시외버스터미널에서 집회장소까지 차량을 운행합니다.",
+      "차량 이용 여부를 선택해주세요",
+      "차량출발 일시: 10월 8일 목요일 오후 1시",
+    ],
     options: [
-      "양평역에서 탑승",
-      "양평 버스터미널에서 탑승",
       "자차 이용 (차량 불필요)",
-      "미정",
+      "춘천 시외버스터미널에서 탑승",
     ],
     askDeparture: false,
     departureOptions: [],
@@ -167,5 +179,6 @@ window.APP_CONFIG = {
     companionNames: true,  // 동반 인원을 입력했으면 그 수만큼 이름 전부
     meals: false,          // 식사: 전혀 안 할 수도 있으므로 0도 통과
     lodging: false,        // 숙박: 전혀 안 할 수도 있으므로 0도 통과
+    transport: true,       // 차량: "선택 안 함" 상태로는 다음으로 못 넘어감
   },
 };
