@@ -132,7 +132,7 @@
           (VALIDATE && step.req ? ' <span class="req">*</span>' : "") + "</h1>" +
         (step.desc && [].concat(step.desc).join("").trim()
           ? '<p class="step__desc">' +
-            [].concat(step.desc).map(function (l) { return esc(l); }).join("<br>") +
+            [].concat(step.desc).map(function (l) { return richText(l); }).join("<br>") +
             "</p>"
           : "") +
         '<div class="step__body" id="stepBody"></div>' +
