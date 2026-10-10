@@ -122,6 +122,7 @@ h2 { font-family: var(--font-display); font-weight: 700; font-size: 20px; margin
   flex: 0 0 auto; display: inline-grid; place-items: center; width: 22px; height: 22px; border-radius: 50%;
   border: 1.5px solid var(--ink); font: 700 12px var(--font-display); font-variant-numeric: tabular-nums;
 }
+.num.blank { visibility: hidden; } /* keeps unnumbered items (Feast) aligned with the numbered ones */
 .what .ref { font-size: 13px; color: var(--muted); font-variant-numeric: tabular-nums; }
 .pills { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 2px; }
 .pill { font-size: 11px; font-weight: 600; letter-spacing: .04em; border-radius: 999px; padding: 2px 8px; }
@@ -216,11 +217,14 @@ const ZONES = [
 ];
 
 // Begins Thu evening Oct 8, ends Sun morning Oct 11 (KST)
-const KINDS = { m: "Morning meeting", a: "Afternoon meeting", e: "Evening meeting" };
+const KINDS = { m: "Morning meeting", a: "Afternoon meeting", e: "Evening meeting", f: "Feast" };
 const KST_TIMES = { m: "10:00", a: "13:30", e: "19:30" };
+// A third entry overrides the usual time for that one session; the Feast is not counted as a numbered session
 const PLAN = [["2026-10-08", "e"], ["2026-10-09", "m"], ["2026-10-09", "a"], ["2026-10-09", "e"],
-              ["2026-10-10", "m"], ["2026-10-10", "a"], ["2026-10-10", "e"], ["2026-10-11", "m"]];
-const SESSIONS = PLAN.map(([d, k]) => ({ kind: k, start: new Date(`${d}T${KST_TIMES[k]}:00+09:00`) }));
+              ["2026-10-10", "m"], ["2026-10-10", "a"], ["2026-10-10", "e"],
+              ["2026-10-11", "f", "09:00"], ["2026-10-11", "m", "10:30"]];
+let count = 0;
+const SESSIONS = PLAN.map(([d, k, t]) => ({ kind: k, no: k === "f" ? null : ++count, start: new Date(`${d}T${t || KST_TIMES[k]}:00+09:00`) }));
 
 // Add the viewer's own zone if it isn't one of the listed ones
 const deviceTz = (() => { try { return Intl.DateTimeFormat().resolvedOptions().timeZone; } catch (e) { return null; } })();
@@ -359,7 +363,7 @@ function render() {
   } else {
     const s = SESSIONS[nextIdx];
     nextEl.innerHTML = `<span class="k">Next · ${countdown(s.start - now)}</span>
-      <span class="t">Session ${nextIdx + 1} · ${KINDS[s.kind]}</span>
+      <span class="t">${s.no ? `Session ${s.no} · ` : ""}${KINDS[s.kind]}</span>
       <span class="s">${dayLabel(z, s.start)} · ${timeStr(z, s.start)} ${abbrOf(z, s.start)}</span>`;
   }
 
@@ -385,7 +389,7 @@ function render() {
       const ref = z.id === "kr" ? "" : `<span class="ref">${dayLabel(KR, s.start)} · ${timeStr(KR, s.start)} KST</span>`;
       html += `<li class="${past ? "past" : ""}">
         <span class="time">${t.hm}<small>${t.ap}</small></span>
-        <div class="what"><strong><span class="num" aria-label="Session ${i + 1}">${i + 1}</span>${KINDS[s.kind]}</strong>${ref}${pills.length ? `<div class="pills">${pills.join("")}</div>` : ""}</div>
+        <div class="what"><strong>${s.no ? `<span class="num" aria-label="Session ${s.no}">${s.no}</span>` : `<span class="num blank" aria-hidden="true"></span>`}${KINDS[s.kind]}</strong>${ref}${pills.length ? `<div class="pills">${pills.join("")}</div>` : ""}</div>
       </li>`;
     });
     html += `</ul></div>`;
