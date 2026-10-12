@@ -3,10 +3,10 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Gathering in Autumn</title>
-<meta name="description" content="Oct 8–11, 2026 · YangPyoung, South Korea. Schedule in your time zone and Zoom details.">
-<meta property="og:title" content="Gathering in Autumn">
-<meta property="og:description" content="Oct 8–11, 2026 · YangPyoung, South Korea. Schedule in your time zone and Zoom details.">
+<title>Pakkret Fellowship Meeting</title>
+<meta name="description" content="Oct 16–18, 2026 · Pakkret, Thailand. Schedule in your time zone and Zoom details.">
+<meta property="og:title" content="Pakkret Fellowship Meeting">
+<meta property="og:description" content="Oct 16–18, 2026 · Pakkret, Thailand. Schedule in your time zone and Zoom details.">
 <meta property="og:type" content="website">
 <style>
 :root { padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); -webkit-text-size-adjust: 100%; }
@@ -17,7 +17,7 @@ body { margin: 0; }
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=Figtree:wght@400;500;600&display=swap">
 <style>
-/* Layout: mobile-first single column. Sticky time-zone chip bar; every time on the page follows the chosen zone. */
+/* Layout: mobile-first single column. Time-zone dropdown; every time on the page follows the chosen zone. */
 :root {
   --paper: #f3f3ef;
   --surface: #ffffff;
@@ -49,23 +49,22 @@ h1 {
   margin: 0; text-wrap: balance;
 }
 .dates { font-family: var(--font-display); font-weight: 500; font-size: 16px; margin: 4px 0 0; }
+.theme { margin: 10px 0 0; padding-left: 12px; border-left: 3px solid var(--ginkgo); display: grid; gap: 2px; }
+.theme b { font-family: var(--font-display); font-weight: 700; font-size: 16px; line-height: 1.25; }
+.theme span { color: var(--muted); font-size: 14px; line-height: 1.4; }
 
-/* Zone bar: compact 3-column grid; 2 columns on very narrow phones */
+/* Zone bar: one dropdown; "Other city…" opens the search picker below it */
 .zonebar { padding: 4px 0 12px; border-bottom: 1px solid var(--line); }
-.zonebar .hint { font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); padding-bottom: 6px; }
-.chips { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px; }
-@media (max-width: 339px) { .chips { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
-.chip {
-  min-width: 0; width: 100%;
-  font: 600 13px var(--font-body); color: var(--ink); text-align: left;
-  background: var(--surface); border: 1px solid var(--line); border-radius: 10px;
-  padding: 6px 8px; cursor: pointer; line-height: 1.25;
+.zonebar .hint { display: block; font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); padding-bottom: 6px; }
+.zone-select {
+  width: 100%; appearance: none; -webkit-appearance: none;
+  font: 600 16px var(--font-body); color: var(--ink);
+  background: var(--surface) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1.5l5 5 5-5' fill='none' stroke='%231c1f26' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") no-repeat right 14px center;
+  border: 1.5px solid var(--ginkgo); border-radius: 10px;
+  padding: 11px 40px 11px 12px; cursor: pointer;
 }
-.chip small { display: block; font-weight: 400; font-size: 10.5px; color: var(--muted); }
-.chip[aria-checked="true"] { background: var(--ginkgo); border-color: var(--ginkgo); color: var(--on-ginkgo); }
-.chip[aria-checked="true"] small { color: var(--on-ginkgo); opacity: .75; }
-.chip.other { border-style: dashed; }
-.chip.other[aria-checked="true"] { border-style: solid; }
+.zone-select:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.zone-select.lang { border-color: var(--line); font-weight: 500; margin-bottom: 14px; }
 .picker { margin-top: 8px; background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 12px; display: grid; gap: 8px; }
 .device {
   font: 600 14px var(--font-body); color: var(--on-ginkgo); background: var(--ginkgo);
@@ -116,15 +115,20 @@ h2 { font-family: var(--font-display); font-weight: 700; font-size: 20px; margin
 .sessions li.past { opacity: .45; }
 .time { font-family: var(--font-display); font-weight: 700; font-size: 18px; font-variant-numeric: tabular-nums; white-space: nowrap; }
 .time small { font-size: 12px; font-weight: 500; margin-left: 2px; }
+/* Burmese and Thai stack marks above and below the line; give them more room */
+:lang(my) .theme b, :lang(my) .theme span, :lang(my) .what strong, :lang(my) .topic, :lang(my) .next .t, :lang(my) .sub,
+:lang(th) .theme span, :lang(th) .topic { line-height: 1.75; }
+.time small.pre { margin: 0 3px 0 0; } /* languages that put the day period first, e.g. Korean 오후 7:00 */
 .what { min-width: 0; display: grid; gap: 2px; }
-.what strong { font-weight: 600; display: flex; align-items: center; gap: 8px; }
+.what strong { font-weight: 600; display: flex; align-items: flex-start; gap: 8px; line-height: 1.35; }
+.what .topic { font-size: 14px; color: var(--muted); line-height: 1.4; padding-left: 30px; }
 .num {
   flex: 0 0 auto; display: inline-grid; place-items: center; width: 22px; height: 22px; border-radius: 50%;
   border: 1.5px solid var(--ink); font: 700 12px var(--font-display); font-variant-numeric: tabular-nums;
 }
-.num.blank { visibility: hidden; } /* keeps unnumbered items (Feast) aligned with the numbered ones */
-.what .ref { font-size: 13px; color: var(--muted); font-variant-numeric: tabular-nums; }
-.pills { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 2px; }
+.num.blank { visibility: hidden; } /* keeps unnumbered items (Q&A, Feast) aligned with the numbered ones */
+.what .ref { font-size: 13px; color: var(--muted); font-variant-numeric: tabular-nums; padding-left: 30px; }
+.pills { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 2px; padding-left: 30px; }
 .pill { font-size: 11px; font-weight: 600; letter-spacing: .04em; border-radius: 999px; padding: 2px 8px; }
 .pill.next-p { background: var(--ginkgo); color: var(--on-ginkgo); }
 .pill.night { border: 1px solid var(--line); color: var(--muted); }
@@ -134,6 +138,7 @@ h2 { font-family: var(--font-display); font-weight: 700; font-size: 20px; margin
 .zoom h2 { margin: 0; }
 .cred { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
 .cred .val { font-family: var(--font-display); font-size: 18px; letter-spacing: .02em; }
+.cred .val.tbd { font-family: var(--font-body); font-size: 16px; font-weight: 500; letter-spacing: 0; color: var(--muted); }
 .copy {
   font: 600 13px var(--font-body); color: var(--ink); background: transparent;
   border: 1px solid var(--line); border-radius: 999px; padding: 6px 14px; cursor: pointer; flex: 0 0 auto;
@@ -154,6 +159,7 @@ footer { font-size: 13px; color: var(--muted); }
   .time { font-size: 21px; }
   .next .t { font-size: 24px; }
   .dates { font-size: 19px; }
+  .theme b { font-size: 18px; }
 }
 </style>
 </head>
@@ -161,17 +167,21 @@ footer { font-size: 13px; color: var(--muted); }
 
 <div class="wrap">
   <header>
-    <div class="place">YangPyoung, South Korea</div>
-    <h1>Gathering in Autumn</h1>
-    <p class="dates" id="dates">Oct 8 – 11, 2026</p>
+    <div class="place" data-t="place">Pakkret, Thailand</div>
+    <h1>Pakkret Fellowship Meeting</h1>
+    <p class="dates" id="dates">Oct 16 – 18, 2026</p>
+    <p class="theme"><b data-t="theme">The Final Preparation for the Coming of the King</b>
+      <span data-t="themeSub">Knowing and Cooperative with Christ as the Great High Priest in Perfecting Our Salvation</span></p>
   </header>
 
   <div class="zonebar">
-    <div class="hint">Show times for</div>
-    <div class="chips" id="chips" role="radiogroup" aria-label="Time zone"></div>
+    <label class="hint" for="langSelect" data-t="language">Language</label>
+    <select class="zone-select lang" id="langSelect"></select>
+    <label class="hint" for="zoneSelect" data-t="where">Where are you now?</label>
+    <select class="zone-select" id="zoneSelect"></select>
     <div class="picker" id="picker" hidden>
       <button class="device" id="useDevice" type="button"></button>
-      <label class="lbl" for="tzSearch">Or search for your city</label>
+      <label class="lbl" for="tzSearch" data-t="search">Or search for your city</label>
       <input id="tzSearch" type="search" placeholder="e.g. Sydney, London, Dubai" autocomplete="off" enterkeyhint="search">
       <ul class="results" id="tzResults"></ul>
     </div>
@@ -183,48 +193,271 @@ footer { font-size: 13px; color: var(--muted); }
   <section class="overview" id="overview" aria-label="Overview"></section>
 
   <section>
-    <h2>Schedule</h2>
+    <h2 data-t="schedule">Schedule</h2>
     <p class="sub" id="schedSub"></p>
     <div id="schedule"></div>
   </section>
 
   <section class="zoom">
-    <h2>Zoom meeting</h2>
+    <h2 data-t="zoom">Zoom meeting</h2>
     <div class="cred">
-      <div><div class="lbl">Meeting ID</div><div class="val" id="zid">864 4145 9436</div></div>
-      <button class="copy" type="button" data-copy="86441459436" data-target="zid">Copy</button>
+      <div><div class="lbl" data-t="meetingId">Meeting ID</div><div class="val" id="zid"></div></div>
+      <button class="copy" type="button" data-target="zid" data-t="copy" hidden>Copy</button>
     </div>
     <div class="cred">
-      <div><div class="lbl">Passcode</div><div class="val" id="zpw">1234</div></div>
-      <button class="copy" type="button" data-copy="1234" data-target="zpw">Copy</button>
+      <div><div class="lbl" data-t="passcode">Passcode</div><div class="val" id="zpw"></div></div>
+      <button class="copy" type="button" data-target="zpw" data-t="copy" hidden>Copy</button>
     </div>
-    <a class="join" href="https://zoom.us/j/86441459436" target="_blank" rel="noopener">Open in Zoom</a>
+    <a class="join" id="zjoin" target="_blank" rel="noopener" data-t="join" hidden>Open in Zoom</a>
   </section>
 
-  <footer>Meeting times are set in Korea time (KST). Times in other zones are converted automatically.</footer>
+  <footer data-t="footer">Meeting times are set in Thailand time (ICT). Times in other zones are converted automatically.</footer>
 </div>
 
 <script>
+// Host first, then nearest to Pakkret
 const ZONES = [
-  { id: "kr", name: "Korea",                 place: "Seoul",           tz: "Asia/Seoul",          abbr: "KST" },
-  { id: "ca", name: "California",            place: "Fountain Valley", tz: "America/Los_Angeles", abbr: "PDT" },
-  { id: "ph", name: "Philippines",           place: "Manila",          tz: "Asia/Manila",         abbr: "PHT" },
-  { id: "th", name: "Thailand",              place: "Bangkok",         tz: "Asia/Bangkok",        abbr: "ICT" },
-  { id: "eu", name: "Europe", place: "Berlin · Zurich", tz: "Europe/Berlin",       abbr: "CEST", also: ["Europe/Zurich"] },
-  { id: "vn", name: "Vietnam",               place: "Ho Chi Minh",     tz: "Asia/Ho_Chi_Minh",    abbr: "ICT", also: ["Asia/Saigon"] },
-  { id: "mm", name: "Myanmar",               place: "Yangon",          tz: "Asia/Yangon",         abbr: "MMT", also: ["Asia/Rangoon"] },
-  { id: "to", name: "Canada",                place: "Toronto",         tz: "America/Toronto",     abbr: "EDT" },
+  { id: "th", place: "Pakkret",           tz: "Asia/Bangkok",        abbr: "ICT" },
+  { id: "mm", place: "Yangon",            tz: "Asia/Yangon",         abbr: "MMT", also: ["Asia/Rangoon"] },
+  { id: "vn", place: "Ho Chi Minh",       tz: "Asia/Ho_Chi_Minh",    abbr: "ICT", also: ["Asia/Saigon"] },
+  { id: "ph", place: "Manila",            tz: "Asia/Manila",         abbr: "PHT" },
+  { id: "kr", place: "Seoul",             tz: "Asia/Seoul",          abbr: "KST" },
+  { id: "eu", place: "Stuttgart, Zurich", tz: "Europe/Berlin",       abbr: "CEST", also: ["Europe/Zurich"] },
+  { id: "ca", place: "Fountain Valley",   tz: "America/Los_Angeles", abbr: "PDT" },
+  { id: "to", place: "Toronto",           tz: "America/Toronto",     abbr: "EDT" },
 ];
 
-// Begins Thu evening Oct 8, ends Sun morning Oct 11 (KST)
-const KINDS = { m: "Morning meeting", a: "Afternoon meeting", e: "Evening meeting", f: "Feast" };
-const KST_TIMES = { m: "10:00", a: "13:30", e: "19:30" };
-// A third entry overrides the usual time for that one session; the Feast is not counted as a numbered session
-const PLAN = [["2026-10-08", "e"], ["2026-10-09", "m"], ["2026-10-09", "a"], ["2026-10-09", "e"],
-              ["2026-10-10", "m"], ["2026-10-10", "a"], ["2026-10-10", "e"],
-              ["2026-10-11", "f", "09:00"], ["2026-10-11", "m", "10:30"]];
+// Fill these in once decided (e.g. id: "864 4145 9436", passcode: "1234").
+// While one is empty the page shows "To be decided" and hides its Copy button; the Zoom button appears once the ID is set.
+const ZOOM = { id: "", passcode: "" };
+
+// Begins Fri evening Oct 16, ends Sun afternoon Oct 18 (Thailand time, UTC+7).
+// Titles and topics for each entry live in TEXT[lang].sessions, in the same order;
+// an entry without a topic (Q&A, Feast) is not counted as a numbered session.
+const PLAN = [
+  ["2026-10-16", "19:00"],
+  ["2026-10-17", "08:30"], ["2026-10-17", "10:30"], ["2026-10-17", "15:30"], ["2026-10-17", "19:00"],
+  ["2026-10-18", "09:30"], ["2026-10-18", "10:45"], ["2026-10-18", "15:30"],
+];
+
+// Ordered like ZONES: English, then the host, then nearest to Pakkret.
+// {x} placeholders are filled in by t(). `locale` drives date/time formatting.
+const TEXT = {
+  en: {
+    label: "English", locale: "en-US",
+    place: "Pakkret, Thailand",
+    theme: "The Final Preparation for the Coming of the King",
+    themeSub: "Knowing and Cooperative with Christ as the Great High Priest in Perfecting Our Salvation",
+    language: "Language", where: "Where are you now?", otherCity: "Other city…",
+    useDevice: "Use my phone's time · {city}", search: "Or search for your city",
+    placeholder: "e.g. Sydney, London, Dubai", noCity: "No city found. Try a nearby major city.",
+    nowIn: "Now in {zone}:", next: "Next", inDays: "in {d}d {h}h", inHours: "in {h}h {m}m", inMins: "in {m} min",
+    session: "Session {n}", complete: "Gathering complete", thanks: "Thank you for joining",
+    begins: "Begins", final: "Final session", schedule: "Schedule",
+    allHost: "All times in Thailand time (ICT).",
+    shownIn: "Times shown in {zone} time ({abbr}). Thailand time is listed under each meeting.",
+    lateNight: "Late night", zoom: "Zoom meeting", meetingId: "Meeting ID", passcode: "Passcode",
+    tbd: "To be decided", copy: "Copy", copied: "Copied", selected: "Selected", join: "Open in Zoom",
+    footer: "Meeting times are set in Thailand time (ICT). Times in other zones are converted automatically.",
+    zones: { th: "Thailand", mm: "Myanmar", vn: "Vietnam", ph: "Philippines", kr: "Korea", eu: "Europe", ca: "California", to: "Canada" },
+    sessions: [
+      ["Signs of the Times", "The end of this age is approaching"],
+      ["God's Eternal Plan and Our Goal", "The way of transformation and perfection"],
+      ["Are You Serving the Lord or Serving the Temple? (Ezekiel 44)", "Are serving the saints and do gospel work serving the Lord?"],
+      ["Q&A"],
+      ["First Steps of a Holy Priest", "How to begin after realizing our calling as God's holy priest"],
+      ["Lord's Table Feast"],
+      ["Beyond the Veil", "Experiencing Christ's salvation by mingling faith with the Word, the hidden Manna, and His resurrection life"],
+      ["Get to know Christ as the Great High Priest", "Perfecting our salvation (The Book of Hebrews)"],
+    ],
+  },
+  th: {
+    label: "ไทย", locale: "th-TH",
+    place: "ปากเกร็ด ประเทศไทย",
+    theme: "การเตรียมพร้อมครั้งสุดท้ายสำหรับการเสด็จมาของกษัตริย์",
+    themeSub: "รู้จักและร่วมมือกับพระคริสต์ผู้ทรงเป็นมหาปุโรหิต ในการทำให้ความรอดของเราสมบูรณ์",
+    language: "ภาษา", where: "ตอนนี้คุณอยู่ที่ไหน?", otherCity: "เมืองอื่น…",
+    useDevice: "ใช้เวลาของโทรศัพท์ · {city}", search: "หรือค้นหาเมืองของคุณ",
+    placeholder: "เช่น Sydney, London, Dubai", noCity: "ไม่พบเมือง ลองค้นหาเมืองใหญ่ที่อยู่ใกล้เคียง",
+    nowIn: "เวลาขณะนี้ที่{zone}:", next: "ถัดไป", inDays: "อีก {d} วัน {h} ชม.", inHours: "อีก {h} ชม. {m} นาที", inMins: "อีก {m} นาที",
+    session: "ครั้งที่ {n}", complete: "การประชุมเสร็จสิ้นแล้ว", thanks: "ขอบคุณที่ร่วมประชุม",
+    begins: "เริ่ม", final: "ครั้งสุดท้าย", schedule: "กำหนดการ",
+    allHost: "เวลาทั้งหมดเป็นเวลาประเทศไทย (ICT)",
+    shownIn: "แสดงตามเวลา{zone} ({abbr}) และระบุเวลาประเทศไทยไว้ใต้แต่ละรายการ",
+    lateNight: "ดึก", zoom: "ประชุม Zoom", meetingId: "Meeting ID", passcode: "รหัสผ่าน",
+    tbd: "รอประกาศ", copy: "คัดลอก", copied: "คัดลอกแล้ว", selected: "เลือกแล้ว", join: "เปิดใน Zoom",
+    footer: "เวลาประชุมกำหนดตามเวลาประเทศไทย (ICT) เวลาในเขตอื่นจะแปลงให้อัตโนมัติ",
+    zones: { th: "ไทย", mm: "เมียนมา", vn: "เวียดนาม", ph: "ฟิลิปปินส์", kr: "เกาหลี", eu: "ยุโรป", ca: "แคลิฟอร์เนีย", to: "แคนาดา" },
+    sessions: [
+      ["หมายสำคัญแห่งยุคสมัย", "วาระสุดท้ายของยุคนี้ใกล้เข้ามาแล้ว"],
+      ["แผนการนิรันดร์ของพระเจ้าและเป้าหมายของเรา", "หนทางแห่งการเปลี่ยนแปลงและความสมบูรณ์"],
+      ["ท่านกำลังปรนนิบัติองค์พระผู้เป็นเจ้า หรือปรนนิบัติพระวิหาร? (เอเสเคียล 44)", "การรับใช้วิสุทธิชนและการประกาศข่าวประเสริฐ คือการปรนนิบัติองค์พระผู้เป็นเจ้าหรือไม่?"],
+      ["ถาม-ตอบ"],
+      ["ก้าวแรกของปุโรหิตผู้บริสุทธิ์", "จะเริ่มต้นอย่างไร เมื่อตระหนักถึงการทรงเรียกให้เป็นปุโรหิตผู้บริสุทธิ์ของพระเจ้า"],
+      ["งานเลี้ยงโต๊ะขององค์พระผู้เป็นเจ้า"],
+      ["ภายในม่าน", "ประสบความรอดของพระคริสต์ โดยผสานความเชื่อเข้ากับพระวจนะ มานาที่ซ่อนไว้ และชีวิตแห่งการเป็นขึ้นจากตายของพระองค์"],
+      ["รู้จักพระคริสต์ผู้ทรงเป็นมหาปุโรหิต", "การทำให้ความรอดของเราสมบูรณ์ (พระธรรมฮีบรู)"],
+    ],
+  },
+  my: {
+    label: "မြန်မာ", locale: "my-MM",
+    place: "Pakkret၊ ထိုင်းနိုင်ငံ",
+    theme: "ဘုရင်ကြွလာခြင်းအတွက် နောက်ဆုံးပြင်ဆင်ခြင်း",
+    themeSub: "ကျွန်ုပ်တို့၏ ကယ်တင်ခြင်းကို စုံလင်စေရာတွင် ယဇ်ပုရောဟိတ်မင်းကြီး ခရစ်တော်ကို သိကျွမ်း၍ ပူးပေါင်းဆောင်ရွက်ခြင်း",
+    language: "ဘာသာစကား", where: "ယခု သင် ဘယ်မှာ ရှိပါသလဲ။", otherCity: "အခြားမြို့…",
+    useDevice: "ဖုန်း၏ အချိန်ကို သုံးမည် · {city}", search: "သို့မဟုတ် သင့်မြို့ကို ရှာပါ",
+    placeholder: "ဥပမာ Sydney, London, Dubai", noCity: "မြို့ကို မတွေ့ပါ။ အနီးရှိ မြို့ကြီးတစ်ခုကို ရှာကြည့်ပါ။",
+    nowIn: "{zone} ယခုအချိန်:", next: "နောက်တစ်ခု", inDays: "{d} ရက် {h} နာရီ အကြာ", inHours: "{h} နာရီ {m} မိနစ် အကြာ", inMins: "{m} မိနစ် အကြာ",
+    session: "အစည်းအဝေး {n}", complete: "အစည်းအဝေး ပြီးဆုံးပါပြီ", thanks: "ပါဝင်ပေးသည့်အတွက် ကျေးဇူးတင်ပါသည်",
+    begins: "စတင်ချိန်", final: "နောက်ဆုံး အစည်းအဝေး", schedule: "အစီအစဉ်",
+    allHost: "အချိန်အားလုံးသည် ထိုင်းစံတော်ချိန် (ICT) ဖြစ်သည်။",
+    shownIn: "{zone} အချိန် ({abbr}) ဖြင့် ပြထားသည်။ အစည်းအဝေးတစ်ခုချင်းအောက်တွင် ထိုင်းအချိန်ကို ဖော်ပြထားသည်။",
+    lateNight: "ညနက်", zoom: "Zoom အစည်းအဝေး", meetingId: "Meeting ID", passcode: "စကားဝှက်",
+    tbd: "နောက်မှ အကြောင်းကြားပါမည်", copy: "ကူးယူ", copied: "ကူးယူပြီး", selected: "ရွေးပြီး", join: "Zoom တွင် ဖွင့်ရန်",
+    footer: "အစည်းအဝေးအချိန်များကို ထိုင်းစံတော်ချိန် (ICT) ဖြင့် သတ်မှတ်ထားပြီး အခြားဒေသအချိန်များကို အလိုအလျောက် ပြောင်းပေးသည်။",
+    zones: { th: "ထိုင်း", mm: "မြန်မာ", vn: "ဗီယက်နမ်", ph: "ဖိလစ်ပိုင်", kr: "ကိုရီးယား", eu: "ဥရောပ", ca: "ကယ်လီဖိုးနီးယား", to: "ကနေဒါ" },
+    sessions: [
+      ["ကာလ၏ နိမိတ်လက္ခဏာများ", "ဤခေတ်၏ အဆုံးသည် နီးကပ်လာပြီ"],
+      ["ဘုရားသခင်၏ ထာဝရအကြံအစည်နှင့် ကျွန်ုပ်တို့၏ ပန်းတိုင်", "ပြောင်းလဲခြင်းနှင့် စုံလင်ခြင်းသို့ ရောက်သောလမ်း"],
+      ["သင်သည် သခင်ဘုရားကို အမှုတော်ဆောင်နေသလော၊ ဗိမာန်တော်ကို အမှုဆောင်နေသလော။ (ယေဇကျေလ ၄၄)", "သန့်ရှင်းသူများကို ပြုစုခြင်းနှင့် ဧဝံဂေလိအမှုတော်ဆောင်ခြင်းသည် သခင်ဘုရားကို အမှုတော်ဆောင်ခြင်း ဖြစ်သလော။"],
+      ["အမေး-အဖြေ"],
+      ["သန့်ရှင်းသော ယဇ်ပုရောဟိတ်၏ ပထမခြေလှမ်းများ", "ဘုရားသခင်၏ သန့်ရှင်းသော ယဇ်ပုရောဟိတ်အဖြစ် ခေါ်တော်မူခြင်းကို သိမြင်ပြီးနောက် မည်သို့ စတင်ရမည်နည်း"],
+      ["သခင်ဘုရား၏ စားပွဲတော်ပွဲ"],
+      ["ကုလားကာအတွင်းသို့", "ယုံကြည်ခြင်းကို နှုတ်ကပါဌ်တော်၊ ဝှက်ထားသော မန္နနှင့် ကိုယ်တော်၏ ရှင်ပြန်ထမြောက်ခြင်းအသက်နှင့် ပေါင်းစပ်၍ ခရစ်တော်၏ ကယ်တင်ခြင်းကို တွေ့ကြုံခြင်း"],
+      ["ယဇ်ပုရောဟိတ်မင်းကြီး ခရစ်တော်ကို သိကျွမ်းခြင်း", "ကျွန်ုပ်တို့၏ ကယ်တင်ခြင်းကို စုံလင်စေခြင်း (ဟေဗြဲဩဝါဒစာ)"],
+    ],
+  },
+  vi: {
+    label: "Tiếng Việt", locale: "vi-VN",
+    place: "Pakkret, Thái Lan",
+    theme: "Sự chuẩn bị cuối cùng cho sự đến của Vua",
+    themeSub: "Biết và hợp tác với Đấng Christ là Thầy Tế Lễ Thượng Phẩm trong việc hoàn thiện sự cứu rỗi của chúng ta",
+    language: "Ngôn ngữ", where: "Bạn đang ở đâu?", otherCity: "Thành phố khác…",
+    useDevice: "Dùng giờ của điện thoại · {city}", search: "Hoặc tìm thành phố của bạn",
+    placeholder: "VD: Sydney, London, Dubai", noCity: "Không tìm thấy thành phố. Hãy thử một thành phố lớn gần đó.",
+    nowIn: "Giờ hiện tại ở {zone}:", next: "Tiếp theo", inDays: "còn {d} ngày {h} giờ", inHours: "còn {h} giờ {m} phút", inMins: "còn {m} phút",
+    session: "Buổi {n}", complete: "Kỳ nhóm đã kết thúc", thanks: "Cảm ơn bạn đã tham dự",
+    begins: "Bắt đầu", final: "Buổi cuối", schedule: "Lịch trình",
+    allHost: "Tất cả thời gian theo giờ Thái Lan (ICT).",
+    shownIn: "Hiển thị theo giờ {zone} ({abbr}). Giờ Thái Lan được ghi dưới mỗi buổi.",
+    lateNight: "Đêm khuya", zoom: "Họp Zoom", meetingId: "Meeting ID", passcode: "Mật mã",
+    tbd: "Sẽ thông báo sau", copy: "Sao chép", copied: "Đã sao chép", selected: "Đã chọn", join: "Mở trong Zoom",
+    footer: "Thời gian các buổi nhóm theo giờ Thái Lan (ICT). Giờ ở khu vực khác được tự động chuyển đổi.",
+    zones: { th: "Thái Lan", mm: "Myanmar", vn: "Việt Nam", ph: "Philippines", kr: "Hàn Quốc", eu: "Châu Âu", ca: "California", to: "Canada" },
+    sessions: [
+      ["Dấu hiệu của thời đại", "Sự cuối cùng của thời đại này đang đến gần"],
+      ["Kế hoạch đời đời của Đức Chúa Trời và mục tiêu của chúng ta", "Con đường biến đổi và hoàn thiện"],
+      ["Bạn đang phục vụ Chúa hay phục vụ đền thờ? (Ê-xê-chi-ên 44)", "Phục vụ các thánh đồ và làm công tác Phúc Âm có phải là phục vụ Chúa không?"],
+      ["Hỏi & Đáp"],
+      ["Những bước đầu của một thầy tế lễ thánh", "Bắt đầu thế nào sau khi nhận biết sự kêu gọi làm thầy tế lễ thánh của Đức Chúa Trời"],
+      ["Tiệc Bàn của Chúa"],
+      ["Vào bên trong bức màn", "Kinh nghiệm sự cứu rỗi của Đấng Christ bằng cách hòa hiệp đức tin với Lời Chúa, ma-na ẩn giấu và sự sống phục sinh của Ngài"],
+      ["Nhận biết Đấng Christ là Thầy Tế Lễ Thượng Phẩm", "Hoàn thiện sự cứu rỗi của chúng ta (Sách Hê-bơ-rơ)"],
+    ],
+  },
+  fil: {
+    label: "Filipino", locale: "fil-PH",
+    place: "Pakkret, Thailand",
+    theme: "Ang Huling Paghahanda para sa Pagdating ng Hari",
+    themeSub: "Pagkilala at Pakikipagtulungan kay Cristo bilang Dakilang Punong Saserdote sa Pagpapasakdal ng Ating Kaligtasan",
+    language: "Wika", where: "Nasaan ka ngayon?", otherCity: "Ibang lungsod…",
+    useDevice: "Gamitin ang oras ng aking telepono · {city}", search: "O hanapin ang iyong lungsod",
+    placeholder: "hal. Sydney, London, Dubai", noCity: "Walang nahanap na lungsod. Subukan ang kalapit na malaking lungsod.",
+    nowIn: "Oras ngayon sa {zone}:", next: "Susunod", inDays: "{d} araw {h} oras pa", inHours: "{h} oras {m} min pa", inMins: "{m} min pa",
+    session: "Pulong {n}", complete: "Tapos na ang pagtitipon", thanks: "Salamat sa inyong pagdalo",
+    begins: "Simula", final: "Huling pulong", schedule: "Iskedyul",
+    allHost: "Lahat ng oras ay sa oras ng Thailand (ICT).",
+    shownIn: "Ipinapakita sa oras ng {zone} ({abbr}). Nakalista sa ilalim ng bawat pulong ang oras sa Thailand.",
+    lateNight: "Hatinggabi", zoom: "Zoom meeting", meetingId: "Meeting ID", passcode: "Passcode",
+    tbd: "Iaanunsyo pa", copy: "Kopyahin", copied: "Nakopya", selected: "Napili", join: "Buksan sa Zoom",
+    footer: "Ang mga oras ng pulong ay nakatakda sa oras ng Thailand (ICT). Awtomatikong kino-convert ang oras sa ibang lugar.",
+    zones: { th: "Thailand", mm: "Myanmar", vn: "Vietnam", ph: "Pilipinas", kr: "Korea", eu: "Europa", ca: "California", to: "Canada" },
+    sessions: [
+      ["Mga Tanda ng Panahon", "Nalalapit na ang wakas ng panahong ito"],
+      ["Ang Walang-hanggang Plano ng Diyos at ang Ating Layunin", "Ang daan ng pagbabago at kasakdalan"],
+      ["Naglilingkod Ka ba sa Panginoon o sa Templo? (Ezekiel 44)", "Ang paglilingkod ba sa mga banal at ang gawain ng ebanghelyo ay paglilingkod sa Panginoon?"],
+      ["Tanong at Sagot"],
+      ["Mga Unang Hakbang ng Isang Banal na Saserdote", "Paano magsimula matapos maunawaan ang ating pagkatawag bilang banal na saserdote ng Diyos"],
+      ["Piging sa Hapag ng Panginoon"],
+      ["Sa Loob ng Tabing", "Pagdanas sa kaligtasan ni Cristo sa pamamagitan ng paghahalo ng pananampalataya sa Salita, sa nakatagong Mana, at sa Kanyang buhay ng pagkabuhay na muli"],
+      ["Kilalanin si Cristo bilang Dakilang Punong Saserdote", "Ang pagpapasakdal ng ating kaligtasan (Aklat ng mga Hebreo)"],
+    ],
+  },
+  ko: {
+    label: "한국어", locale: "ko-KR",
+    place: "태국 빡끄렛",
+    theme: "왕의 오심을 위한 마지막 준비",
+    themeSub: "우리의 구원을 온전케 하시는 대제사장 그리스도를 알고 그분과 협력함",
+    language: "언어", where: "지금 어디에 계신가요?", otherCity: "다른 도시…",
+    useDevice: "내 기기 시간 사용 · {city}", search: "또는 도시 검색",
+    placeholder: "예: Sydney, London, Dubai", noCity: "도시를 찾을 수 없습니다. 가까운 큰 도시로 검색해 보세요.",
+    nowIn: "{zone} 현재 시각:", next: "다음", inDays: "{d}일 {h}시간 후", inHours: "{h}시간 {m}분 후", inMins: "{m}분 후",
+    session: "{n}번째 집회", complete: "집회가 모두 끝났습니다", thanks: "함께해 주셔서 감사합니다",
+    begins: "시작", final: "마지막 집회", schedule: "일정",
+    allHost: "모든 시간은 태국 시간(ICT) 기준입니다.",
+    shownIn: "{zone} 시간({abbr}) 기준입니다. 각 집회 아래에 태국 시간을 함께 표시합니다.",
+    lateNight: "심야", zoom: "Zoom 회의", meetingId: "회의 ID", passcode: "암호",
+    tbd: "추후 공지", copy: "복사", copied: "복사됨", selected: "선택됨", join: "Zoom으로 열기",
+    footer: "집회 시간은 태국 시간(ICT) 기준이며, 다른 지역 시간은 자동으로 변환됩니다.",
+    zones: { th: "태국", mm: "미얀마", vn: "베트남", ph: "필리핀", kr: "한국", eu: "유럽", ca: "캘리포니아", to: "캐나다" },
+    sessions: [
+      ["시대의 징조", "이 시대의 끝이 다가오고 있다"],
+      ["하나님의 영원한 계획과 우리의 목표", "변화와 온전함에 이르는 길"],
+      ["주님을 섬기는가, 성전을 섬기는가? (에스겔 44장)", "성도를 섬기고 복음을 전하는 일이 곧 주님을 섬기는 것인가?"],
+      ["질의응답"],
+      ["거룩한 제사장의 첫걸음", "하나님의 거룩한 제사장으로 부르심을 깨달은 후 어떻게 시작할 것인가"],
+      ["주의 만찬"],
+      ["휘장 안으로", "믿음을 말씀과 화합하여, 감추었던 만나와 그분의 부활 생명으로 그리스도의 구원을 체험함"],
+      ["대제사장이신 그리스도를 알라", "우리의 구원을 온전케 하심 (히브리서)"],
+    ],
+  },
+  de: {
+    label: "Deutsch", locale: "de-DE",
+    place: "Pakkret, Thailand",
+    theme: "Die letzte Vorbereitung auf das Kommen des Königs",
+    themeSub: "Christus als den großen Hohenpriester kennen und mit ihm zusammenwirken in der Vollendung unserer Errettung",
+    language: "Sprache", where: "Wo bist du gerade?", otherCity: "Andere Stadt…",
+    useDevice: "Zeit meines Geräts verwenden · {city}", search: "Oder nach deiner Stadt suchen",
+    placeholder: "z. B. Sydney, London, Dubai", noCity: "Keine Stadt gefunden. Versuche eine größere Stadt in der Nähe.",
+    nowIn: "Jetzt in {zone}:", next: "Nächstes", inDays: "in {d} T. {h} Std.", inHours: "in {h} Std. {m} Min.", inMins: "in {m} Min.",
+    session: "Treffen {n}", complete: "Die Konferenz ist beendet", thanks: "Danke für deine Teilnahme",
+    begins: "Beginn", final: "Letztes Treffen", schedule: "Programm",
+    allHost: "Alle Zeiten in thailändischer Zeit (ICT).",
+    shownIn: "Zeiten für {zone} ({abbr}). Die thailändische Zeit steht unter jedem Treffen.",
+    lateNight: "Spät nachts", zoom: "Zoom-Meeting", meetingId: "Meeting-ID", passcode: "Kenncode",
+    tbd: "Wird noch bekannt gegeben", copy: "Kopieren", copied: "Kopiert", selected: "Markiert", join: "In Zoom öffnen",
+    footer: "Die Zeiten richten sich nach thailändischer Zeit (ICT). Zeiten in anderen Zonen werden automatisch umgerechnet.",
+    zones: { th: "Thailand", mm: "Myanmar", vn: "Vietnam", ph: "Philippinen", kr: "Korea", eu: "Europa", ca: "Kalifornien", to: "Kanada" },
+    sessions: [
+      ["Zeichen der Zeit", "Das Ende dieses Zeitalters naht"],
+      ["Gottes ewiger Plan und unser Ziel", "Der Weg der Verwandlung und Vollendung"],
+      ["Dienst du dem Herrn oder dem Tempel? (Hesekiel 44)", "Ist der Dienst an den Heiligen und das Evangeliumswerk ein Dienst für den Herrn?"],
+      ["Fragen & Antworten"],
+      ["Erste Schritte eines heiligen Priesters", "Wie wir beginnen, nachdem wir unsere Berufung als Gottes heilige Priester erkannt haben"],
+      ["Fest am Tisch des Herrn"],
+      ["Hinter den Vorhang", "Christi Errettung erfahren, indem wir den Glauben mit dem Wort, dem verborgenen Manna und seinem Auferstehungsleben vermischen"],
+      ["Christus als den großen Hohenpriester kennenlernen", "Die Vollendung unserer Errettung (Hebräerbrief)"],
+    ],
+  },
+};
+
+const SESSIONS = PLAN.map(([d, time], i) => ({ i, start: new Date(`${d}T${time}:00+07:00`) }));
 let count = 0;
-const SESSIONS = PLAN.map(([d, k, t]) => ({ kind: k, no: k === "f" ? null : ++count, start: new Date(`${d}T${t || KST_TIMES[k]}:00+09:00`) }));
+TEXT.en.sessions.forEach(([, topic], i) => { SESSIONS[i].no = topic ? ++count : null; });
+
+// Language: ?lang=xx link, then the saved choice, then the browser's language, else English
+const matchLang = code => {
+  code = (code || "").toLowerCase();
+  if (code.startsWith("tl")) return "fil";
+  return Object.keys(TEXT).find(k => code === k || code.startsWith(k + "-")) || null;
+};
+let lang = matchLang(new URLSearchParams(location.search).get("lang"));
+if (!lang) { try { lang = matchLang(localStorage.getItem("lang")); } catch (e) {} }
+if (!lang) lang = (navigator.languages || [navigator.language]).map(matchLang).find(Boolean) || "en";
+
+const L = () => TEXT[lang];
+const t = (key, vars = {}) => L()[key].replace(/\{(\w+)\}/g, (_, k) => vars[k]);
+const zoneName = z => z.id === "custom" ? z.name : L().zones[z.id];
 
 // Add the viewer's own zone if it isn't one of the listed ones
 const deviceTz = (() => { try { return Intl.DateTimeFormat().resolvedOptions().timeZone; } catch (e) { return null; } })();
@@ -248,44 +481,72 @@ function choose(z) {
   current = z;
   try { localStorage.setItem("zone", z.id === "custom" ? "tz:" + z.tz : z.id); } catch (e) {}
   document.getElementById("picker").hidden = true;
+  renderSelect();
   render();
 }
 
-const fmt = (tz, opts) => new Intl.DateTimeFormat("en-US", { timeZone: tz, ...opts });
+// Gregorian calendar and Latin digits in every language (Thai would otherwise show year 2569, Burmese its own digits)
+const fmt = (tz, opts, locale = "en-US") => new Intl.DateTimeFormat(locale + "-u-ca-gregory-nu-latn", { timeZone: tz, ...opts });
 const abbrOf = (z, date) => z.abbr || (fmt(z.tz, { timeZoneName: "short" }).formatToParts(date).find(p => p.type === "timeZoneName") || {}).value || "";
+// 12- or 24-hour clock follows the language; the day period may come before the time (Korean 오후 7:00)
 const timeParts = (z, d) => {
-  const parts = fmt(z.tz, { hour: "numeric", minute: "2-digit", hour12: true }).formatToParts(d);
-  const get = t => (parts.find(p => p.type === t) || {}).value;
-  return { hm: `${get("hour")}:${get("minute")}`, ap: get("dayPeriod"), h24: +fmt(z.tz, { hour: "numeric", hourCycle: "h23" }).format(d) };
+  const parts = fmt(z.tz, { hour: "numeric", minute: "2-digit" }, L().locale).formatToParts(d);
+  const get = type => (parts.find(p => p.type === type) || {}).value;
+  const ap = get("dayPeriod") || "";
+  return {
+    hm: `${ap ? get("hour") : get("hour").padStart(2, "0")}:${get("minute")}`, ap,
+    apFirst: !!ap && parts.findIndex(p => p.type === "dayPeriod") < parts.findIndex(p => p.type === "hour"),
+    h24: +fmt(z.tz, { hour: "numeric", hourCycle: "h23" }).format(d),
+  };
 };
-const dayLabel = (z, d) => fmt(z.tz, { weekday: "short", month: "short", day: "numeric" }).format(d);
-const timeStr = (z, d) => { const t = timeParts(z, d); return `${t.hm} ${t.ap}`; };
-const KR = ZONES[0];
+const dayLabel = (z, d) => fmt(z.tz, { weekday: "short", month: "short", day: "numeric" }, L().locale).format(d);
+const timeStr = (z, d) => { const p = timeParts(z, d); return !p.ap ? p.hm : p.apFirst ? `${p.ap} ${p.hm}` : `${p.hm} ${p.ap}`; };
+const HOST = ZONES[0];
 
-function renderChips() {
-  const box = document.getElementById("chips");
-  box.innerHTML = "";
-  ZONES.forEach(z => {
-    const b = document.createElement("button");
-    b.type = "button"; b.className = "chip"; b.id = "zone-" + z.id;
-    b.setAttribute("role", "radio");
-    b.setAttribute("aria-checked", z === current);
-    b.innerHTML = `${z.name}<small>${z.place} ${abbrOf(z, SESSIONS[0].start)}</small>`;
-    b.addEventListener("click", () => choose(z));
-    box.appendChild(b);
-  });
-  const custom = current.id === "custom";
-  const o = document.createElement("button");
-  o.type = "button"; o.className = "chip other"; o.id = "zone-other";
-  o.setAttribute("role", "radio");
-  o.setAttribute("aria-checked", custom);
-  o.setAttribute("aria-expanded", !document.getElementById("picker").hidden);
-  o.innerHTML = custom
-    ? `${current.name}<small>${current.place} ${abbrOf(current, SESSIONS[0].start)}</small>`
-    : `Other<small>Choose your city</small>`;
-  o.addEventListener("click", togglePicker);
-  box.appendChild(o);
+const zoneText = z => `${zoneName(z)} · ${z.place} (${abbrOf(z, SESSIONS[0].start)})`;
+
+// Rebuilt only when the zone or language changes, so the 30s refresh never disturbs an open dropdown
+function renderSelect() {
+  const sel = document.getElementById("zoneSelect");
+  sel.innerHTML = "";
+  ZONES.forEach(z => sel.add(new Option(zoneText(z), z.id)));
+  if (current.id === "custom") sel.add(new Option(zoneText(current), "custom"));
+  sel.add(new Option(t("otherCity"), "other"));
+  sel.value = document.getElementById("picker").hidden ? current.id : "other";
 }
+
+function applyLang() {
+  document.documentElement.lang = L().locale.split("-")[0];
+  document.querySelectorAll("[data-t]").forEach(el => { el.textContent = t(el.dataset.t); });
+  document.getElementById("tzSearch").placeholder = t("placeholder");
+  document.getElementById("langSelect").value = lang;
+  renderZoom();
+  if (deviceTz) document.getElementById("useDevice").textContent = t("useDevice", { city: cityOf(deviceTz) });
+  showResults(document.getElementById("tzSearch").value);
+  renderSelect();
+  render();
+}
+
+function renderZoom() {
+  [["zid", ZOOM.id], ["zpw", ZOOM.passcode]].forEach(([id, v]) => {
+    const el = document.getElementById(id), btn = document.querySelector(`.copy[data-target="${id}"]`);
+    el.textContent = v || t("tbd");
+    el.classList.toggle("tbd", !v);
+    btn.hidden = !v;
+    btn.dataset.copy = v.replace(/\s/g, "");
+  });
+  const join = document.getElementById("zjoin");
+  join.hidden = !ZOOM.id;
+  if (ZOOM.id) join.href = "https://zoom.us/j/" + ZOOM.id.replace(/\s/g, "");
+}
+
+const langSel = document.getElementById("langSelect");
+Object.entries(TEXT).forEach(([k, v]) => langSel.add(new Option(v.label, k)));
+langSel.addEventListener("change", e => {
+  lang = e.target.value;
+  try { localStorage.setItem("lang", lang); } catch (e) {}
+  applyLang();
+});
 
 const ALL_TZ = (() => {
   try { return Intl.supportedValuesOf("timeZone").filter(t => t.includes("/") && !t.startsWith("Etc/")); }
@@ -297,17 +558,19 @@ const offsetOf = tz => {
   } catch (e) { return ""; }
 };
 
-function togglePicker() {
-  const pk = document.getElementById("picker");
-  pk.hidden = !pk.hidden;
-  document.getElementById("zone-other").setAttribute("aria-expanded", !pk.hidden);
-  if (!pk.hidden) {
-    const dev = document.getElementById("useDevice");
-    dev.hidden = !deviceTz;
-    if (deviceTz) dev.textContent = `Use my phone's time · ${cityOf(deviceTz)}`;
-    showResults("");
-  }
+function openPicker() {
+  document.getElementById("picker").hidden = false;
+  document.getElementById("useDevice").hidden = !deviceTz;
+  document.getElementById("tzSearch").value = "";
+  showResults("");
 }
+
+document.getElementById("zoneSelect").addEventListener("change", e => {
+  const v = e.target.value;
+  if (v === "other") openPicker();
+  else if (v !== "custom") choose(ZONES.find(z => z.id === v));
+  else document.getElementById("picker").hidden = true;
+});
 
 function showResults(q) {
   const ul = document.getElementById("tzResults");
@@ -315,7 +578,7 @@ function showResults(q) {
   if (!q) { ul.innerHTML = ""; return; }
   const hits = ALL_TZ.filter(t => t.toLowerCase().replace(/_/g, " ").includes(q)).slice(0, 12);
   if (!hits.length) {
-    ul.innerHTML = `<li class="empty">No city found. Try a nearby major city.</li>`;
+    ul.innerHTML = `<li class="empty">${t("noCity")}</li>`;
     return;
   }
   ul.innerHTML = "";
@@ -335,61 +598,60 @@ document.getElementById("useDevice").addEventListener("click", () => deviceTz &&
 
 function countdown(ms) {
   const m = Math.round(ms / 6e4), d = Math.floor(m / 1440), h = Math.floor(m / 60) % 24, mm = m % 60;
-  if (d > 0) return `in ${d}d ${h}h`;
-  if (h > 0) return `in ${h}h ${mm}m`;
-  return `in ${mm} min`;
+  if (d > 0) return t("inDays", { d, h });
+  if (h > 0) return t("inHours", { h, m: mm });
+  return t("inMins", { m: mm });
 }
 
 function render() {
-  const z = current, now = new Date();
-  renderChips();
+  const z = current, now = new Date(), name = zoneName(z);
 
   document.getElementById("now").innerHTML =
-    `Now in ${z.name}: <b>${dayLabel(z, now)}, ${timeStr(z, now)}</b> ${abbrOf(z, now)}`;
+    `${t("nowIn", { zone: name })} <b>${dayLabel(z, now)}, ${timeStr(z, now)}</b> ${abbrOf(z, now)}`;
 
   const first = SESSIONS[0].start, last = SESSIONS[SESSIONS.length - 1].start;
-  const m1 = fmt(z.tz, { month: "short" }).format(first), m2 = fmt(z.tz, { month: "short" }).format(last);
-  const d1 = fmt(z.tz, { day: "numeric" }).format(first), d2 = fmt(z.tz, { day: "numeric" }).format(last);
-  document.getElementById("dates").textContent = m1 === m2 ? `${m1} ${d1} – ${d2}, 2026` : `${m1} ${d1} – ${m2} ${d2}, 2026`;
+  const range = fmt(z.tz, { year: "numeric", month: "short", day: "numeric" }, L().locale);
+  document.getElementById("dates").textContent = range.formatRange ? range.formatRange(first, last) : `${range.format(first)} – ${range.format(last)}`;
 
   document.getElementById("overview").innerHTML = `
-    <div><span class="lbl">Begins</span><span class="val">${dayLabel(z, first)}</span><span class="val">${timeStr(z, first)}</span></div>
-    <div><span class="lbl">Final session</span><span class="val">${dayLabel(z, last)}</span><span class="val">${timeStr(z, last)}</span></div>`;
+    <div><span class="lbl">${t("begins")}</span><span class="val">${dayLabel(z, first)}</span><span class="val">${timeStr(z, first)}</span></div>
+    <div><span class="lbl">${t("final")}</span><span class="val">${dayLabel(z, last)}</span><span class="val">${timeStr(z, last)}</span></div>`;
 
   const nextIdx = SESSIONS.findIndex(s => s.start > now);
   const nextEl = document.getElementById("next");
   if (nextIdx === -1) {
-    nextEl.innerHTML = `<span class="k">Gathering complete</span><span class="t">Thank you for joining</span>`;
+    nextEl.innerHTML = `<span class="k">${t("complete")}</span><span class="t">${t("thanks")}</span>`;
   } else {
     const s = SESSIONS[nextIdx];
-    nextEl.innerHTML = `<span class="k">Next · ${countdown(s.start - now)}</span>
-      <span class="t">${s.no ? `Session ${s.no} · ` : ""}${KINDS[s.kind]}</span>
+    nextEl.innerHTML = `<span class="k">${t("next")} · ${countdown(s.start - now)}</span>
+      <span class="t">${s.no ? `${t("session", { n: s.no })} · ` : ""}${L().sessions[s.i][0]}</span>
       <span class="s">${dayLabel(z, s.start)} · ${timeStr(z, s.start)} ${abbrOf(z, s.start)}</span>`;
   }
 
-  document.getElementById("schedSub").textContent = z.id === "kr"
-    ? "All times in Korea time (KST)."
-    : `Times shown in ${z.name} time (${abbrOf(z, first)}). Korea time is listed under each meeting.`;
+  document.getElementById("schedSub").textContent = z === HOST
+    ? t("allHost")
+    : t("shownIn", { zone: name, abbr: abbrOf(z, first) });
 
   const groups = new Map();
-  SESSIONS.forEach((s, i) => {
+  SESSIONS.forEach(s => {
     const key = dayLabel(z, s.start);
     if (!groups.has(key)) groups.set(key, []);
-    groups.get(key).push([s, i]);
+    groups.get(key).push(s);
   });
   let html = "";
   groups.forEach((list, day) => {
     html += `<div class="day"><h3>${day}</h3><ul class="sessions">`;
-    list.forEach(([s, i]) => {
-      const t = timeParts(z, s.start);
-      const past = s.start <= now && i !== nextIdx;
+    list.forEach(s => {
+      const p = timeParts(z, s.start), [title, topic] = L().sessions[s.i];
+      const past = s.start <= now && s.i !== nextIdx;
       const pills = [];
-      if (i === nextIdx) pills.push(`<span class="pill next-p">Next</span>`);
-      if (t.h24 < 6 || t.h24 >= 23) pills.push(`<span class="pill night">Late night</span>`);
-      const ref = z.id === "kr" ? "" : `<span class="ref">${dayLabel(KR, s.start)} · ${timeStr(KR, s.start)} KST</span>`;
+      if (s.i === nextIdx) pills.push(`<span class="pill next-p">${t("next")}</span>`);
+      if (p.h24 < 6 || p.h24 >= 23) pills.push(`<span class="pill night">${t("lateNight")}</span>`);
+      const ref = z === HOST ? "" : `<span class="ref">${dayLabel(HOST, s.start)} · ${timeStr(HOST, s.start)} ICT</span>`;
+      const time = !p.ap ? p.hm : p.apFirst ? `<small class="pre">${p.ap}</small>${p.hm}` : `${p.hm}<small>${p.ap}</small>`;
       html += `<li class="${past ? "past" : ""}">
-        <span class="time">${t.hm}<small>${t.ap}</small></span>
-        <div class="what"><strong>${s.no ? `<span class="num" aria-label="Session ${s.no}">${s.no}</span>` : `<span class="num blank" aria-hidden="true"></span>`}${KINDS[s.kind]}</strong>${ref}${pills.length ? `<div class="pills">${pills.join("")}</div>` : ""}</div>
+        <span class="time">${time}</span>
+        <div class="what"><strong>${s.no ? `<span class="num" aria-label="${t("session", { n: s.no })}">${s.no}</span>` : `<span class="num blank" aria-hidden="true"></span>`}<span>${title}</span></strong>${topic ? `<span class="topic">${topic}</span>` : ""}${ref}${pills.length ? `<div class="pills">${pills.join("")}</div>` : ""}</div>
       </li>`;
     });
     html += `</ul></div>`;
@@ -397,16 +659,16 @@ function render() {
   document.getElementById("schedule").innerHTML = html;
 }
 
-render();
+applyLang();
 setInterval(render, 30000);
 
 document.querySelectorAll(".copy").forEach(btn => {
   btn.addEventListener("click", () => {
-    const done = () => { btn.textContent = "Copied"; setTimeout(() => (btn.textContent = "Copy"), 1500); };
+    const done = () => { btn.textContent = t("copied"); setTimeout(() => (btn.textContent = t("copy")), 1500); };
     const fallback = () => {
       const r = document.createRange(); r.selectNodeContents(document.getElementById(btn.dataset.target));
       const s = getSelection(); s.removeAllRanges(); s.addRange(r);
-      btn.textContent = "Selected";
+      btn.textContent = t("selected");
     };
     try { navigator.clipboard.writeText(btn.dataset.copy).then(done, fallback); } catch (e) { fallback(); }
   });
