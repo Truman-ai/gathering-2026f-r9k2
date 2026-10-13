@@ -54,6 +54,12 @@ h1 {
 .theme { margin: 10px 0 0; padding-left: 12px; border-left: 3px solid var(--brand); display: grid; gap: 2px; }
 .theme b { font-family: var(--font-display); font-weight: 700; font-size: 16px; line-height: 1.25; }
 .theme span { color: var(--muted); font-size: 14px; line-height: 1.4; }
+.share {
+  display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%;
+  font: 600 14px var(--font-body); color: var(--ink); background: transparent;
+  border: 1px solid var(--brand); border-radius: 12px; padding: 12px 16px; cursor: pointer;
+}
+.share svg { flex: 0 0 auto; color: var(--accent); }
 
 /* Zone bar: one dropdown; "Other city…" opens the search picker below it */
 .zonebar { padding: 4px 0 12px; border-bottom: 1px solid var(--line); }
@@ -213,6 +219,11 @@ footer { font-size: 13px; color: var(--muted); }
     <a class="join" id="zjoin" target="_blank" rel="noopener" data-t="join" hidden>Open in Zoom</a>
   </section>
 
+  <button class="share" id="share" type="button">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12"/><path d="M7 8l5-5 5 5"/><path d="M5 13v6a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-6"/></svg>
+    <span data-t="share">Share with fellow priests</span>
+  </button>
+
   <footer data-t="footer">Meeting times are set in Thailand time (ICT). Times in other zones are converted automatically.</footer>
 </div>
 
@@ -247,6 +258,7 @@ const PLAN = [
 const TEXT = {
   en: {
     label: "English", locale: "en-US",
+    share: "Share with fellow priests", linkCopied: "Link copied",
     place: "Pakkret, Thailand",
     theme: "The Final Preparation for the Coming of the King",
     themeSub: "Knowing and Cooperative with Christ as the Great High Priest in Perfecting Our Salvation",
@@ -275,6 +287,7 @@ const TEXT = {
   },
   th: {
     label: "ไทย", locale: "th-TH",
+    share: "แบ่งปันให้เพื่อนปุโรหิต", linkCopied: "คัดลอกลิงก์แล้ว",
     place: "ปากเกร็ด ประเทศไทย",
     theme: "การเตรียมพร้อมครั้งสุดท้ายสำหรับการเสด็จมาของกษัตริย์",
     themeSub: "รู้จักและร่วมมือกับพระคริสต์ผู้ทรงเป็นมหาปุโรหิต ในการทำให้ความรอดของเราสมบูรณ์",
@@ -303,6 +316,7 @@ const TEXT = {
   },
   my: {
     label: "မြန်မာ", locale: "my-MM",
+    share: "ယဇ်ပုရောဟိတ်ညီအစ်ကိုများထံ မျှဝေရန်", linkCopied: "လင့်ခ် ကူးယူပြီး",
     place: "Pakkret၊ ထိုင်းနိုင်ငံ",
     theme: "ဘုရင်ကြွလာခြင်းအတွက် နောက်ဆုံးပြင်ဆင်ခြင်း",
     themeSub: "ကျွန်ုပ်တို့၏ ကယ်တင်ခြင်းကို စုံလင်စေရာတွင် ယဇ်ပုရောဟိတ်မင်းကြီး ခရစ်တော်ကို သိကျွမ်း၍ ပူးပေါင်းဆောင်ရွက်ခြင်း",
@@ -331,6 +345,7 @@ const TEXT = {
   },
   vi: {
     label: "Tiếng Việt", locale: "vi-VN",
+    share: "Chia sẻ với các thầy tế lễ đồng công", linkCopied: "Đã sao chép liên kết",
     place: "Pakkret, Thái Lan",
     theme: "Sự chuẩn bị cuối cùng cho sự đến của Vua",
     themeSub: "Biết và hợp tác với Đấng Christ là Thầy Tế Lễ Thượng Phẩm trong việc hoàn thiện sự cứu rỗi của chúng ta",
@@ -359,6 +374,7 @@ const TEXT = {
   },
   fil: {
     label: "Filipino", locale: "fil-PH",
+    share: "Ibahagi sa kapwa saserdote", linkCopied: "Nakopya ang link",
     place: "Pakkret, Thailand",
     theme: "Ang Huling Paghahanda para sa Pagdating ng Hari",
     themeSub: "Pagkilala at Pakikipagtulungan kay Cristo bilang Dakilang Punong Saserdote sa Pagpapasakdal ng Ating Kaligtasan",
@@ -387,6 +403,7 @@ const TEXT = {
   },
   ko: {
     label: "한국어", locale: "ko-KR",
+    share: "동역하는 제사장들에게 공유", linkCopied: "링크가 복사되었습니다",
     place: "태국 빡끄렛",
     theme: "왕의 오심을 위한 마지막 준비",
     themeSub: "우리의 구원을 온전케 하시는 대제사장 그리스도를 알고 그분과 협력함",
@@ -415,6 +432,7 @@ const TEXT = {
   },
   de: {
     label: "Deutsch", locale: "de-DE",
+    share: "Mit Mitpriestern teilen", linkCopied: "Link kopiert",
     place: "Pakkret, Thailand",
     theme: "Die letzte Vorbereitung auf das Kommen des Königs",
     themeSub: "Christus als den großen Hohenpriester kennen und mit ihm zusammenwirken in der Vollendung unserer Errettung",
@@ -663,6 +681,26 @@ function render() {
 
 applyLang();
 setInterval(render, 30000);
+
+// Phones open the share sheet (KakaoTalk, LINE, WhatsApp…); elsewhere the link is copied.
+// The plain address is shared so each recipient gets their own language and time zone.
+document.getElementById("share").addEventListener("click", async () => {
+  const url = location.origin + location.pathname;
+  if (navigator.share) {
+    try { await navigator.share({ title: document.title, url }); } catch (e) {}
+    return;
+  }
+  const label = document.querySelector("#share [data-t]");
+  try { await navigator.clipboard.writeText(url); }
+  catch (e) {
+    const tmp = document.createElement("textarea");
+    tmp.value = url; document.body.appendChild(tmp); tmp.select();
+    try { document.execCommand("copy"); } catch (e2) {}
+    tmp.remove();
+  }
+  label.textContent = t("linkCopied");
+  setTimeout(() => (label.textContent = t("share")), 2000);
+});
 
 document.querySelectorAll(".copy").forEach(btn => {
   btn.addEventListener("click", () => {
