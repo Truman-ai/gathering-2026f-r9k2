@@ -242,7 +242,9 @@ const ZONES = [
 
 // Fill these in once decided (e.g. id: "864 4145 9436", passcode: "1234").
 // While one is empty the page shows "To be decided" and hides its Copy button; the Zoom button appears once the ID is set.
-const ZOOM = { id: "818 7686 2531", passcode: "144000" };
+// `link` is Zoom's invite link (with ?pwd=…) so the button joins without typing the passcode; without it the button opens zoom.us/j/<id>.
+const ZOOM = { id: "818 7686 2531", passcode: "144000",
+               link: "https://us02web.zoom.us/j/81876862531?pwd=0NTO9ruymsoJJDT9QIg4zV6wEDUa0J.1" };
 
 // Begins Fri evening Oct 16, ends Sun afternoon Oct 18 (Thailand time, UTC+7).
 // Titles and topics for each entry live in TEXT[lang].sessions, in the same order;
@@ -586,7 +588,7 @@ function renderZoom() {
   });
   const join = document.getElementById("zjoin");
   join.hidden = !ZOOM.id;
-  if (ZOOM.id) join.href = "https://zoom.us/j/" + ZOOM.id.replace(/\s/g, "");
+  if (ZOOM.id) join.href = ZOOM.link || "https://zoom.us/j/" + ZOOM.id.replace(/\s/g, "");
 }
 
 const langSel = document.getElementById("langSelect");
