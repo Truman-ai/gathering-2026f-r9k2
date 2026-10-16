@@ -1,0 +1,172 @@
+{
+  "title": "Gathering in Autumn",
+  "place": {
+    "en": "YangPyoung, South Korea",
+    "th": "ยางพยอง เกาหลีใต้",
+    "my": "YangPyoung၊ တောင်ကိုရီးယား",
+    "vi": "YangPyoung, Hàn Quốc",
+    "fil": "YangPyoung, South Korea",
+    "zh": "韩国 杨平",
+    "ko": "대한민국 양평",
+    "de": "YangPyoung, Südkorea"
+  },
+  "hostTz": "Asia/Seoul",
+  "hostAbbr": "KST",
+  "dates": {
+    "start": "2026-10-08",
+    "end": "2026-10-11"
+  },
+  "theme": {},
+  "themeSub": {},
+  "sessions": [
+    {
+      "date": "2026-10-08",
+      "time": "19:30",
+      "numbered": true,
+      "title": {
+        "en": "Evening meeting",
+        "th": "การประชุมช่วงค่ำ",
+        "my": "ညပိုင်း အစည်းအဝေး",
+        "vi": "Buổi nhóm tối",
+        "fil": "Pulong sa gabi",
+        "zh": "晚上聚会",
+        "ko": "저녁 집회",
+        "de": "Abendversammlung"
+      },
+      "topic": {}
+    },
+    {
+      "date": "2026-10-09",
+      "time": "10:00",
+      "numbered": true,
+      "title": {
+        "en": "Morning meeting",
+        "th": "การประชุมช่วงเช้า",
+        "my": "နံနက်ပိုင်း အစည်းအဝေး",
+        "vi": "Buổi nhóm sáng",
+        "fil": "Pulong sa umaga",
+        "zh": "上午聚会",
+        "ko": "오전 집회",
+        "de": "Vormittagsversammlung"
+      },
+      "topic": {}
+    },
+    {
+      "date": "2026-10-09",
+      "time": "13:30",
+      "numbered": true,
+      "title": {
+        "en": "Afternoon meeting",
+        "th": "การประชุมช่วงบ่าย",
+        "my": "နေ့လယ်ပိုင်း အစည်းအဝေး",
+        "vi": "Buổi nhóm chiều",
+        "fil": "Pulong sa hapon",
+        "zh": "下午聚会",
+        "ko": "오후 집회",
+        "de": "Nachmittagsversammlung"
+      },
+      "topic": {}
+    },
+    {
+      "date": "2026-10-09",
+      "time": "19:30",
+      "numbered": true,
+      "title": {
+        "en": "Evening meeting",
+        "th": "การประชุมช่วงค่ำ",
+        "my": "ညပိုင်း အစည်းအဝေး",
+        "vi": "Buổi nhóm tối",
+        "fil": "Pulong sa gabi",
+        "zh": "晚上聚会",
+        "ko": "저녁 집회",
+        "de": "Abendversammlung"
+      },
+      "topic": {}
+    },
+    {
+      "date": "2026-10-10",
+      "time": "10:00",
+      "numbered": true,
+      "title": {
+        "en": "Morning meeting",
+        "th": "การประชุมช่วงเช้า",
+        "my": "နံနက်ပိုင်း အစည်းအဝေး",
+        "vi": "Buổi nhóm sáng",
+        "fil": "Pulong sa umaga",
+        "zh": "上午聚会",
+        "ko": "오전 집회",
+        "de": "Vormittagsversammlung"
+      },
+      "topic": {}
+    },
+    {
+      "date": "2026-10-10",
+      "time": "13:30",
+      "numbered": true,
+      "title": {
+        "en": "Afternoon meeting",
+        "th": "การประชุมช่วงบ่าย",
+        "my": "နေ့လယ်ပိုင်း အစည်းအဝေး",
+        "vi": "Buổi nhóm chiều",
+        "fil": "Pulong sa hapon",
+        "zh": "下午聚会",
+        "ko": "오후 집회",
+        "de": "Nachmittagsversammlung"
+      },
+      "topic": {}
+    },
+    {
+      "date": "2026-10-10",
+      "time": "19:30",
+      "numbered": true,
+      "title": {
+        "en": "Evening meeting",
+        "th": "การประชุมช่วงค่ำ",
+        "my": "ညပိုင်း အစည်းအဝေး",
+        "vi": "Buổi nhóm tối",
+        "fil": "Pulong sa gabi",
+        "zh": "晚上聚会",
+        "ko": "저녁 집회",
+        "de": "Abendversammlung"
+      },
+      "topic": {}
+    },
+    {
+      "date": "2026-10-11",
+      "time": "09:00",
+      "numbered": false,
+      "title": {
+        "en": "Feast",
+        "th": "งานเลี้ยง",
+        "my": "စားသောက်ပွဲ",
+        "vi": "Bữa tiệc",
+        "fil": "Piging",
+        "zh": "筵席",
+        "ko": "만찬",
+        "de": "Festmahl"
+      },
+      "topic": {}
+    },
+    {
+      "date": "2026-10-11",
+      "time": "10:30",
+      "numbered": true,
+      "title": {
+        "en": "Morning meeting",
+        "th": "การประชุมช่วงเช้า",
+        "my": "နံနက်ပိုင်း အစည်းအဝေး",
+        "vi": "Buổi nhóm sáng",
+        "fil": "Pulong sa umaga",
+        "zh": "上午聚会",
+        "ko": "오전 집회",
+        "de": "Vormittagsversammlung"
+      },
+      "topic": {}
+    }
+  ],
+  "zoom": {
+    "id": "864 4145 9436",
+    "passcode": "1234",
+    "link": "https://zoom.us/j/86441459436"
+  }
+}

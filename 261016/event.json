@@ -1,0 +1,228 @@
+{
+  "title": "2026 Weekend Fellowship in Pakkret",
+  "place": {
+    "en": "Pakkret, Thailand",
+    "th": "ปากเกร็ด ประเทศไทย",
+    "my": "Pakkret၊ ထိုင်းနိုင်ငံ",
+    "vi": "Pakkret, Thái Lan",
+    "fil": "Pakkret, Thailand",
+    "zh": "泰国 Pakkret",
+    "ko": "태국 빡끄렛",
+    "de": "Pakkret, Thailand"
+  },
+  "hostTz": "Asia/Bangkok",
+  "hostAbbr": "ICT",
+  "dates": {
+    "start": "2026-10-16",
+    "end": "2026-10-18"
+  },
+  "theme": {
+    "en": "The Final Preparation for the Coming of the King",
+    "th": "การเตรียมพร้อมครั้งสุดท้ายสำหรับการเสด็จมาของกษัตริย์",
+    "my": "ဘုရင်ကြွလာခြင်းအတွက် နောက်ဆုံးပြင်ဆင်ခြင်း",
+    "vi": "Sự chuẩn bị cuối cùng cho sự đến của Vua",
+    "fil": "Ang Huling Paghahanda para sa Pagdating ng Hari",
+    "zh": "为君王再来的最后预备",
+    "ko": "왕의 오심을 위한 마지막 준비",
+    "de": "Die letzte Vorbereitung auf das Kommen des Königs"
+  },
+  "themeSub": {
+    "en": "Knowing and Cooperating with Christ as the Great High Priest in Perfecting Our Salvation",
+    "th": "รู้จักและร่วมมือกับพระคริสต์ผู้ทรงเป็นมหาปุโรหิต ในการทำให้ความรอดของเราสมบูรณ์",
+    "my": "ကျွန်ုပ်တို့၏ ကယ်တင်ခြင်းကို စုံလင်စေရာတွင် ယဇ်ပုရောဟိတ်မင်းကြီး ခရစ်တော်ကို သိကျွမ်း၍ ပူးပေါင်းဆောင်ရွက်ခြင်း",
+    "vi": "Biết và hợp tác với Đấng Christ là Thầy Tế Lễ Thượng Phẩm trong việc hoàn thiện sự cứu rỗi của chúng ta",
+    "fil": "Pagkilala at Pakikipagtulungan kay Cristo bilang Dakilang Punong Saserdote sa Pagpapasakdal ng Ating Kaligtasan",
+    "zh": "认识基督为大祭司，并与祂配合，以成全我们的救恩",
+    "ko": "우리의 구원을 온전케 하시는 대제사장 그리스도를 알고 그분과 협력함",
+    "de": "Christus als den großen Hohenpriester kennen und mit ihm zusammenwirken in der Vollendung unserer Errettung"
+  },
+  "sessions": [
+    {
+      "date": "2026-10-16",
+      "time": "19:00",
+      "numbered": true,
+      "title": {
+        "en": "Signs of the Times",
+        "th": "หมายสำคัญแห่งยุคสมัย",
+        "my": "ကာလ၏ နိမိတ်လက္ခဏာများ",
+        "vi": "Dấu hiệu của thời đại",
+        "fil": "Mga Tanda ng Panahon",
+        "zh": "时代的预兆",
+        "ko": "시대의 징조",
+        "de": "Zeichen der Zeit"
+      },
+      "topic": {
+        "en": "The end of this age is approaching",
+        "th": "วาระสุดท้ายของยุคนี้ใกล้เข้ามาแล้ว",
+        "my": "ဤခေတ်၏ အဆုံးသည် နီးကပ်လာပြီ",
+        "vi": "Sự cuối cùng của thời đại này đang đến gần",
+        "fil": "Nalalapit na ang wakas ng panahong ito",
+        "zh": "这个时代的结束近了",
+        "ko": "이 시대의 끝이 다가오고 있다",
+        "de": "Das Ende dieses Zeitalters naht"
+      }
+    },
+    {
+      "date": "2026-10-17",
+      "time": "08:30",
+      "numbered": true,
+      "title": {
+        "en": "God's Eternal Plan and Our Goal",
+        "th": "แผนการนิรันดร์ของพระเจ้าและเป้าหมายของเรา",
+        "my": "ဘုရားသခင်၏ ထာဝရအကြံအစည်နှင့် ကျွန်ုပ်တို့၏ ပန်းတိုင်",
+        "vi": "Kế hoạch đời đời của Đức Chúa Trời và mục tiêu của chúng ta",
+        "fil": "Ang Walang-hanggang Plano ng Diyos at ang Ating Layunin",
+        "zh": "神永远的计划与我们的目标",
+        "ko": "하나님의 영원한 계획과 우리의 목표",
+        "de": "Gottes ewiger Plan und unser Ziel"
+      },
+      "topic": {
+        "en": "The way of transformation and perfection",
+        "th": "หนทางแห่งการเปลี่ยนแปลงและความสมบูรณ์",
+        "my": "ပြောင်းလဲခြင်းနှင့် စုံလင်ခြင်းသို့ ရောက်သောလမ်း",
+        "vi": "Con đường biến đổi và hoàn thiện",
+        "fil": "Ang daan ng pagbabago at kasakdalan",
+        "zh": "变化与成全的道路",
+        "ko": "변화와 온전함에 이르는 길",
+        "de": "Der Weg der Verwandlung und Vollendung"
+      }
+    },
+    {
+      "date": "2026-10-17",
+      "time": "10:30",
+      "numbered": true,
+      "title": {
+        "en": "First Steps of a Holy Priest",
+        "th": "ก้าวแรกของปุโรหิตผู้บริสุทธิ์",
+        "my": "သန့်ရှင်းသော ယဇ်ပုရောဟိတ်၏ ပထမခြေလှမ်းများ",
+        "vi": "Những bước đầu của một thầy tế lễ thánh",
+        "fil": "Mga Unang Hakbang ng Isang Banal na Saserdote",
+        "zh": "圣别祭司的第一步",
+        "ko": "거룩한 제사장의 첫걸음",
+        "de": "Erste Schritte eines heiligen Priesters"
+      },
+      "topic": {
+        "en": "How to begin after realizing our calling as God's holy priest",
+        "th": "จะเริ่มต้นอย่างไร เมื่อตระหนักถึงการทรงเรียกให้เป็นปุโรหิตผู้บริสุทธิ์ของพระเจ้า",
+        "my": "ဘုရားသခင်၏ သန့်ရှင်းသော ယဇ်ပုရောဟိတ်အဖြစ် ခေါ်တော်မူခြင်းကို သိမြင်ပြီးနောက် မည်သို့ စတင်ရမည်နည်း",
+        "vi": "Bắt đầu thế nào sau khi nhận biết sự kêu gọi làm thầy tế lễ thánh của Đức Chúa Trời",
+        "fil": "Paano magsimula matapos maunawaan ang ating pagkatawag bilang banal na saserdote ng Diyos",
+        "zh": "认识到我们蒙召作神圣别的祭司之后，该如何开始",
+        "ko": "하나님의 거룩한 제사장으로 부르심을 깨달은 후 어떻게 시작할 것인가",
+        "de": "Wie wir beginnen, nachdem wir unsere Berufung als Gottes heilige Priester erkannt haben"
+      }
+    },
+    {
+      "date": "2026-10-17",
+      "time": "15:30",
+      "numbered": false,
+      "title": {
+        "en": "Q&A",
+        "th": "ถาม-ตอบ",
+        "my": "အမေး-အဖြေ",
+        "vi": "Hỏi & Đáp",
+        "fil": "Tanong at Sagot",
+        "zh": "问答",
+        "ko": "질의응답",
+        "de": "Fragen & Antworten"
+      },
+      "topic": {}
+    },
+    {
+      "date": "2026-10-17",
+      "time": "19:00",
+      "numbered": true,
+      "title": {
+        "en": "Are You Serving the Lord or Serving the Temple? (Ezekiel 44)",
+        "th": "ท่านกำลังปรนนิบัติองค์พระผู้เป็นเจ้า หรือปรนนิบัติพระวิหาร? (เอเสเคียล 44)",
+        "my": "သင်သည် သခင်ဘုရားကို အမှုတော်ဆောင်နေသလော၊ ဗိမာန်တော်ကို အမှုဆောင်နေသလော။ (ယေဇကျေလ ၄၄)",
+        "vi": "Bạn đang phục vụ Chúa hay phục vụ đền thờ? (Ê-xê-chi-ên 44)",
+        "fil": "Naglilingkod Ka ba sa Panginoon o sa Templo? (Ezekiel 44)",
+        "zh": "你是在事奉主，还是事奉殿？（以西结书44章）",
+        "ko": "주님을 섬기는가, 성전을 섬기는가? (에스겔 44장)",
+        "de": "Dienst du dem Herrn oder dem Tempel? (Hesekiel 44)"
+      },
+      "topic": {
+        "en": "Are serving the saints and do gospel work serving the Lord?",
+        "th": "การรับใช้วิสุทธิชนและการประกาศข่าวประเสริฐ คือการปรนนิบัติองค์พระผู้เป็นเจ้าหรือไม่?",
+        "my": "သန့်ရှင်းသူများကို ပြုစုခြင်းနှင့် ဧဝံဂေလိအမှုတော်ဆောင်ခြင်းသည် သခင်ဘုရားကို အမှုတော်ဆောင်ခြင်း ဖြစ်သလော။",
+        "vi": "Phục vụ các thánh đồ và làm công tác Phúc Âm có phải là phục vụ Chúa không?",
+        "fil": "Ang paglilingkod ba sa mga banal at ang gawain ng ebanghelyo ay paglilingkod sa Panginoon?",
+        "zh": "服事圣徒、作福音工作，是在事奉主吗？",
+        "ko": "성도를 섬기고 복음을 전하는 일이 곧 주님을 섬기는 것인가?",
+        "de": "Ist der Dienst an den Heiligen und das Evangeliumswerk ein Dienst für den Herrn?"
+      }
+    },
+    {
+      "date": "2026-10-18",
+      "time": "09:30",
+      "numbered": false,
+      "title": {
+        "en": "Lord's Table Feast",
+        "th": "งานเลี้ยงโต๊ะขององค์พระผู้เป็นเจ้า",
+        "my": "သခင်ဘုရား၏ စားပွဲတော်ပွဲ",
+        "vi": "Tiệc Bàn của Chúa",
+        "fil": "Piging sa Hapag ng Panginoon",
+        "zh": "主的筵席",
+        "ko": "주의 만찬",
+        "de": "Fest am Tisch des Herrn"
+      },
+      "topic": {}
+    },
+    {
+      "date": "2026-10-18",
+      "time": "10:45",
+      "numbered": true,
+      "title": {
+        "en": "Beyond the Veil",
+        "th": "ภายในม่าน",
+        "my": "ကုလားကာအတွင်းသို့",
+        "vi": "Vào bên trong bức màn",
+        "fil": "Sa Loob ng Tabing",
+        "zh": "进入幔内",
+        "ko": "휘장 안으로",
+        "de": "Hinter den Vorhang"
+      },
+      "topic": {
+        "en": "Experiencing Christ's salvation by mingling faith with the Word, the hidden Manna, and His resurrection life",
+        "th": "ประสบความรอดของพระคริสต์ โดยผสานความเชื่อเข้ากับพระวจนะ มานาที่ซ่อนไว้ และชีวิตแห่งการเป็นขึ้นจากตายของพระองค์",
+        "my": "ယုံကြည်ခြင်းကို နှုတ်ကပါဌ်တော်၊ ဝှက်ထားသော မန္နနှင့် ကိုယ်တော်၏ ရှင်ပြန်ထမြောက်ခြင်းအသက်နှင့် ပေါင်းစပ်၍ ခရစ်တော်၏ ကယ်တင်ခြင်းကို တွေ့ကြုံခြင်း",
+        "vi": "Kinh nghiệm sự cứu rỗi của Đấng Christ bằng cách hòa hiệp đức tin với Lời Chúa, ma-na ẩn giấu và sự sống phục sinh của Ngài",
+        "fil": "Pagdanas sa kaligtasan ni Cristo sa pamamagitan ng paghahalo ng pananampalataya sa Salita, sa nakatagong Mana, at sa Kanyang buhay ng pagkabuhay na muli",
+        "zh": "将信心与话调和，借着隐藏的吗哪和祂复活的生命，经历基督的救恩",
+        "ko": "믿음을 말씀과 화합하여, 감추었던 만나와 그분의 부활 생명으로 그리스도의 구원을 체험함",
+        "de": "Christi Errettung erfahren, indem wir den Glauben mit dem Wort, dem verborgenen Manna und seinem Auferstehungsleben vermischen"
+      }
+    },
+    {
+      "date": "2026-10-18",
+      "time": "15:30",
+      "numbered": true,
+      "title": {
+        "en": "Get to know Christ as the Great High Priest",
+        "th": "รู้จักพระคริสต์ผู้ทรงเป็นมหาปุโรหิต",
+        "my": "ယဇ်ပုရောဟိတ်မင်းကြီး ခရစ်တော်ကို သိကျွမ်းခြင်း",
+        "vi": "Nhận biết Đấng Christ là Thầy Tế Lễ Thượng Phẩm",
+        "fil": "Kilalanin si Cristo bilang Dakilang Punong Saserdote",
+        "zh": "认识基督作大祭司",
+        "ko": "대제사장이신 그리스도를 알라",
+        "de": "Christus als den großen Hohenpriester kennenlernen"
+      },
+      "topic": {
+        "en": "Perfecting our salvation (The Book of Hebrews)",
+        "th": "การทำให้ความรอดของเราสมบูรณ์ (พระธรรมฮีบรู)",
+        "my": "ကျွန်ုပ်တို့၏ ကယ်တင်ခြင်းကို စုံလင်စေခြင်း (ဟေဗြဲဩဝါဒစာ)",
+        "vi": "Hoàn thiện sự cứu rỗi của chúng ta (Sách Hê-bơ-rơ)",
+        "fil": "Ang pagpapasakdal ng ating kaligtasan (Aklat ng mga Hebreo)",
+        "zh": "成全我们的救恩（希伯来书）",
+        "ko": "우리의 구원을 온전케 하심 (히브리서)",
+        "de": "Die Vollendung unserer Errettung (Hebräerbrief)"
+      }
+    }
+  ],
+  "zoom": {
+    "id": "818 7686 2531",
+    "passcode": "144000",
+    "link": "https://us02web.zoom.us/j/81876862531?pwd=0NTO9ruymsoJJDT9QIg4zV6wEDUa0J.1"
+  }
+}
