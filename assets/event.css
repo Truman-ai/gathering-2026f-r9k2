@@ -125,6 +125,14 @@ h2 { font-family: var(--font-display); font-weight: 800; font-size: 20px; margin
 .pills { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 2px; padding-left: 30px; }
 .pill { font-size: 11px; font-weight: 700; letter-spacing: .08em; border-radius: 999px; padding: 2px 8px; }
 .pill.next-p { background: var(--brand); color: var(--on-brand); }
+/* In progress: filled with a pulsing dot; the following meeting then gets an outline "Next" */
+.pill.live-p { background: var(--brand-grad); color: var(--on-brand); display: inline-flex; align-items: center; gap: 5px; }
+.pill.soon-p { border: 1px solid var(--brand); color: var(--accent); }
+.dot { display: inline-block; width: 7px; height: 7px; border-radius: 50%; background: currentColor; animation: pulse 1.6s ease-in-out infinite; }
+.next .k .dot { margin-right: 6px; vertical-align: 1px; }
+.next.live { border-color: var(--brand); }
+@keyframes pulse { 50% { opacity: .3; } }
+@media (prefers-reduced-motion: reduce) { .dot { animation: none; } }
 .pill.night { border: 1px solid var(--line); color: var(--muted); }
 
 /* Zoom */

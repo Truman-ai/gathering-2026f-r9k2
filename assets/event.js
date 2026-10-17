@@ -80,7 +80,7 @@ const TEXT = {
     language: "Language", where: "Where are you now?", otherCity: "Other city…",
     useDevice: "Use my phone's time · {city}", search: "Or search for your city",
     placeholder: "e.g. Sydney, London, Dubai", noCity: "No city found. Try a nearby major city.",
-    nowIn: "Now in {zone}:", next: "Next", inDays: "in {d}d {h}h", inHours: "in {h}h {m}m", inMins: "in {m} min",
+    nowIn: "Now in {zone}:", next: "Next", live: "In progress", until: "until {time}", inDays: "in {d}d {h}h", inHours: "in {h}h {m}m", inMins: "in {m} min",
     session: "Session {n}", complete: "Gathering complete", thanks: "Thank you for joining",
     begins: "Begins", final: "Final session", schedule: "Schedule",
     allHost: "All times in {host} time ({hostAbbr}).",
@@ -96,7 +96,7 @@ const TEXT = {
     language: "ภาษา", where: "ตอนนี้คุณอยู่ที่ไหน?", otherCity: "เมืองอื่น…",
     useDevice: "ใช้เวลาของโทรศัพท์ · {city}", search: "หรือค้นหาเมืองของคุณ",
     placeholder: "เช่น Sydney, London, Dubai", noCity: "ไม่พบเมือง ลองค้นหาเมืองใหญ่ที่อยู่ใกล้เคียง",
-    nowIn: "เวลาขณะนี้ที่{zone}:", next: "ถัดไป", inDays: "อีก {d} วัน {h} ชม.", inHours: "อีก {h} ชม. {m} นาที", inMins: "อีก {m} นาที",
+    nowIn: "เวลาขณะนี้ที่{zone}:", next: "ถัดไป", live: "กำลังประชุม", until: "ถึง {time}", inDays: "อีก {d} วัน {h} ชม.", inHours: "อีก {h} ชม. {m} นาที", inMins: "อีก {m} นาที",
     session: "ครั้งที่ {n}", complete: "การประชุมเสร็จสิ้นแล้ว", thanks: "ขอบคุณที่ร่วมประชุม",
     begins: "เริ่ม", final: "ครั้งสุดท้าย", schedule: "กำหนดการ",
     allHost: "เวลาทั้งหมดเป็นเวลา{host} ({hostAbbr})",
@@ -112,7 +112,7 @@ const TEXT = {
     language: "ဘာသာစကား", where: "ယခု သင် ဘယ်မှာ ရှိပါသလဲ။", otherCity: "အခြားမြို့…",
     useDevice: "ဖုန်း၏ အချိန်ကို သုံးမည် · {city}", search: "သို့မဟုတ် သင့်မြို့ကို ရှာပါ",
     placeholder: "ဥပမာ Sydney, London, Dubai", noCity: "မြို့ကို မတွေ့ပါ။ အနီးရှိ မြို့ကြီးတစ်ခုကို ရှာကြည့်ပါ။",
-    nowIn: "{zone} ယခုအချိန်:", next: "နောက်တစ်ခု", inDays: "{d} ရက် {h} နာရီ အကြာ", inHours: "{h} နာရီ {m} မိနစ် အကြာ", inMins: "{m} မိနစ် အကြာ",
+    nowIn: "{zone} ယခုအချိန်:", next: "နောက်တစ်ခု", live: "ယခု ကျင်းပနေသည်", until: "{time} အထိ", inDays: "{d} ရက် {h} နာရီ အကြာ", inHours: "{h} နာရီ {m} မိနစ် အကြာ", inMins: "{m} မိနစ် အကြာ",
     session: "အစည်းအဝေး {n}", complete: "အစည်းအဝေး ပြီးဆုံးပါပြီ", thanks: "ပါဝင်ပေးသည့်အတွက် ကျေးဇူးတင်ပါသည်",
     begins: "စတင်ချိန်", final: "နောက်ဆုံး အစည်းအဝေး", schedule: "အစီအစဉ်",
     allHost: "အချိန်အားလုံးသည် {host} အချိန် ({hostAbbr}) ဖြစ်သည်။",
@@ -128,7 +128,7 @@ const TEXT = {
     language: "Ngôn ngữ", where: "Bạn đang ở đâu?", otherCity: "Thành phố khác…",
     useDevice: "Dùng giờ của điện thoại · {city}", search: "Hoặc tìm thành phố của bạn",
     placeholder: "VD: Sydney, London, Dubai", noCity: "Không tìm thấy thành phố. Hãy thử một thành phố lớn gần đó.",
-    nowIn: "Giờ hiện tại ở {zone}:", next: "Tiếp theo", inDays: "còn {d} ngày {h} giờ", inHours: "còn {h} giờ {m} phút", inMins: "còn {m} phút",
+    nowIn: "Giờ hiện tại ở {zone}:", next: "Tiếp theo", live: "Đang diễn ra", until: "đến {time}", inDays: "còn {d} ngày {h} giờ", inHours: "còn {h} giờ {m} phút", inMins: "còn {m} phút",
     session: "Buổi {n}", complete: "Kỳ nhóm đã kết thúc", thanks: "Cảm ơn bạn đã tham dự",
     begins: "Bắt đầu", final: "Buổi cuối", schedule: "Lịch trình",
     allHost: "Tất cả thời gian theo giờ {host} ({hostAbbr}).",
@@ -144,7 +144,7 @@ const TEXT = {
     language: "Wika", where: "Nasaan ka ngayon?", otherCity: "Ibang lungsod…",
     useDevice: "Gamitin ang oras ng aking telepono · {city}", search: "O hanapin ang iyong lungsod",
     placeholder: "hal. Sydney, London, Dubai", noCity: "Walang nahanap na lungsod. Subukan ang kalapit na malaking lungsod.",
-    nowIn: "Oras ngayon sa {zone}:", next: "Susunod", inDays: "{d} araw {h} oras pa", inHours: "{h} oras {m} min pa", inMins: "{m} min pa",
+    nowIn: "Oras ngayon sa {zone}:", next: "Susunod", live: "Kasalukuyang nagaganap", until: "hanggang {time}", inDays: "{d} araw {h} oras pa", inHours: "{h} oras {m} min pa", inMins: "{m} min pa",
     session: "Pulong {n}", complete: "Tapos na ang pagtitipon", thanks: "Salamat sa inyong pagdalo",
     begins: "Simula", final: "Huling pulong", schedule: "Iskedyul",
     allHost: "Lahat ng oras ay sa oras ng {host} ({hostAbbr}).",
@@ -160,7 +160,7 @@ const TEXT = {
     language: "语言", where: "您现在在哪里？", otherCity: "其他城市…",
     useDevice: "使用手机时间 · {city}", search: "或搜索您的城市",
     placeholder: "例如 Sydney、London、Dubai", noCity: "找不到该城市。请尝试附近的大城市。",
-    nowIn: "{zone}当前时间：", next: "下一场", inDays: "{d}天{h}小时后", inHours: "{h}小时{m}分钟后", inMins: "{m}分钟后",
+    nowIn: "{zone}当前时间：", next: "下一场", live: "进行中", until: "至 {time}", inDays: "{d}天{h}小时后", inHours: "{h}小时{m}分钟后", inMins: "{m}分钟后",
     session: "第{n}堂", complete: "聚会已全部结束", thanks: "感谢您的参与",
     begins: "开始", final: "最后一堂", schedule: "日程",
     allHost: "所有时间均为{host}时间（{hostAbbr}）。",
@@ -176,7 +176,7 @@ const TEXT = {
     language: "언어", where: "지금 어디에 계신가요?", otherCity: "다른 도시…",
     useDevice: "내 기기 시간 사용 · {city}", search: "또는 도시 검색",
     placeholder: "예: Sydney, London, Dubai", noCity: "도시를 찾을 수 없습니다. 가까운 큰 도시로 검색해 보세요.",
-    nowIn: "{zone} 현재 시각:", next: "다음", inDays: "{d}일 {h}시간 후", inHours: "{h}시간 {m}분 후", inMins: "{m}분 후",
+    nowIn: "{zone} 현재 시각:", next: "다음", live: "진행 중", until: "{time}까지", inDays: "{d}일 {h}시간 후", inHours: "{h}시간 {m}분 후", inMins: "{m}분 후",
     session: "{n}번째 집회", complete: "집회가 모두 끝났습니다", thanks: "함께해 주셔서 감사합니다",
     begins: "시작", final: "마지막 집회", schedule: "일정",
     allHost: "모든 시간은 {host} 시간({hostAbbr}) 기준입니다.",
@@ -192,7 +192,7 @@ const TEXT = {
     language: "Sprache", where: "Wo bist du gerade?", otherCity: "Andere Stadt…",
     useDevice: "Zeit meines Geräts verwenden · {city}", search: "Oder nach deiner Stadt suchen",
     placeholder: "z. B. Sydney, London, Dubai", noCity: "Keine Stadt gefunden. Versuche eine größere Stadt in der Nähe.",
-    nowIn: "Jetzt in {zone}:", next: "Nächstes", inDays: "in {d} T. {h} Std.", inHours: "in {h} Std. {m} Min.", inMins: "in {m} Min.",
+    nowIn: "Jetzt in {zone}:", next: "Nächstes", live: "Läuft gerade", until: "bis {time}", inDays: "in {d} T. {h} Std.", inHours: "in {h} Std. {m} Min.", inMins: "in {m} Min.",
     session: "Treffen {n}", complete: "Die Konferenz ist beendet", thanks: "Danke für deine Teilnahme",
     begins: "Beginn", final: "Letztes Treffen", schedule: "Programm",
     allHost: "Alle Zeiten in Ortszeit {host} ({hostAbbr}).",
@@ -400,15 +400,24 @@ function render() {
     <div><span class="lbl">${t("begins")}</span><span class="val">${dayLabel(z, first)}</span><span class="val">${timeStr(z, first)}</span></div>
     <div><span class="lbl">${t("final")}</span><span class="val">${dayLabel(z, last)}</span><span class="val">${timeStr(z, last)}</span></div>`;
 
+  // While a meeting is running the card shows it; once it ends, the card moves on to the next one
+  const liveIdx = SESSIONS.findIndex(s => s.start <= now && now < s.end);
   const nextIdx = SESSIONS.findIndex(s => s.start > now);
   const nextEl = document.getElementById("next");
-  if (nextIdx === -1) {
-    nextEl.innerHTML = `<span class="k">${t("complete")}</span><span class="t">${t("thanks")}</span>`;
-  } else {
+  const name_ = s => [s.no && t("session", { n: s.no }), esc(pick(s.title))].filter(Boolean).join(" · ");
+  nextEl.classList.toggle("live", liveIdx !== -1);
+  if (liveIdx !== -1) {
+    const s = SESSIONS[liveIdx];
+    nextEl.innerHTML = `<span class="k"><span class="dot" aria-hidden="true"></span>${t("live")} · ${t("until", { time: timeStr(z, s.end) })}</span>
+      <span class="t">${name_(s)}</span>
+      <span class="s">${dayLabel(z, s.start)} · ${timeStr(z, s.start)} – ${timeStr(z, s.end)} ${abbrOf(z, s.start)}</span>`;
+  } else if (nextIdx !== -1) {
     const s = SESSIONS[nextIdx];
     nextEl.innerHTML = `<span class="k">${t("next")} · ${countdown(s.start - now)}</span>
-      <span class="t">${[s.no && t("session", { n: s.no }), esc(pick(s.title))].filter(Boolean).join(" · ")}</span>
+      <span class="t">${name_(s)}</span>
       <span class="s">${dayLabel(z, s.start)} · ${timeStr(z, s.start)} ${abbrOf(z, s.start)}</span>`;
+  } else {
+    nextEl.innerHTML = `<span class="k">${t("complete")}</span><span class="t">${t("thanks")}</span>`;
   }
 
   document.getElementById("schedSub").textContent = z === HOST
@@ -427,9 +436,10 @@ function render() {
     list.forEach(s => {
       const p = timeParts(z, s.start), topic = esc(pick(s.topic));
       const title = esc(pick(s.title)) || (s.no ? t("session", { n: s.no }) : "");
-      const past = s.start <= now && s.i !== nextIdx;
+      const past = s.end <= now;
       const pills = [];
-      if (s.i === nextIdx) pills.push(`<span class="pill next-p">${t("next")}</span>`);
+      if (s.i === liveIdx) pills.push(`<span class="pill live-p"><span class="dot" aria-hidden="true"></span>${t("live")}</span>`);
+      if (s.i === nextIdx) pills.push(`<span class="pill ${liveIdx === -1 ? "next-p" : "soon-p"}">${t("next")}</span>`);
       if (p.h24 < 6 || p.h24 >= 23) pills.push(`<span class="pill night">${t("lateNight")}</span>`);
       const ref = z === HOST ? "" : `<span class="ref">${dayLabel(HOST, s.start)} · ${timeStr(HOST, s.start)} ${abbrOf(HOST, s.start)}</span>`;
       const time = !p.ap ? p.hm : p.apFirst ? `<small class="pre">${p.ap}</small>${p.hm}` : `${p.hm}<small>${p.ap}</small>`;
@@ -457,6 +467,9 @@ function hostMoment(date, time, tz) {
   return new Date(ts);
 }
 
+// A meeting counts as in progress for this long after it starts (an entry can set its own "duration" in minutes)
+const DEFAULT_MINUTES = 120;
+
 function start(ev) {
   EVENT = ev;
   const tz = validTz(ev.hostTz) ? ev.hostTz : "Asia/Bangkok";
@@ -464,9 +477,11 @@ function start(ev) {
   if (ev.hostAbbr && HOST.id !== "custom") HOST = { ...HOST, abbr: ev.hostAbbr };
   let n = 0;
   SESSIONS = (ev.sessions || [])
-    .map(s => ({ ...s, start: hostMoment(s.date, s.time, tz) }))
+    .map(s => { const start = hostMoment(s.date, s.time, tz); return { ...s, start, end: new Date(+start + (s.duration || DEFAULT_MINUTES) * 6e4) }; })
     .sort((a, b) => a.start - b.start)
     .map((s, i) => ({ ...s, i, no: s.numbered ? ++n : null }));
+  // If the next meeting starts within that window, this one ends when the next begins
+  SESSIONS.forEach((s, i) => { const nx = SESSIONS[i + 1]; if (nx && nx.start < s.end) s.end = nx.start; });
   const hostIdx = ZONES.findIndex(z => z.id === HOST.id);
   if (hostIdx >= 0) ZONES[hostIdx] = HOST;
   current = fromHash() || (saved && saved.startsWith("tz:") ? pickZone(saved.slice(3))
