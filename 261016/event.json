@@ -174,31 +174,6 @@
       "time": "10:45",
       "numbered": true,
       "title": {
-        "en": "Beyond the Veil",
-        "th": "ภายในม่าน",
-        "my": "ကုလားကာအတွင်းသို့",
-        "vi": "Vào bên trong bức màn",
-        "fil": "Sa Loob ng Tabing",
-        "zh": "进入幔内",
-        "ko": "휘장 안으로",
-        "de": "Hinter den Vorhang"
-      },
-      "topic": {
-        "en": "Experiencing Christ's salvation by mingling faith with the Word, the hidden Manna, and His resurrection life",
-        "th": "ประสบความรอดของพระคริสต์ โดยผสานความเชื่อเข้ากับพระวจนะ มานาที่ซ่อนไว้ และชีวิตแห่งการเป็นขึ้นจากตายของพระองค์",
-        "my": "ယုံကြည်ခြင်းကို နှုတ်ကပါဌ်တော်၊ ဝှက်ထားသော မန္နနှင့် ကိုယ်တော်၏ ရှင်ပြန်ထမြောက်ခြင်းအသက်နှင့် ပေါင်းစပ်၍ ခရစ်တော်၏ ကယ်တင်ခြင်းကို တွေ့ကြုံခြင်း",
-        "vi": "Kinh nghiệm sự cứu rỗi của Đấng Christ bằng cách hòa hiệp đức tin với Lời Chúa, ma-na ẩn giấu và sự sống phục sinh của Ngài",
-        "fil": "Pagdanas sa kaligtasan ni Cristo sa pamamagitan ng paghahalo ng pananampalataya sa Salita, sa nakatagong Mana, at sa Kanyang buhay ng pagkabuhay na muli",
-        "zh": "将信心与话调和，借着隐藏的吗哪和祂复活的生命，经历基督的救恩",
-        "ko": "믿음을 말씀과 화합하여, 감추었던 만나와 그분의 부활 생명으로 그리스도의 구원을 체험함",
-        "de": "Christi Errettung erfahren, indem wir den Glauben mit dem Wort, dem verborgenen Manna und seinem Auferstehungsleben vermischen"
-      }
-    },
-    {
-      "date": "2026-10-18",
-      "time": "14:00",
-      "numbered": true,
-      "title": {
         "en": "Get to know Christ as the Great High Priest",
         "th": "รู้จักพระคริสต์ผู้ทรงเป็นมหาปุโรหิต",
         "my": "ယဇ်ပုရောဟိတ်မင်းကြီး ခရစ်တော်ကို သိကျွမ်းခြင်း",
@@ -217,6 +192,31 @@
         "zh": "成全我们的救恩（希伯来书）",
         "ko": "우리의 구원을 온전케 하심 (히브리서)",
         "de": "Die Vollendung unserer Errettung (Hebräerbrief)"
+      }
+    },
+    {
+      "date": "2026-10-18",
+      "time": "14:00",
+      "numbered": true,
+      "title": {
+        "en": "Beyond the Veil",
+        "th": "ภายในม่าน",
+        "my": "ကုလားကာအတွင်းသို့",
+        "vi": "Vào bên trong bức màn",
+        "fil": "Sa Loob ng Tabing",
+        "zh": "进入幔内",
+        "ko": "휘장 안으로",
+        "de": "Hinter den Vorhang"
+      },
+      "topic": {
+        "en": "Experiencing Christ's salvation by mingling faith with the Word, the hidden Manna, and His resurrection life",
+        "th": "ประสบความรอดของพระคริสต์ โดยผสานความเชื่อเข้ากับพระวจนะ มานาที่ซ่อนไว้ และชีวิตแห่งการเป็นขึ้นจากตายของพระองค์",
+        "my": "ယုံကြည်ခြင်းကို နှုတ်ကပါဌ်တော်၊ ဝှက်ထားသော မန္နနှင့် ကိုယ်တော်၏ ရှင်ပြန်ထမြောက်ခြင်းအသက်နှင့် ပေါင်းစပ်၍ ခရစ်တော်၏ ကယ်တင်ခြင်းကို တွေ့ကြုံခြင်း",
+        "vi": "Kinh nghiệm sự cứu rỗi của Đấng Christ bằng cách hòa hiệp đức tin với Lời Chúa, ma-na ẩn giấu và sự sống phục sinh của Ngài",
+        "fil": "Pagdanas sa kaligtasan ni Cristo sa pamamagitan ng paghahalo ng pananampalataya sa Salita, sa nakatagong Mana, at sa Kanyang buhay ng pagkabuhay na muli",
+        "zh": "将信心与话调和，借着隐藏的吗哪和祂复活的生命，经历基督的救恩",
+        "ko": "믿음을 말씀과 화합하여, 감추었던 만나와 그분의 부활 생명으로 그리스도의 구원을 체험함",
+        "de": "Christi Errettung erfahren, indem wir den Glauben mit dem Wort, dem verborgenen Manna und seinem Auferstehungsleben vermischen"
       }
     }
   ],
