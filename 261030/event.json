@@ -1,0 +1,125 @@
+{
+  "title": "2026 Weekend Fellowship in Quezon City",
+  "place": {
+    "en": "Quezon City, Philippines",
+    "th": "เกซอนซิตี ฟิลิปปินส์",
+    "my": "ကွီဇွန်စီးတီး၊ ဖိလစ်ပိုင်",
+    "vi": "Thành phố Quezon, Philippines",
+    "fil": "Lungsod Quezon, Pilipinas",
+    "zh": "菲律宾 奎松市",
+    "ko": "필리핀 케손시티",
+    "de": "Quezon City, Philippinen"
+  },
+  "hostTz": "Asia/Manila",
+  "hostAbbr": "PHT",
+  "dates": {
+    "start": "2026-10-30",
+    "end": "2026-11-02"
+  },
+  "theme": {},
+  "themeSub": {},
+  "sessions": [
+    {
+      "date": "2026-10-30",
+      "time": "19:00",
+      "numbered": true,
+      "title": {
+        "en": "Evening meeting",
+        "th": "การประชุมช่วงค่ำ",
+        "my": "ညပိုင်း အစည်းအဝေး",
+        "vi": "Buổi nhóm tối",
+        "fil": "Pulong sa gabi",
+        "zh": "晚上聚会",
+        "ko": "저녁 집회",
+        "de": "Abendversammlung"
+      },
+      "topic": {}
+    },
+    {
+      "date": "2026-10-31",
+      "time": "10:00",
+      "numbered": true,
+      "title": {
+        "en": "Morning meeting",
+        "th": "การประชุมช่วงเช้า",
+        "my": "နံနက်ပိုင်း အစည်းအဝေး",
+        "vi": "Buổi nhóm sáng",
+        "fil": "Pulong sa umaga",
+        "zh": "上午聚会",
+        "ko": "오전 집회",
+        "de": "Vormittagsversammlung"
+      },
+      "topic": {}
+    },
+    {
+      "date": "2026-10-31",
+      "time": "19:00",
+      "numbered": true,
+      "title": {
+        "en": "Evening meeting",
+        "th": "การประชุมช่วงค่ำ",
+        "my": "ညပိုင်း အစည်းအဝေး",
+        "vi": "Buổi nhóm tối",
+        "fil": "Pulong sa gabi",
+        "zh": "晚上聚会",
+        "ko": "저녁 집회",
+        "de": "Abendversammlung"
+      },
+      "topic": {}
+    },
+    {
+      "date": "2026-11-01",
+      "time": "09:30",
+      "numbered": true,
+      "title": {
+        "en": "Feast meeting",
+        "th": "การประชุมงานเลี้ยง",
+        "my": "စားသောက်ပွဲ အစည်းအဝေး",
+        "vi": "Buổi nhóm Tiệc",
+        "fil": "Pulong ng Piging",
+        "zh": "筵席聚会",
+        "ko": "만찬 집회",
+        "de": "Festversammlung"
+      },
+      "topic": {},
+      "duration": 150
+    },
+    {
+      "date": "2026-11-01",
+      "time": "19:00",
+      "numbered": true,
+      "title": {
+        "en": "Evening meeting",
+        "th": "การประชุมช่วงค่ำ",
+        "my": "ညပိုင်း အစည်းအဝေး",
+        "vi": "Buổi nhóm tối",
+        "fil": "Pulong sa gabi",
+        "zh": "晚上聚会",
+        "ko": "저녁 집회",
+        "de": "Abendversammlung"
+      },
+      "topic": {}
+    },
+    {
+      "date": "2026-11-02",
+      "time": "10:00",
+      "numbered": true,
+      "title": {
+        "en": "Morning meeting",
+        "th": "การประชุมช่วงเช้า",
+        "my": "နံနက်ပိုင်း အစည်းအဝေး",
+        "vi": "Buổi nhóm sáng",
+        "fil": "Pulong sa umaga",
+        "zh": "上午聚会",
+        "ko": "오전 집회",
+        "de": "Vormittagsversammlung"
+      },
+      "topic": {}
+    }
+  ],
+  "zoom": {
+    "id": "",
+    "passcode": "",
+    "link": ""
+  }
+}
