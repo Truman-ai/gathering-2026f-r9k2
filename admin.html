@@ -183,7 +183,15 @@ let eventId = null, events = [], isNew = false;
 // Same order as the public page's language menu; English is always entered directly
 const LANGS = [["th", "Thai"], ["my", "Burmese"], ["vi", "Vietnamese"], ["fil", "Filipino"], ["zh", "Chinese (Simplified)"], ["ko", "Korean"], ["de", "German"]];
 // Time zones offered first; any other IANA zone can be typed in
-const COMMON_TZ = ["Asia/Bangkok", "Asia/Yangon", "Asia/Ho_Chi_Minh", "Asia/Manila", "Asia/Seoul", "Asia/Shanghai", "Europe/Berlin", "America/Los_Angeles", "America/Toronto"];
+// Host places offered first; "Other…" opens the full list of time zones
+const HOST_PLACES = [
+  ["Fountain Valley, California, USA", "America/Los_Angeles"],
+  ["Stuttgart, Germany", "Europe/Berlin"],
+  ["Toronto, Canada", "America/Toronto"],
+  ["Quezon City, Philippines", "Asia/Manila"],
+  ["Chuncheon, South Korea", "Asia/Seoul"],
+  ["Pak Kret, Thailand", "Asia/Bangkok"],
+];
 
 // The password is kept for this tab only (sessionStorage), or on this device if "Keep me logged in" was ticked
 const PASS_KEY = "admin.pass";
@@ -369,7 +377,8 @@ function trField(obj, label, { multiline = false, placeholder = "", noneLabel = 
     langInputs.forEach(([l, input]) => input.value = obj[l] || "");
     refreshBadge();
   };
-  box.setDisabled = off => box.querySelectorAll("input, textarea").forEach(i => i.disabled = off);
+  // Locks the text inputs only; the "None" checkbox sits in the same box and must stay clickable
+  box.setDisabled = off => box.querySelectorAll("input:not([type=checkbox]), textarea").forEach(i => i.disabled = off);
   box.enInput = en;
   if (noneLabel) box.firstChild.append(noneToggle(obj, box, noneLabel));
   refreshBadge();
@@ -381,15 +390,35 @@ let fields = [];
 // "None" checkbox: clears the field and locks it until unchecked
 function noneToggle(obj, box, label = "None") {
   const cb = h("input", { type: "checkbox", checked: marked(obj) });
+  let kept = null; // what was there before ticking "None", so unticking brings it back
   cb.addEventListener("change", () => {
-    if (cb.checked) { Object.keys(obj).forEach(k => delete obj[k]); stale.delete(obj); markedNone.add(obj); box.refresh(); }
-    else markedNone.delete(obj);
-    box.setDisabled(cb.checked); markDirty();
+    if (cb.checked) {
+      kept = { ...obj };
+      Object.keys(obj).forEach(k => delete obj[k]); stale.delete(obj); markedNone.add(obj);
+    } else {
+      markedNone.delete(obj);
+      if (kept && !Object.keys(obj).length) Object.assign(obj, kept);
+      kept = null;
+    }
+    box.refresh(); box.setDisabled(cb.checked); markDirty();
   });
   box.setDisabled(cb.checked);
   return h("label", { class: "check" }, cb, label);
 }
 const marked = obj => markedNone.has(obj);
+
+// Session start times in 15-minute steps, shown as "7:00 PM" and stored as "19:00".
+// A time saved earlier that is off the 15-minute grid stays in the list so it isn't lost.
+const QUARTERS = Array.from({ length: 96 }, (_, i) => `${String(Math.floor(i / 4)).padStart(2, "0")}:${String(i % 4 * 15).padStart(2, "0")}`);
+const clock12 = t => { const [hh, mm] = t.split(":").map(Number); return `${hh % 12 || 12}:${String(mm).padStart(2, "0")} ${hh < 12 ? "AM" : "PM"}`; };
+function timeSelect(value, onchange) {
+  const times = value && !QUARTERS.includes(value) ? [...QUARTERS, value].sort() : QUARTERS;
+  const sel = h("select", { onchange: e => onchange(e.target.value) },
+    value ? null : h("option", { value: "" }, "Pick a time"),
+    times.map(t => h("option", { value: t }, clock12(t))));
+  sel.value = value || "";
+  return sel;
+}
 
 // ---------- form ----------
 function renderForm() {
@@ -402,8 +431,22 @@ function renderForm() {
     h("input", { type, value: value || "", ...extra, oninput: e => { onchange(e.target.value); markDirty(); } });
 
   // 1 venue
-  const tzList = h("datalist", { id: "tzList" },
-    [...new Set([...COMMON_TZ, ...(Intl.supportedValuesOf ? Intl.supportedValuesOf("timeZone") : [])])].map(z => h("option", { value: z })));
+  // Host time zone: one of the usual places, or "Other…" and pick any zone from the full list
+  const allZones = [...new Set([...HOST_PLACES.map(p => p[1]), ...(Intl.supportedValuesOf ? Intl.supportedValuesOf("timeZone") : []), ev.hostTz].filter(Boolean))].sort();
+  const tzPick = h("select", { id: "hostTz" },
+    HOST_PLACES.map(([name, zone]) => h("option", { value: zone }, name)),
+    h("option", { value: "" }, "Other…"));
+  const tzOther = h("select", { id: "hostTzOther", "aria-label": "Time zone" }, allZones.map(z => h("option", { value: z }, z.replace(/_/g, " "))));
+  const known = HOST_PLACES.some(p => p[1] === ev.hostTz);
+  tzPick.value = known ? ev.hostTz : "";
+  tzOther.value = ev.hostTz;
+  tzOther.hidden = known;
+  tzPick.addEventListener("change", () => {
+    tzOther.hidden = !!tzPick.value;
+    ev.hostTz = tzPick.value || tzOther.value;
+    showTz(); markDirty();
+  });
+  tzOther.addEventListener("change", () => { ev.hostTz = tzOther.value; showTz(); markDirty(); });
   const tzPreview = h("span", { class: "note" });
   const showTz = () => {
     try {
@@ -416,7 +459,7 @@ function renderForm() {
     trField(ev.place, "Place (small line at the top of the page)", { placeholder: "Pakkret, Thailand" }),
     h("div", { class: "row" },
       h("div", { class: "field" }, h("label", { for: "hostTz" }, "Host time zone"),
-        input("text", ev.hostTz, v => { ev.hostTz = v.trim(); showTz(); }, { id: "hostTz", list: "tzList", autocomplete: "off" }), tzList),
+        tzPick, tzOther),
       h("div", { class: "field" }, h("label", { for: "hostAbbr" }, "Time zone abbreviation (optional)"),
         input("text", ev.hostAbbr, v => ev.hostAbbr = v.trim(), { id: "hostAbbr", placeholder: "ICT" }))),
     tzPreview,
@@ -472,7 +515,11 @@ function renderForm() {
           h("div", { class: "field" }, h("label", {}, "Date"),
             h("input", { type: "date", value: s.date, oninput: e => { s.date = e.target.value; markDirty(); }, onchange: () => { sortSessions(); drawSessions(); } })),
           h("div", { class: "field" }, h("label", {}, "Time"),
-            h("input", { type: "time", value: s.time, oninput: e => { s.time = e.target.value; markDirty(); }, onchange: () => { sortSessions(); drawSessions(); } })),
+            timeSelect(s.time, v => {
+              s.time = v; markDirty(); sortSessions(); drawSessions();
+              // Re-sorting redraws the list, so find this session's row again and continue to its length
+              list.children[ev.sessions.indexOf(s)]?.querySelector("input[type=number]")?.focus();
+            })),
           h("div", { class: "field" }, h("label", {}, "Length (minutes)"),
             h("input", { type: "number", min: "15", step: "15", inputmode: "numeric", placeholder: "120", value: s.duration || "",
               oninput: e => { const v = parseInt(e.target.value, 10); if (v > 0) s.duration = v; else delete s.duration; markDirty(); } }))),

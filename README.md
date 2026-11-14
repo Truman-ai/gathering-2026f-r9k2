@@ -21,7 +21,7 @@ admin.html        관리자 화면: 집회 만들기·수정 (암호 로그인, 
 
 관리자 화면(`admin.html`): 관리자 암호로 들어갑니다. 암호 확인, GitHub 읽기·저장, AI 번역은 Google Apps Script
 웹앱(문지기)이 처리하고, 관리자 암호·GitHub 토큰·Claude API 키는 그 Apps Script의 스크립트 속성에만 있습니다.
-Apps Script 코드는 저장소 밖(`apps-script/`, gitignore)에 보관합니다. 암호를 5번 틀리면 15분 동안 잠기고,
+Apps Script 코드는 저장소 밖(`apps-script/`, gitignore)에 보관합니다. 암호를 틀리면 1초 늦게 답하고(잠금은 없음),
 문지기는 집회 폴더의 `event.json`·`index.html`과 `events.json`만 고칠 수 있습니다.
 
 ---
