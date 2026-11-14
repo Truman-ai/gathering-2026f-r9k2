@@ -1,0 +1,129 @@
+{
+  "title": "2026 Year End Conference",
+  "place": {
+    "en": "Fountain Valley, CA, USA"
+  },
+  "hostTz": "America/Los_Angeles",
+  "hostAbbr": "PST",
+  "dates": {
+    "start": "2026-12-24",
+    "end": "2026-12-27"
+  },
+  "theme": {
+    "en": "Preparing for Jesus Christ's Soon Return!"
+  },
+  "themeSub": {},
+  "sessions": [
+    {
+      "date": "2026-12-24",
+      "time": "10:00",
+      "numbered": true,
+      "title": {},
+      "topic": {},
+      "duration": 60
+    },
+    {
+      "date": "2026-12-24",
+      "time": "11:15",
+      "numbered": true,
+      "title": {},
+      "topic": {},
+      "duration": 60
+    },
+    {
+      "date": "2026-12-24",
+      "time": "19:30",
+      "numbered": true,
+      "title": {},
+      "topic": {},
+      "duration": 90
+    },
+    {
+      "date": "2026-12-25",
+      "time": "10:00",
+      "numbered": true,
+      "title": {},
+      "topic": {},
+      "duration": 60
+    },
+    {
+      "date": "2026-12-25",
+      "time": "11:15",
+      "numbered": true,
+      "title": {},
+      "topic": {},
+      "duration": 60
+    },
+    {
+      "date": "2026-12-25",
+      "time": "19:30",
+      "numbered": true,
+      "title": {},
+      "topic": {},
+      "duration": 90
+    },
+    {
+      "date": "2026-12-26",
+      "time": "10:00",
+      "numbered": true,
+      "title": {},
+      "topic": {},
+      "duration": 60
+    },
+    {
+      "date": "2026-12-26",
+      "time": "11:15",
+      "numbered": true,
+      "title": {},
+      "topic": {},
+      "duration": 60
+    },
+    {
+      "date": "2026-12-26",
+      "time": "19:00",
+      "numbered": true,
+      "title": {},
+      "topic": {},
+      "duration": 90
+    },
+    {
+      "date": "2026-12-26",
+      "time": "19:30",
+      "numbered": true,
+      "title": {},
+      "topic": {},
+      "duration": 90
+    },
+    {
+      "date": "2026-12-27",
+      "time": "10:00",
+      "numbered": true,
+      "title": {},
+      "topic": {},
+      "duration": 60
+    },
+    {
+      "date": "2026-12-27",
+      "time": "11:15",
+      "numbered": true,
+      "title": {},
+      "topic": {},
+      "duration": 60
+    },
+    {
+      "date": "2026-12-27",
+      "time": "19:30",
+      "numbered": true,
+      "title": {
+        "en": "Feast Mtg"
+      },
+      "topic": {},
+      "duration": 90
+    }
+  ],
+  "zoom": {
+    "id": "886 7682 6032",
+    "passcode": "firstfruit",
+    "link": "https://us02web.zoom.us/j/88676826032?pwd=NUNwTWlyMVdwbEZOTmtlM2Z0Z2Rkdz09"
+  }
+}
