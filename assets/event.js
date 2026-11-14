@@ -318,6 +318,12 @@ function renderEvent() {
   document.title = EVENT.title;
   document.getElementById("title").textContent = EVENT.title;
   document.getElementById("place").textContent = pick(EVENT.place);
+  // Optional cover photo behind the title: "cover": "cover.jpg" in event.json, a file in the meeting's folder
+  const header = document.querySelector("header");
+  const cover = typeof EVENT.cover === "string" && /^[\w.-]+\.(jpe?g|png|webp)$/i.test(EVENT.cover) ? EVENT.cover : "";
+  header.classList.toggle("cover", !!cover);
+  // Full address: a relative url() inside a CSS variable would be read relative to assets/event.css
+  if (cover) header.style.setProperty("--cover", `url("${new URL(cover, location.href).href}")`);
   const theme = document.getElementById("theme"), [b, sub] = theme.children;
   b.textContent = pick(EVENT.theme);
   sub.textContent = pick(EVENT.themeSub);
