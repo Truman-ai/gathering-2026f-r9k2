@@ -4,7 +4,8 @@
 // Light/dark mode: set the saved choice before anything is drawn (no flash), then load the toggle button
 (() => {
   let t = null; try { t = localStorage.getItem("theme"); } catch (e) {}
-  document.documentElement.dataset.theme = t === "light" ? "light" : "dark";
+  if (t !== "light" && t !== "dark") t = window.matchMedia && matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
+  document.documentElement.dataset.theme = t;
   const s = document.createElement("script");
   s.src = new URL("theme.js", document.currentScript.src).href;
   document.head.append(s);
