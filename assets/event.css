@@ -5,19 +5,33 @@ body { margin: 0; }
 
 /* Layout: mobile-first single column. Time-zone dropdown; every time on the page follows the chosen zone. */
 :root {
-  /* Dark navy with indigo-violet accents */
+  /* Dark navy with sky-blue accents (the logo's blue) */
   --paper: #0f1322;
   --surface: #171c2e;
   --ink: #f2f3f8;
   --muted: #9ba2b8;
   --line: #262c43;
-  --brand: #5b4cf0;
-  --brand-grad: linear-gradient(90deg, #6d4af2, #4b5cf0);
+  --brand: #3399d6;
+  --brand-grad: linear-gradient(90deg, #43a7e0, #2b8bcc);
   --on-brand: #ffffff;
-  --accent: #8f89ff;
+  --accent: #7cc4ef;
   --font-display: "Inter", "Helvetica Neue", Arial, sans-serif;
   color-scheme: dark;
   --font-body: "Inter", "Helvetica Neue", Arial, sans-serif;
+  --card-top: #162436;
+  --chevron: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1.5l5 5 5-5' fill='none' stroke='%23f2f3f8' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+}
+/* Light mode (chosen with the top-right button; see theme.js) */
+:root[data-theme="light"] {
+  color-scheme: light;
+  --paper: #f6f7fb;
+  --surface: #ffffff;
+  --ink: #161a2e;
+  --muted: #5b6278;
+  --line: #dfe2ec;
+  --accent: #1d74b0;
+  --card-top: #e8f3fb;
+  --chevron: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1.5l5 5 5-5' fill='none' stroke='%23161a2e' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
 }
 * { box-sizing: border-box; }
 body {
@@ -29,8 +43,9 @@ body {
 .wrap > * { min-width: 0; }
 html, body { overflow-x: hidden; }
 
-header { padding-top: 20px; display: grid; gap: 4px; }
-.place { font-size: 12px; letter-spacing: .16em; text-transform: uppercase; color: var(--accent); font-weight: 700; }
+header { padding-top: 12px; display: grid; gap: 4px; }
+/* The place line shares the top row with the light/dark button, so keep it clear of it */
+.place { min-height: 36px; display: flex; align-items: center; padding-right: 44px; font-size: 12px; letter-spacing: .16em; text-transform: uppercase; color: var(--accent); font-weight: 700; }
 h1 {
   font-family: var(--font-display); font-weight: 800;
   font-size: clamp(30px, 8.5vw, 52px); line-height: 1.04; letter-spacing: -.035em;
@@ -53,7 +68,7 @@ h1 {
 .zone-select {
   width: 100%; appearance: none; -webkit-appearance: none;
   font: 600 16px var(--font-body); color: var(--ink);
-  background: var(--surface) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1.5l5 5 5-5' fill='none' stroke='%23f2f3f8' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") no-repeat right 14px center;
+  background: var(--surface) var(--chevron) no-repeat right 14px center;
   border: 1.5px solid var(--brand); border-radius: 10px;
   padding: 11px 40px 11px 12px; cursor: pointer;
 }
@@ -84,7 +99,7 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--accent); outlin
 
 /* Next-up */
 .next {
-  background: linear-gradient(160deg, #1b2036, var(--surface)); border: 1px solid var(--line); border-radius: 18px;
+  background: linear-gradient(160deg, var(--card-top), var(--surface)); border: 1px solid var(--line); border-radius: 18px;
   padding: 14px 16px; display: grid; gap: 2px;
 }
 .next .k { font-size: 12px; letter-spacing: .14em; text-transform: uppercase; color: var(--accent); font-weight: 700; }
@@ -136,7 +151,7 @@ h2 { font-family: var(--font-display); font-weight: 800; font-size: 20px; margin
 .pill.night { border: 1px solid var(--line); color: var(--muted); }
 
 /* Zoom */
-.zoom { background: linear-gradient(160deg, #1b2036, var(--surface)); border: 1px solid var(--line); border-radius: 18px; padding: 14px 16px; display: grid; gap: 10px; }
+.zoom { background: linear-gradient(160deg, var(--card-top), var(--surface)); border: 1px solid var(--line); border-radius: 18px; padding: 14px 16px; display: grid; gap: 10px; }
 .zoom h2 { margin: 0; }
 .cred { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
 .cred .val { font-family: var(--font-display); font-size: 18px; letter-spacing: .02em; }

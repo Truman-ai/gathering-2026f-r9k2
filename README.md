@@ -19,8 +19,11 @@ admin.html        관리자 화면: 집회 만들기·수정 (암호 로그인, 
 저장할 때마다 그 집회의 `event.json`, `index.html`(링크 미리보기), `events.json` 이 한 커밋으로 함께 저장됩니다.
 주소는 처음 만들 때 정해지고, 나중에 날짜를 바꿔도 그대로입니다. 같은 날 시작하는 집회가 또 있으면 `-2` 가 붙습니다.
 
-관리자 화면(`admin.html`): 관리자 암호로 들어갑니다. 암호 확인, GitHub 읽기·저장, AI 번역은 Google Apps Script
-웹앱(문지기)이 처리하고, 관리자 암호·GitHub 토큰·Claude API 키는 그 Apps Script의 스크립트 속성에만 있습니다.
+관리자 화면(`admin.html`): 관리자 암호로 들어갑니다. 지난 집회 조회와 새 집회 생성·수정을 **영어로만** 합니다.
+다른 언어 번역은 관리자 화면에서 하지 않고, 저장 뒤 Claude Code로 `event.json`에 채웁니다.
+관리자가 영어 문구를 고치면 그 칸의 기존 번역은 지워지고(다른 언어 페이지엔 새 영어가 보임), 다시 번역하면 됩니다.
+암호 확인과 GitHub 읽기·저장은 Google Apps Script 웹앱(문지기)이 처리하고, 관리자 암호·GitHub 토큰은
+그 Apps Script의 스크립트 속성에만 있습니다.
 Apps Script 코드는 저장소 밖(`apps-script/`, gitignore)에 보관합니다. 암호를 틀리면 1초 늦게 답하고(잠금은 없음),
 문지기는 집회 폴더의 `event.json`·`index.html`과 `events.json`만 고칠 수 있습니다.
 

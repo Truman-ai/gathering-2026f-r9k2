@@ -1,5 +1,14 @@
 // Shared script for every meeting page. Each /<yymmdd>/index.html loads this file;
 // the meeting's own content comes from event.json in that same folder.
+
+// Light/dark mode: set the saved choice before anything is drawn (no flash), then load the toggle button
+(() => {
+  let t = null; try { t = localStorage.getItem("theme"); } catch (e) {}
+  document.documentElement.dataset.theme = t === "light" ? "light" : "dark";
+  const s = document.createElement("script");
+  s.src = new URL("theme.js", document.currentScript.src).href;
+  document.head.append(s);
+})();
 document.body.insertAdjacentHTML("afterbegin", `
 <div class="wrap">
   <header>
@@ -59,15 +68,22 @@ document.body.insertAdjacentHTML("afterbegin", `
 
 // Thailand first, then nearest to Pakkret (the 2026 venue)
 const ZONES = [
-  { id: "th", place: "Bangkok",           tz: "Asia/Bangkok",        abbr: "ICT" },
-  { id: "mm", place: "Yangon",            tz: "Asia/Yangon",         abbr: "MMT", also: ["Asia/Rangoon"] },
-  { id: "vn", place: "Ho Chi Minh",       tz: "Asia/Ho_Chi_Minh",    abbr: "ICT", also: ["Asia/Saigon"] },
-  { id: "ph", place: "Manila",            tz: "Asia/Manila",         abbr: "PHT" },
-  { id: "kr", place: "Seoul",             tz: "Asia/Seoul",          abbr: "KST" },
-  { id: "eu", place: "Stuttgart, Zurich", tz: "Europe/Berlin",       abbr: "CEST", also: ["Europe/Zurich"] },
-  { id: "ca", place: "Fountain Valley",   tz: "America/Los_Angeles", abbr: "PDT" },
-  { id: "to", place: "Toronto",           tz: "America/Toronto",     abbr: "EDT" },
+  { id: "th", place: "Bangkok",           tz: "Asia/Bangkok" },
+  { id: "mm", place: "Yangon",            tz: "Asia/Yangon",         also: ["Asia/Rangoon"] },
+  { id: "vn", place: "Ho Chi Minh",       tz: "Asia/Ho_Chi_Minh",    also: ["Asia/Saigon"] },
+  { id: "ph", place: "Manila",            tz: "Asia/Manila" },
+  { id: "kr", place: "Seoul",             tz: "Asia/Seoul" },
+  { id: "eu", place: "Stuttgart, Zurich", tz: "Europe/Berlin",       also: ["Europe/Zurich"] },
+  { id: "ca", place: "Fountain Valley",   tz: "America/Los_Angeles" },
+  { id: "to", place: "Toronto",           tz: "America/Toronto" },
 ];
+// Zones without daylight saving use the same letters all year; browsers only name them "GMT+9" and so on
+const FIXED_ABBR = {
+  "Asia/Bangkok": "ICT", "Asia/Ho_Chi_Minh": "ICT", "Asia/Saigon": "ICT", "Asia/Yangon": "MMT", "Asia/Rangoon": "MMT",
+  "Asia/Manila": "PHT", "Asia/Seoul": "KST", "Asia/Tokyo": "JST", "Asia/Shanghai": "CST", "Asia/Taipei": "CST",
+  "Asia/Hong_Kong": "HKT", "Asia/Singapore": "SGT", "Asia/Kuala_Lumpur": "MYT", "Asia/Jakarta": "WIB",
+  "Asia/Kolkata": "IST", "Asia/Calcutta": "IST",
+};
 
 // Everything about the meeting itself (title, venue, dates, sessions, Zoom) lives in the folder's
 // event.json, edited through edit.html. This file holds only the page's own wording in each language.
@@ -229,7 +245,7 @@ const zoneName = z => z.id === "custom" ? z.name : L().zones[z.id];
 const deviceTz = (() => { try { return Intl.DateTimeFormat().resolvedOptions().timeZone; } catch (e) { return null; } })();
 const findListed = tz => ZONES.find(z => z.tz === tz || (z.also || []).includes(tz));
 const cityOf = tz => tz.split("/").pop().replace(/_/g, " ");
-const makeCustom = tz => ({ id: "custom", name: cityOf(tz), place: tz.split("/")[0].replace(/_/g, " "), tz, abbr: null });
+const makeCustom = tz => ({ id: "custom", name: cityOf(tz), place: tz.split("/")[0].replace(/_/g, " "), tz });
 const validTz = tz => { try { new Intl.DateTimeFormat("en-US", { timeZone: tz }); return true; } catch (e) { return false; } };
 
 function pickZone(tz) {
@@ -252,7 +268,13 @@ function choose(z) {
 
 // Gregorian calendar and Latin digits in every language (Thai would otherwise show year 2569, Burmese its own digits)
 const fmt = (tz, opts, locale = "en-US") => new Intl.DateTimeFormat(locale + "-u-ca-gregory-nu-latn", { timeZone: tz, ...opts });
-const abbrOf = (z, date) => z.abbr || (fmt(z.tz, { timeZoneName: "short" }).formatToParts(date).find(p => p.type === "timeZoneName") || {}).value || "";
+const tzName = (tz, date, locale) => (fmt(tz, { timeZoneName: "short" }, locale).formatToParts(date).find(p => p.type === "timeZoneName") || {}).value || "";
+// Letters for the zone on that date, so daylight saving is right (PST in winter, PDT in summer; CET/CEST).
+// US zones are named in en-US, European ones in en-GB, the rest from FIXED_ABBR, else "GMT+5" style.
+const abbrOf = (z, date) => {
+  for (const locale of ["en-US", "en-GB"]) { const n = tzName(z.tz, date, locale); if (/^[A-Z]{2,5}$/.test(n)) return n; }
+  return FIXED_ABBR[z.tz] || tzName(z.tz, date, "en-US");
+};
 // 12- or 24-hour clock follows the language; the day period may come before the time (Korean 오후 7:00)
 const timeParts = (z, d) => {
   const parts = fmt(z.tz, { hour: "numeric", minute: "2-digit" }, L().locale).formatToParts(d);
@@ -480,8 +502,8 @@ const DEFAULT_MINUTES = 120;
 function start(ev) {
   EVENT = ev;
   const tz = validTz(ev.hostTz) ? ev.hostTz : "Asia/Bangkok";
-  HOST = findListed(tz) || { ...makeCustom(tz), abbr: ev.hostAbbr || null };
-  if (ev.hostAbbr && HOST.id !== "custom") HOST = { ...HOST, abbr: ev.hostAbbr };
+  // The abbreviation (KST, PST/PDT …) is worked out from the zone and date; an old "hostAbbr" in event.json is ignored
+  HOST = findListed(tz) || makeCustom(tz);
   let n = 0;
   SESSIONS = (ev.sessions || [])
     .map(s => { const start = hostMoment(s.date, s.time, tz); return { ...s, start, end: new Date(+start + (s.duration || DEFAULT_MINUTES) * 6e4) }; })

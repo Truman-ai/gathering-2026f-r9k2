@@ -8,8 +8,9 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap">
+<script src="assets/theme.js"></script>
 <style>
-/* Meeting page admin: create and edit /<yymmdd>/ meeting pages. Same dark palette as the public page; single column, sticky save bar. */
+/* Meeting page admin: create and edit /<yymmdd>/ meeting pages. Same palette as the public page; single column, sticky save bar. */
 :root {
   --paper: #0f1322;
   --surface: #171c2e;
@@ -17,15 +18,31 @@
   --ink: #f2f3f8;
   --muted: #9ba2b8;
   --line: #262c43;
-  --brand: #5b4cf0;
-  --brand-grad: linear-gradient(90deg, #6d4af2, #4b5cf0);
+  --brand: #3399d6;
+  --brand-grad: linear-gradient(90deg, #43a7e0, #2b8bcc);
   --on-brand: #ffffff;
-  --accent: #8f89ff;
+  --accent: #7cc4ef;
   --warn: #f2b84b;
   --error: #ff7a7a;
   --ok: #5fd39a;
   --font: "Inter", "Helvetica Neue", Arial, sans-serif;
+  --bar-bg: rgba(15, 19, 34, .94);
   color-scheme: dark;
+}
+/* Light mode (chosen with the top-right button; see assets/theme.js) */
+:root[data-theme="light"] {
+  color-scheme: light;
+  --paper: #f6f7fb;
+  --surface: #ffffff;
+  --field: #f8f9fc;
+  --ink: #161a2e;
+  --muted: #5b6278;
+  --line: #d9dcea;
+  --accent: #1d74b0;
+  --warn: #9a6200;
+  --error: #c4373a;
+  --ok: #1b8452;
+  --bar-bg: rgba(246, 247, 251, .94);
 }
 * { box-sizing: border-box; }
 html, body { overflow-x: hidden; }
@@ -60,18 +77,9 @@ input.invalid, textarea.invalid { border-color: var(--error); }
 .check { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; color: var(--muted); cursor: pointer; user-select: none; }
 .check input { width: 16px; height: 16px; accent-color: var(--brand); }
 
-/* Translatable field: English input + collapsible per-language inputs */
+/* Text field: label (+ optional "None" checkbox) and the English input */
 .tr { display: grid; gap: 6px; min-width: 0; }
 .tr-head { display: flex; justify-content: space-between; align-items: center; gap: 8px; flex-wrap: wrap; }
-.tr details { border: 1px dashed var(--line); border-radius: 10px; padding: 0 10px; }
-.tr summary { cursor: pointer; font-size: 13px; color: var(--muted); padding: 8px 0; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
-.tr details[open] summary { border-bottom: 1px dashed var(--line); margin-bottom: 8px; }
-.tr .langs { display: grid; gap: 8px; padding-bottom: 10px; }
-.tr .lang { display: grid; grid-template-columns: 112px minmax(0, 1fr); gap: 8px; align-items: start; }
-.tr .lang span { font-size: 13px; color: var(--muted); padding-top: 10px; }
-.badge { font-size: 11px; font-weight: 700; letter-spacing: .04em; border-radius: 999px; padding: 2px 8px; border: 1px solid var(--line); color: var(--muted); }
-.badge.full { border-color: var(--ok); color: var(--ok); }
-.badge.stale { border-color: var(--warn); color: var(--warn); }
 
 /* Sessions */
 .sessions { display: grid; gap: 12px; }
@@ -100,7 +108,7 @@ button { font: 600 14px var(--font); cursor: pointer; border-radius: 10px; }
 /* Bottom bar */
 .bar {
   position: fixed; left: 0; right: 0; bottom: 0; z-index: 5;
-  background: rgba(15, 19, 34, .94); border-top: 1px solid var(--line);
+  background: var(--bar-bg); border-top: 1px solid var(--line);
   padding: 12px 16px calc(12px + env(safe-area-inset-bottom, 0px));
 }
 .bar .inner { max-width: 720px; margin: 0 auto; display: flex; gap: 12px; align-items: center; justify-content: space-between; flex-wrap: wrap; }
@@ -146,10 +154,9 @@ button { font: 600 14px var(--font); cursor: pointer; border-radius: 10px; }
     <div class="newbox" id="newBox" hidden>
       <div class="row">
         <div class="field"><label for="newStart">Start date</label><input type="date" id="newStart"></div>
-        <div class="field"><label for="newFrom">Copy content from</label><select id="newFrom"></select></div>
       </div>
       <p class="url-preview" id="newUrl">Pick a start date to set the address.</p>
-      <p class="hint" style="margin:0">Copying from an earlier meeting brings over the venue, theme, sessions and translations, and moves the session dates to the new start date. Zoom details are left empty.</p>
+      <p class="hint" style="margin:0">A new meeting starts empty with one session. Use “+ Add session” for more.</p>
       <div class="actions">
         <button class="btn brand" type="button" id="createBtn">Create</button>
         <button class="btn" type="button" id="cancelNew">Cancel</button>
@@ -165,23 +172,22 @@ button { font: 600 14px var(--font); cursor: pointer; border-radius: 10px; }
   <div class="inner">
     <div class="status" id="status" role="status" aria-live="polite">Loading…</div>
     <div class="actions">
-      <label class="check"><input type="checkbox" id="overwrite"> Redo existing translations</label>
-      <button class="btn outline" type="button" id="translateBtn">AI translate</button>
       <button class="btn brand" type="button" id="saveBtn">Save &amp; publish</button>
     </div>
   </div>
 </div>
 
 <script>
-// The Google Apps Script web app that checks the admin password, then reads/saves on GitHub and runs AI translation.
-// The GitHub token and Claude key live only there (script properties); this page only ever holds the password.
+// The Google Apps Script web app that checks the admin password, then reads/saves on GitHub.
+// The GitHub token lives only there (script properties); this page only ever holds the password.
 const GATE = "https://script.google.com/macros/s/AKfycbwBWvXUDPOHOFhGkXh8YnV0qycKSw7dRSSCuzc1KF-YBdZ9aSo4wL0-jXChq-abliZx3g/exec";
 const SITE = "https://truman-ai.github.io/gathering-2026f-r9k2/";
 // Each meeting lives in its own folder named after its start date (/<yymmdd>/), listed in events.json.
 // ?e=<yymmdd> picks one, else the upcoming one.
 let eventId = null, events = [], isNew = false;
-// Same order as the public page's language menu; English is always entered directly
-const LANGS = [["th", "Thai"], ["my", "Burmese"], ["vi", "Vietnamese"], ["fil", "Filipino"], ["zh", "Chinese (Simplified)"], ["ko", "Korean"], ["de", "German"]];
+// Translations into the other page languages are added later outside this page (with Claude Code).
+// Language codes the public page knows, so an English edit can drop that field's now-outdated translations.
+const LANGS = ["th", "my", "vi", "fil", "zh", "ko", "de"];
 // Time zones offered first; any other IANA zone can be typed in
 // Host places offered first; "Other…" opens the full list of time zones
 const HOST_PLACES = [
@@ -200,7 +206,6 @@ const pass = {
   set(v, remember) { try { (remember ? localStorage : sessionStorage).setItem(PASS_KEY, v); } catch (e) {} },
   clear() { try { sessionStorage.removeItem(PASS_KEY); localStorage.removeItem(PASS_KEY); } catch (e) {} },
 };
-let aiEnabled = false;
 
 let ev = null, sha = null, dirty = false;
 
@@ -227,8 +232,6 @@ async function api(action, data = {}, password = pass.get()) {
 const readEvent = id => api("read", { id }).then(j => j.text == null ? null : { text: j.text, sha: j.sha });
 
 const today = () => { const d = new Date(); return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`; };
-const addDays = (date, n) => { const d = new Date(date + "T00:00:00Z"); d.setUTCDate(d.getUTCDate() + n); return d.toISOString().slice(0, 10); };
-const daysBetween = (a, b) => Math.round((new Date(b + "T00:00:00Z") - new Date(a + "T00:00:00Z")) / 864e5);
 // 2026-12-05 → 261205; a second meeting starting the same day gets 261205-2
 function idFor(start) {
   const base = start.slice(2).replace(/-/g, "");
@@ -240,7 +243,6 @@ const firstLast = e => {
   const ds = (e.sessions || []).map(s => s.date).filter(Boolean).sort();
   return { start: e.dates.start || ds[0] || "", end: e.dates.end || ds[ds.length - 1] || e.dates.start || "" };
 };
-const stale = new WeakSet();   // translatable fields whose English changed after they were translated
 const markedNone = new WeakSet(); // fields set to "None" (empty on purpose)
 
 // ---------- small DOM helper ----------
@@ -298,14 +300,10 @@ document.getElementById("logoutBtn").addEventListener("click", () => {
 });
 
 function enter(info) {
-  aiEnabled = !!info.ai;
   document.getElementById("login").hidden = true;
   document.getElementById("app").hidden = false;
   document.getElementById("bar").hidden = false;
   document.getElementById("logoutBtn").hidden = false;
-  const tb = document.getElementById("translateBtn");
-  tb.disabled = !aiEnabled;
-  tb.title = aiEnabled ? "" : "Not set up on this site.";
   pickEvent()
     .then(() => eventId ? load() : setStatus("No meetings yet. Start with “+ New meeting”.", ""))
     .catch(e => setStatus(e.message || "Could not load the list of meetings.", "error"));
@@ -334,7 +332,7 @@ function normalizeShape(e) {
 }
 function normalize(e) {
   e.title ??= ""; e.place ??= {}; e.theme ??= {}; e.themeSub ??= {};
-  e.hostTz ??= "Asia/Bangkok"; e.hostAbbr ??= "";
+  e.hostTz ??= "Asia/Bangkok"; delete e.hostAbbr; // the page works the abbreviation out itself
   e.dates ??= { start: "", end: "" };
   e.sessions ??= []; e.zoom ??= { id: "", passcode: "", link: "" };
   e.sessions.forEach(s => { s.title ??= {}; s.topic ??= {}; s.numbered ??= true; });
@@ -344,44 +342,23 @@ function normalize(e) {
 }
 const sortSessions = () => ev.sessions.sort((a, b) => (a.date + a.time).localeCompare(b.date + b.time));
 
-// ---------- translatable field ----------
-// obj holds { en, th, my, … }; empty values are removed so the page falls back to English
+// ---------- text field (English only) ----------
+// obj holds { en, th, my, … }. Only English is edited here; when it changes, that field's translations
+// are dropped so other-language pages show the new English until it is translated again.
 function trField(obj, label, { multiline = false, placeholder = "", noneLabel = null } = {}) {
-  const make = (lang, ph) => {
-    const attrs = { value: obj[lang] || "", placeholder: ph, oninput: e => {
-      const v = e.target.value;
-      if (v.trim()) obj[lang] = v; else delete obj[lang];
-      if (lang === "en" && LANGS.some(([l]) => obj[l])) stale.add(obj);
-      refreshBadge(); markDirty();
-    } };
-    if (multiline) { const t = h("textarea", { rows: 2, placeholder: ph, oninput: attrs.oninput }); t.value = obj[lang] || ""; return t; }
-    return h("input", { type: "text", ...attrs });
+  const oninput = e => {
+    const v = e.target.value;
+    if (v.trim()) obj.en = v; else delete obj.en;
+    LANGS.forEach(l => delete obj[l]);
+    markDirty();
   };
-  const en = make("en", placeholder);
-  const langInputs = LANGS.map(([l, name]) => [l, make(l, "Leave empty to show English")]);
-  const badge = h("span", { class: "badge" });
-  const refreshBadge = () => {
-    const n = LANGS.filter(([l]) => obj[l]).length;
-    badge.textContent = stale.has(obj) ? "English changed · check translations" : `Translated ${n}/${LANGS.length}`;
-    badge.className = "badge" + (stale.has(obj) ? " stale" : n === LANGS.length ? " full" : "");
-  };
-  const box = h("div", { class: "tr" },
-    h("div", { class: "tr-head" }, h("span", { class: "lbl" }, label)),
-    en,
-    h("details", {},
-      h("summary", {}, "Other languages", badge),
-      h("div", { class: "langs" }, langInputs.map(([l, input]) =>
-        h("label", { class: "lang" }, h("span", {}, LANGS.find(x => x[0] === l)[1]), input)))));
-  box.refresh = () => {
-    en.value = obj.en || "";
-    langInputs.forEach(([l, input]) => input.value = obj[l] || "");
-    refreshBadge();
-  };
-  // Locks the text inputs only; the "None" checkbox sits in the same box and must stay clickable
+  const en = multiline ? h("textarea", { rows: 2, placeholder, oninput }) : h("input", { type: "text", placeholder, oninput });
+  en.value = obj.en || "";
+  const box = h("div", { class: "tr" }, h("div", { class: "tr-head" }, h("span", { class: "lbl" }, label)), en);
+  box.refresh = () => { en.value = obj.en || ""; };
+  // Locks the text input only; the "None" checkbox sits in the same box and must stay clickable
   box.setDisabled = off => box.querySelectorAll("input:not([type=checkbox]), textarea").forEach(i => i.disabled = off);
-  box.enInput = en;
   if (noneLabel) box.firstChild.append(noneToggle(obj, box, noneLabel));
-  refreshBadge();
   fields.push({ obj, box });
   return box;
 }
@@ -394,7 +371,7 @@ function noneToggle(obj, box, label = "None") {
   cb.addEventListener("change", () => {
     if (cb.checked) {
       kept = { ...obj };
-      Object.keys(obj).forEach(k => delete obj[k]); stale.delete(obj); markedNone.add(obj);
+      Object.keys(obj).forEach(k => delete obj[k]); markedNone.add(obj);
     } else {
       markedNone.delete(obj);
       if (kept && !Object.keys(obj).length) Object.assign(obj, kept);
@@ -434,13 +411,14 @@ function renderForm() {
   // Host time zone: one of the usual places, or "Other…" and pick any zone from the full list
   const allZones = [...new Set([...HOST_PLACES.map(p => p[1]), ...(Intl.supportedValuesOf ? Intl.supportedValuesOf("timeZone") : []), ev.hostTz].filter(Boolean))].sort();
   const tzPick = h("select", { id: "hostTz" },
+    ev.hostTz ? null : h("option", { value: "-", disabled: true }, "Choose the host’s place"),
     HOST_PLACES.map(([name, zone]) => h("option", { value: zone }, name)),
     h("option", { value: "" }, "Other…"));
   const tzOther = h("select", { id: "hostTzOther", "aria-label": "Time zone" }, allZones.map(z => h("option", { value: z }, z.replace(/_/g, " "))));
   const known = HOST_PLACES.some(p => p[1] === ev.hostTz);
-  tzPick.value = known ? ev.hostTz : "";
+  tzPick.value = !ev.hostTz ? "-" : known ? ev.hostTz : "";
   tzOther.value = ev.hostTz;
-  tzOther.hidden = known;
+  tzOther.hidden = known || !ev.hostTz;
   tzPick.addEventListener("change", () => {
     tzOther.hidden = !!tzPick.value;
     ev.hostTz = tzPick.value || tzOther.value;
@@ -449,6 +427,7 @@ function renderForm() {
   tzOther.addEventListener("change", () => { ev.hostTz = tzOther.value; showTz(); markDirty(); });
   const tzPreview = h("span", { class: "note" });
   const showTz = () => {
+    if (!ev.hostTz) { tzPreview.textContent = ""; return; }
     try {
       const now = new Intl.DateTimeFormat("en-US", { timeZone: ev.hostTz, month: "short", day: "numeric", weekday: "short", hour: "numeric", minute: "2-digit", timeZoneName: "short" }).format(new Date());
       tzPreview.textContent = `Time there now: ${now}`; tzPreview.style.color = "";
@@ -460,10 +439,9 @@ function renderForm() {
     h("div", { class: "row" },
       h("div", { class: "field" }, h("label", { for: "hostTz" }, "Host time zone"),
         tzPick, tzOther),
-      h("div", { class: "field" }, h("label", { for: "hostAbbr" }, "Time zone abbreviation (optional)"),
-        input("text", ev.hostAbbr, v => ev.hostAbbr = v.trim(), { id: "hostAbbr", placeholder: "ICT" }))),
+      ),
     tzPreview,
-    h("p", { class: "hint" }, "Enter session times in this time zone. Visitors elsewhere see them converted to their own time.")));
+    h("p", { class: "hint" }, "Enter session times in this time zone. Visitors elsewhere see them converted to their own time. The abbreviation (KST, PST or PDT, …) is added automatically for the meeting dates.")));
   showTz();
 
   // 2 title
@@ -555,14 +533,11 @@ function validate() {
   const problems = [];
   const flag = (el, msg) => { if (el) el.classList.add("invalid"); problems.push(msg); };
   if (!ev.title.trim()) flag(document.getElementById("title"), "Enter the main title.");
-  try { new Intl.DateTimeFormat("en", { timeZone: ev.hostTz }); } catch (e) { flag(document.getElementById("hostTz"), "The host time zone is not valid."); }
+  if (!ev.hostTz) flag(document.getElementById("hostTz"), "Choose the host time zone.");
+  else try { new Intl.DateTimeFormat("en", { timeZone: ev.hostTz }); } catch (e) { flag(document.getElementById("hostTz"), "The host time zone is not valid."); }
   if (!ev.sessions.length) problems.push("Add at least one session.");
   if (!firstLast(ev).start) flag(document.getElementById("dStart"), "Enter the start date.");
   ev.sessions.forEach((s, i) => { if (!s.date || !s.time) problems.push(`Enter the date and time of session ${i + 1}.`); });
-  // A field with translations but no English would show blank to English readers
-  fields.forEach(({ obj, box }) => {
-    if (!obj.en && LANGS.some(([l]) => obj[l])) flag(box.enInput, "A field has translations but no English. Enter the English text.");
-  });
   if (ev.dates.start && ev.dates.end && ev.dates.end < ev.dates.start) flag(document.getElementById("dEnd"), "The end date is before the start date.");
   return [...new Set(problems)];
 }
@@ -594,52 +569,12 @@ document.getElementById("saveBtn").addEventListener("click", async () => {
   }
 });
 
-// ---------- AI translation (Claude, run by the gate with its own key; one request per language in parallel) ----------
-document.getElementById("translateBtn").addEventListener("click", async () => {
-  if (!ev) return;
-  if (!aiEnabled) { setStatus("AI translation is not set up on this site.", "error"); return; }
-  const overwrite = document.getElementById("overwrite").checked;
-  const todo = fields
-    .filter(({ obj }) => obj.en && (overwrite || stale.has(obj) || LANGS.some(([l]) => !obj[l])))
-    .map((f, i) => ({ ...f, id: String(i + 1) }));
-  if (!todo.length) { setStatus("Nothing to translate: every field is already translated. (Tick “Redo existing translations” to translate again.)", "ok"); return; }
-
-  const btn = document.getElementById("translateBtn"); btn.disabled = true;
-  setStatus(`Translating ${todo.length} items… (this can take up to a minute)`, "busy");
-  try {
-    const { results, failed } = await api("translate", { items: todo.map(({ obj, id }) => ({ id, text: obj.en })) });
-    let filled = 0;
-    todo.forEach(({ obj, box, id }) => {
-      const redo = overwrite || stale.has(obj);
-      let all = true;
-      LANGS.forEach(([l]) => {
-        const t = results[l]?.[id]?.trim();
-        if (!t) { all = false; return; }
-        if (redo || !obj[l]) { obj[l] = t; filled++; }
-      });
-      if (all) stale.delete(obj);
-      box.refresh();
-    });
-    markDirty();
-    const names = Object.fromEntries(LANGS);
-    setStatus(failed.length
-      ? `Filled ${filled} translations, but ${failed.map(f => names[f.lang] || f.lang).join(", ")} failed (${failed[0].message}). Try again.`
-      : `Filled ${filled} translations. Open “Other languages” to check them, then save.`, failed.length ? "error" : "ok");
-  } catch (e) {
-    setStatus(e.message || "Something went wrong while translating.", "error");
-  } finally {
-    btn.disabled = !aiEnabled;
-  }
-});
-
 function fillEventSelect() {
-  const sel = document.getElementById("eventSelect"), from = document.getElementById("newFrom");
-  sel.innerHTML = ""; from.innerHTML = "";
+  const sel = document.getElementById("eventSelect");
+  sel.innerHTML = "";
   events.forEach(e => sel.add(new Option(`${e.id} · ${e.title}`, e.id)));
   if (isNew) sel.add(new Option(`${eventId} · (new, not saved yet)`, eventId));
   sel.value = eventId;
-  from.add(new Option("Start blank", ""));
-  [...events].reverse().forEach(e => from.add(new Option(`${e.id} · ${e.title}`, e.id)));
   const link = document.getElementById("eventLink");
   link.hidden = isNew;
   link.href = `${eventId}/`; link.textContent = `Open public page: …/${eventId}`;
@@ -658,7 +593,7 @@ async function pickEvent() {
   });
 }
 
-// New meeting: the start date sets the address; optionally copy an earlier meeting
+// New meeting: the start date sets the address; the form starts empty
 const newBox = document.getElementById("newBox"), newStart = document.getElementById("newStart");
 document.getElementById("newBtn").addEventListener("click", () => {
   newBox.hidden = !newBox.hidden;
@@ -677,25 +612,15 @@ document.getElementById("createBtn").addEventListener("click", async () => {
   const start = newStart.value;
   if (!start) { newStart.classList.add("invalid"); return; }
   if (dirty && !confirm("You have unsaved changes. Discard them and create a new meeting?")) return;
-  const fromId = document.getElementById("newFrom").value;
-  let fresh;
-  try {
-    if (fromId) {
-      const f = await readEvent(fromId);
-      if (!f) throw new Error(`Could not find meeting ${fromId}.`);
-      fresh = JSON.parse(f.text);
-      normalizeShape(fresh);
-      const shift = daysBetween(firstLast(fresh).start, start);
-      fresh.sessions.forEach(s => { if (s.date) s.date = addDays(s.date, shift); });
-      fresh.dates = { start, end: fresh.dates.end ? addDays(fresh.dates.end, shift) : "" };
-    } else {
-      fresh = { title: "", place: {}, hostTz: "Asia/Bangkok", hostAbbr: "", dates: { start, end: start }, theme: {}, themeSub: {},
-        sessions: [{ date: start, time: "19:00", numbered: true, title: {}, topic: {} }] };
-    }
-  } catch (e) { setStatus(e.message || "Could not copy that meeting.", "error"); return; }
+  // Always start empty: no host place picked, one session on the start date with no time yet
+  const fresh = { title: "", place: {}, hostTz: "", dates: { start, end: "" }, theme: {}, themeSub: {},
+    sessions: [{ date: start, time: "", numbered: true, title: {}, topic: {} }] };
   fresh.zoom = { id: "", passcode: "", link: "" };
   eventId = idFor(start); isNew = true; sha = null;
-  ev = fresh; normalize(ev); renderForm();
+  ev = fresh; normalize(ev);
+  // Empty here means "not filled in yet", not "None", so leave these fields open for typing
+  [ev.theme, ev.themeSub, ...ev.sessions.map(s => s.title)].forEach(o => markedNone.delete(o));
+  renderForm();
   newBox.hidden = true;
   fillEventSelect();
   const banner = document.getElementById("newBanner");
