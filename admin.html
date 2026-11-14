@@ -1,59 +1,669 @@
 <!doctype html>
-<html lang="ko">
+<html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="robots" content="noindex, nofollow, noarchive" />
-  <meta name="referrer" content="no-referrer" />
-  <title>접수 현황 (관리자)</title>
-  <link rel="stylesheet" href="assets/style.css?v=20260911" />
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<title>Meeting Page Admin</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap">
+<style>
+/* Meeting page admin: create and edit /<yymmdd>/ meeting pages. Same dark palette as the public page; single column, sticky save bar. */
+:root {
+  --paper: #0f1322;
+  --surface: #171c2e;
+  --field: #11162a;
+  --ink: #f2f3f8;
+  --muted: #9ba2b8;
+  --line: #262c43;
+  --brand: #5b4cf0;
+  --brand-grad: linear-gradient(90deg, #6d4af2, #4b5cf0);
+  --on-brand: #ffffff;
+  --accent: #8f89ff;
+  --warn: #f2b84b;
+  --error: #ff7a7a;
+  --ok: #5fd39a;
+  --font: "Inter", "Helvetica Neue", Arial, sans-serif;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+html, body { overflow-x: hidden; }
+body {
+  margin: 0; background: var(--paper); color: var(--ink);
+  font: 15px/1.5 var(--font); padding: 0 16px 120px;
+}
+[hidden] { display: none !important; }
+.wrap, #app { max-width: 720px; margin: 0 auto; display: grid; gap: 20px; }
+#app { width: 100%; }
+header { padding-top: 24px; display: grid; gap: 4px; }
+.kicker { font-size: 12px; font-weight: 700; letter-spacing: .16em; text-transform: uppercase; color: var(--accent); }
+h1 { margin: 0; font-size: 28px; font-weight: 800; letter-spacing: -.03em; }
+header p { margin: 4px 0 0; color: var(--muted); font-size: 14px; }
+header a { color: var(--accent); }
+
+.card { background: var(--surface); border: 1px solid var(--line); border-radius: 18px; padding: 16px; display: grid; gap: 14px; min-width: 0; }
+.card > h2 { margin: 0; font-size: 18px; font-weight: 800; letter-spacing: -.02em; display: flex; align-items: center; gap: 10px; }
+.card > h2 .step { display: inline-grid; place-items: center; width: 24px; height: 24px; border-radius: 50%; background: var(--brand); color: var(--on-brand); font-size: 12px; }
+.hint { color: var(--muted); font-size: 13px; margin: -6px 0 0; }
+.field { display: grid; gap: 6px; min-width: 0; }
+.field > label, .lbl { font-size: 12px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
+.row { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; }
+input[type=text], input[type=password], input[type=date], input[type=time], input[type=url], input[type=number], select, textarea {
+  width: 100%; min-width: 0; font: 16px var(--font); color: var(--ink);
+  background: var(--field); border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px;
+}
+textarea { resize: vertical; min-height: 44px; line-height: 1.4; }
+input:focus-visible, textarea:focus-visible, button:focus-visible, summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+input:disabled, textarea:disabled { opacity: .45; }
+input.invalid, textarea.invalid { border-color: var(--error); }
+.check { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; color: var(--muted); cursor: pointer; user-select: none; }
+.check input { width: 16px; height: 16px; accent-color: var(--brand); }
+
+/* Translatable field: English input + collapsible per-language inputs */
+.tr { display: grid; gap: 6px; min-width: 0; }
+.tr-head { display: flex; justify-content: space-between; align-items: center; gap: 8px; flex-wrap: wrap; }
+.tr details { border: 1px dashed var(--line); border-radius: 10px; padding: 0 10px; }
+.tr summary { cursor: pointer; font-size: 13px; color: var(--muted); padding: 8px 0; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.tr details[open] summary { border-bottom: 1px dashed var(--line); margin-bottom: 8px; }
+.tr .langs { display: grid; gap: 8px; padding-bottom: 10px; }
+.tr .lang { display: grid; grid-template-columns: 112px minmax(0, 1fr); gap: 8px; align-items: start; }
+.tr .lang span { font-size: 13px; color: var(--muted); padding-top: 10px; }
+.badge { font-size: 11px; font-weight: 700; letter-spacing: .04em; border-radius: 999px; padding: 2px 8px; border: 1px solid var(--line); color: var(--muted); }
+.badge.full { border-color: var(--ok); color: var(--ok); }
+.badge.stale { border-color: var(--warn); color: var(--warn); }
+
+/* Sessions */
+.sessions { display: grid; gap: 12px; }
+.session { border: 1px solid var(--line); border-radius: 14px; padding: 12px; display: grid; gap: 12px; background: var(--field); }
+.session-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; flex-wrap: wrap; }
+.session-head b { font-weight: 800; }
+.session .row { grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); }
+
+button { font: 600 14px var(--font); cursor: pointer; border-radius: 10px; }
+.btn { color: var(--ink); background: transparent; border: 1px solid var(--line); padding: 9px 14px; }
+.btn.brand { color: var(--on-brand); background: var(--brand-grad); border: 0; }
+.btn.outline { border-color: var(--brand); }
+.btn.danger { color: var(--error); border-color: transparent; padding-inline: 8px; }
+.btn:disabled { opacity: .5; cursor: default; }
+.actions { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+
+.saved-key { font-size: 13px; color: var(--ok); }
+.newbox { border: 1px dashed var(--brand); border-radius: 14px; padding: 14px; display: grid; gap: 12px; }
+.url-preview { font-size: 14px; color: var(--muted); }
+.url-preview b { color: var(--ink); font-weight: 700; word-break: break-all; }
+.banner { font-size: 13px; color: var(--warn); }
+.note { font-size: 13px; color: var(--muted); line-height: 1.55; }
+.note ol { margin: 4px 0 0; padding-left: 18px; }
+.note a { color: var(--accent); }
+
+/* Bottom bar */
+.bar {
+  position: fixed; left: 0; right: 0; bottom: 0; z-index: 5;
+  background: rgba(15, 19, 34, .94); border-top: 1px solid var(--line);
+  padding: 12px 16px calc(12px + env(safe-area-inset-bottom, 0px));
+}
+.bar .inner { max-width: 720px; margin: 0 auto; display: flex; gap: 12px; align-items: center; justify-content: space-between; flex-wrap: wrap; }
+.status { font-size: 13px; color: var(--muted); min-width: 0; flex: 1 1 220px; }
+.status.error { color: var(--error); }
+.status.ok { color: var(--ok); }
+.status.busy { color: var(--accent); }
+</style>
 </head>
 <body>
-  <!-- 암호 입력 -->
-  <div class="wrap" id="gateView">
-    <div class="card gate">
-      <div class="section-title" style="margin-top:0;padding-top:0;border-top:0">관리자 확인</div>
-      <div class="field">
-        <label class="lbl" for="pass">암호</label>
-        <input type="password" id="pass" autocomplete="off" />
+
+<div class="wrap">
+  <header>
+    <div class="kicker">Admin</div>
+    <h1>Meeting pages</h1>
+    <p>Each meeting has its own address named after its start date (e.g. …/261205). Changes saved here appear on the public page about a minute later.</p>
+    <div class="actions" style="margin-top:6px"><button class="btn" type="button" id="logoutBtn" hidden>Log out</button></div>
+  </header>
+
+  <form class="card" id="login" hidden>
+    <h2>Admin login</h2>
+    <div class="field">
+      <label for="pass">Admin password</label>
+      <input type="password" id="pass" autocomplete="current-password" required>
+    </div>
+    <label class="check"><input type="checkbox" id="remember"> Keep me logged in on this device</label>
+    <div class="actions">
+      <button class="btn brand" type="submit" id="loginBtn">Log in</button>
+      <span class="status" id="loginMsg" role="status" aria-live="polite"></span>
+    </div>
+    <p class="hint" style="margin:0">Don’t tick “Keep me logged in” on a shared computer. Without it, you are logged out when you close the tab.</p>
+  </form>
+
+  <div id="app" hidden>
+  <section class="card">
+    <h2>Meeting</h2>
+    <div class="actions">
+      <select id="eventSelect" style="flex:1 1 260px;font-weight:600"></select>
+      <button class="btn outline" type="button" id="newBtn">+ New meeting</button>
+    </div>
+    <a id="eventLink" class="note" target="_blank" rel="noopener"></a>
+    <p class="banner" id="newBanner" hidden></p>
+    <div class="newbox" id="newBox" hidden>
+      <div class="row">
+        <div class="field"><label for="newStart">Start date</label><input type="date" id="newStart"></div>
+        <div class="field"><label for="newFrom">Copy content from</label><select id="newFrom"></select></div>
       </div>
-      <button type="button" class="btn btn--block" id="enterBtn">들어가기</button>
-      <div class="msg" id="gateMsg"></div>
-      <div class="foot"><a href="index.html">← 접수 폼으로</a></div>
+      <p class="url-preview" id="newUrl">Pick a start date to set the address.</p>
+      <p class="hint" style="margin:0">Copying from an earlier meeting brings over the venue, theme, sessions and translations, and moves the session dates to the new start date. Zoom details are left empty.</p>
+      <div class="actions">
+        <button class="btn brand" type="button" id="createBtn">Create</button>
+        <button class="btn" type="button" id="cancelNew">Cancel</button>
+      </div>
+    </div>
+  </section>
+
+  <div id="form" hidden></div>
+  </div>
+</div>
+
+<div class="bar" id="bar" hidden>
+  <div class="inner">
+    <div class="status" id="status" role="status" aria-live="polite">Loading…</div>
+    <div class="actions">
+      <label class="check"><input type="checkbox" id="overwrite"> Redo existing translations</label>
+      <button class="btn outline" type="button" id="translateBtn">AI translate</button>
+      <button class="btn brand" type="button" id="saveBtn">Save &amp; publish</button>
     </div>
   </div>
+</div>
 
-  <!-- 현황 (단계형) -->
-  <div class="wrap wrap--wide" id="dashView" hidden>
-    <header class="hero hero--row">
-      <div>
-        <h1 id="dashTitle">접수 현황</h1>
-        <div class="sub" id="dashSub"></div>
-      </div>
-      <button type="button" class="btn btn--ghost btn--sm" id="refreshBtn">새로고침</button>
-    </header>
+<script>
+// The Google Apps Script web app that checks the admin password, then reads/saves on GitHub and runs AI translation.
+// The GitHub token and Claude key live only there (script properties); this page only ever holds the password.
+const GATE = "https://script.google.com/macros/s/AKfycbwBWvXUDPOHOFhGkXh8YnV0qycKSw7dRSSCuzc1KF-YBdZ9aSo4wL0-jXChq-abliZx3g/exec";
+const SITE = "https://truman-ai.github.io/gathering-2026f-r9k2/";
+// Each meeting lives in its own folder named after its start date (/<yymmdd>/), listed in events.json.
+// ?e=<yymmdd> picks one, else the upcoming one.
+let eventId = null, events = [], isNew = false;
+// Same order as the public page's language menu; English is always entered directly
+const LANGS = [["th", "Thai"], ["my", "Burmese"], ["vi", "Vietnamese"], ["fil", "Filipino"], ["zh", "Chinese (Simplified)"], ["ko", "Korean"], ["de", "German"]];
+// Time zones offered first; any other IANA zone can be typed in
+const COMMON_TZ = ["Asia/Bangkok", "Asia/Yangon", "Asia/Ho_Chi_Minh", "Asia/Manila", "Asia/Seoul", "Asia/Shanghai", "Europe/Berlin", "America/Los_Angeles", "America/Toronto"];
 
-    <div class="progress" style="margin-top:14px"><div class="progress__bar" id="progressBar"></div></div>
+// The password is kept for this tab only (sessionStorage), or on this device if "Keep me logged in" was ticked
+const PASS_KEY = "admin.pass";
+const pass = {
+  get() { try { return sessionStorage.getItem(PASS_KEY) || localStorage.getItem(PASS_KEY) || ""; } catch (e) { return ""; } },
+  set(v, remember) { try { (remember ? localStorage : sessionStorage).setItem(PASS_KEY, v); } catch (e) {} },
+  clear() { try { sessionStorage.removeItem(PASS_KEY); localStorage.removeItem(PASS_KEY); } catch (e) {} },
+};
+let aiEnabled = false;
 
-    <div class="adm-head">
-      <h2 class="section-title" id="pageTitle" style="margin:0;border:0;padding:0"></h2>
-    </div>
+let ev = null, sha = null, dirty = false;
 
-    <div class="spin" id="spin">불러오는 중...</div>
-    <main id="admStage"></main>
+// One call to the gate. A wrong/expired password sends us back to the login screen.
+async function api(action, data = {}, password = pass.get()) {
+  if (!GATE) throw new Error("The admin server (Apps Script) address is not set yet.");
+  let r;
+  try {
+    // text/plain body keeps this a "simple" request, which Apps Script accepts from another site
+    r = await fetch(GATE, { method: "POST", body: JSON.stringify({ action, pass: password, ...data }) });
+  } catch (e) {
+    throw new Error("Could not reach the admin server. Check your internet connection.");
+  }
+  let j;
+  try { j = await r.json(); } catch (e) { throw new Error(`Could not read the admin server’s reply (${r.status}).`); }
+  if (!j.ok) {
+    const err = new Error(j.message || "The request failed.");
+    err.code = j.error;
+    if ((j.error === "badpass" || j.error === "locked") && action !== "login") showLogin(j.message);
+    throw err;
+  }
+  return j;
+}
+const readEvent = id => api("read", { id }).then(j => j.text == null ? null : { text: j.text, sha: j.sha });
 
-    <footer class="adm-nav">
-      <button type="button" class="btn btn--ghost" id="prevBtn">이전</button>
-      <div class="adm-nav__meta" id="navMeta"></div>
-      <button type="button" class="btn" id="nextBtn">다음</button>
-    </footer>
+const today = () => { const d = new Date(); return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`; };
+const addDays = (date, n) => { const d = new Date(date + "T00:00:00Z"); d.setUTCDate(d.getUTCDate() + n); return d.toISOString().slice(0, 10); };
+const daysBetween = (a, b) => Math.round((new Date(b + "T00:00:00Z") - new Date(a + "T00:00:00Z")) / 864e5);
+// 2026-12-05 → 261205; a second meeting starting the same day gets 261205-2
+function idFor(start) {
+  const base = start.slice(2).replace(/-/g, "");
+  let id = base, n = 2;
+  while (events.some(e => e.id === id)) id = `${base}-${n++}`;
+  return id;
+}
+const firstLast = e => {
+  const ds = (e.sessions || []).map(s => s.date).filter(Boolean).sort();
+  return { start: e.dates.start || ds[0] || "", end: e.dates.end || ds[ds.length - 1] || e.dates.start || "" };
+};
+const stale = new WeakSet();   // translatable fields whose English changed after they were translated
+const markedNone = new WeakSet(); // fields set to "None" (empty on purpose)
 
-    <div class="foot">
-      <span id="sheetLink"></span> · <a href="index.html">접수 폼</a>
-    </div>
-  </div>
+// ---------- small DOM helper ----------
+function h(tag, attrs = {}, ...kids) {
+  const el = document.createElement(tag);
+  for (const [k, v] of Object.entries(attrs)) {
+    if (k.startsWith("on")) el.addEventListener(k.slice(2), v);
+    else if (k === "class") el.className = v;
+    else if (v === true) el.setAttribute(k, "");
+    else if (v !== false && v != null) el.setAttribute(k, v);
+  }
+  kids.flat().forEach(c => c != null && el.append(c));
+  return el;
+}
 
-  <script src="assets/config.js?v=20260911"></script>
-  <script src="assets/admin.js?v=20260911"></script>
+function setStatus(msg, kind = "") {
+  const el = document.getElementById("status");
+  el.textContent = msg; el.className = "status " + kind;
+}
+function markDirty() { dirty = true; setStatus("You have unsaved changes."); }
+window.addEventListener("beforeunload", e => { if (dirty) { e.preventDefault(); e.returnValue = ""; } });
+
+// ---------- login ----------
+function showLogin(msg = "") {
+  pass.clear();
+  document.getElementById("app").hidden = true;
+  document.getElementById("bar").hidden = true;
+  document.getElementById("logoutBtn").hidden = true;
+  document.getElementById("login").hidden = false;
+  const m = document.getElementById("loginMsg");
+  m.textContent = msg; m.className = "status" + (msg ? " error" : "");
+  document.getElementById("pass").focus();
+}
+document.getElementById("login").addEventListener("submit", async e => {
+  e.preventDefault();
+  const input = document.getElementById("pass"), btn = document.getElementById("loginBtn"), m = document.getElementById("loginMsg");
+  if (!input.value) return;
+  btn.disabled = true; m.textContent = "Checking…"; m.className = "status busy";
+  try {
+    const j = await api("login", {}, input.value);
+    pass.set(input.value, document.getElementById("remember").checked);
+    input.value = "";
+    enter(j);
+  } catch (err) {
+    m.textContent = err.message; m.className = "status error";
+  } finally {
+    btn.disabled = false;
+  }
+});
+document.getElementById("logoutBtn").addEventListener("click", () => {
+  if (dirty && !confirm("You have unsaved changes. Log out anyway?")) return;
+  dirty = false;
+  pass.clear();
+  location.href = location.pathname;
+});
+
+function enter(info) {
+  aiEnabled = !!info.ai;
+  document.getElementById("login").hidden = true;
+  document.getElementById("app").hidden = false;
+  document.getElementById("bar").hidden = false;
+  document.getElementById("logoutBtn").hidden = false;
+  const tb = document.getElementById("translateBtn");
+  tb.disabled = !aiEnabled;
+  tb.title = aiEnabled ? "" : "Not set up on this site.";
+  pickEvent()
+    .then(() => eventId ? load() : setStatus("No meetings yet. Start with “+ New meeting”.", ""))
+    .catch(e => setStatus(e.message || "Could not load the list of meetings.", "error"));
+}
+
+// ---------- loading ----------
+async function load() {
+  setStatus("Loading…", "busy");
+  try {
+    // Read straight from GitHub (through the gate), so we edit the latest version; the public site can lag a minute
+    const f = await readEvent(eventId);
+    if (!f) throw new Error(`${eventId}/event.json does not exist.`);
+    ev = JSON.parse(f.text); sha = f.sha;
+  } catch (e) {
+    setStatus(e.message, "error"); return;
+  }
+  normalize(ev);
+  renderForm();
+  dirty = false;
+  setStatus("Loaded the latest version.", "ok");
+}
+
+function normalizeShape(e) {
+  e.title ??= ""; e.place ??= {}; e.theme ??= {}; e.themeSub ??= {};
+  e.dates ??= { start: "", end: "" }; e.sessions ??= [];
+}
+function normalize(e) {
+  e.title ??= ""; e.place ??= {}; e.theme ??= {}; e.themeSub ??= {};
+  e.hostTz ??= "Asia/Bangkok"; e.hostAbbr ??= "";
+  e.dates ??= { start: "", end: "" };
+  e.sessions ??= []; e.zoom ??= { id: "", passcode: "", link: "" };
+  e.sessions.forEach(s => { s.title ??= {}; s.topic ??= {}; s.numbered ??= true; });
+  e.dates.start ??= ""; e.dates.end ??= "";
+  [e.theme, e.themeSub, ...e.sessions.map(s => s.title)].forEach(o => { if (!Object.keys(o).length) markedNone.add(o); });
+  sortSessions();
+}
+const sortSessions = () => ev.sessions.sort((a, b) => (a.date + a.time).localeCompare(b.date + b.time));
+
+// ---------- translatable field ----------
+// obj holds { en, th, my, … }; empty values are removed so the page falls back to English
+function trField(obj, label, { multiline = false, placeholder = "", noneLabel = null } = {}) {
+  const make = (lang, ph) => {
+    const attrs = { value: obj[lang] || "", placeholder: ph, oninput: e => {
+      const v = e.target.value;
+      if (v.trim()) obj[lang] = v; else delete obj[lang];
+      if (lang === "en" && LANGS.some(([l]) => obj[l])) stale.add(obj);
+      refreshBadge(); markDirty();
+    } };
+    if (multiline) { const t = h("textarea", { rows: 2, placeholder: ph, oninput: attrs.oninput }); t.value = obj[lang] || ""; return t; }
+    return h("input", { type: "text", ...attrs });
+  };
+  const en = make("en", placeholder);
+  const langInputs = LANGS.map(([l, name]) => [l, make(l, "Leave empty to show English")]);
+  const badge = h("span", { class: "badge" });
+  const refreshBadge = () => {
+    const n = LANGS.filter(([l]) => obj[l]).length;
+    badge.textContent = stale.has(obj) ? "English changed · check translations" : `Translated ${n}/${LANGS.length}`;
+    badge.className = "badge" + (stale.has(obj) ? " stale" : n === LANGS.length ? " full" : "");
+  };
+  const box = h("div", { class: "tr" },
+    h("div", { class: "tr-head" }, h("span", { class: "lbl" }, label)),
+    en,
+    h("details", {},
+      h("summary", {}, "Other languages", badge),
+      h("div", { class: "langs" }, langInputs.map(([l, input]) =>
+        h("label", { class: "lang" }, h("span", {}, LANGS.find(x => x[0] === l)[1]), input)))));
+  box.refresh = () => {
+    en.value = obj.en || "";
+    langInputs.forEach(([l, input]) => input.value = obj[l] || "");
+    refreshBadge();
+  };
+  box.setDisabled = off => box.querySelectorAll("input, textarea").forEach(i => i.disabled = off);
+  box.enInput = en;
+  if (noneLabel) box.firstChild.append(noneToggle(obj, box, noneLabel));
+  refreshBadge();
+  fields.push({ obj, box });
+  return box;
+}
+let fields = [];
+
+// "None" checkbox: clears the field and locks it until unchecked
+function noneToggle(obj, box, label = "None") {
+  const cb = h("input", { type: "checkbox", checked: marked(obj) });
+  cb.addEventListener("change", () => {
+    if (cb.checked) { Object.keys(obj).forEach(k => delete obj[k]); stale.delete(obj); markedNone.add(obj); box.refresh(); }
+    else markedNone.delete(obj);
+    box.setDisabled(cb.checked); markDirty();
+  });
+  box.setDisabled(cb.checked);
+  return h("label", { class: "check" }, cb, label);
+}
+const marked = obj => markedNone.has(obj);
+
+// ---------- form ----------
+function renderForm() {
+  fields = [];
+  const form = document.getElementById("form");
+  form.innerHTML = ""; form.hidden = false;
+  form.style.display = "grid"; form.style.gap = "20px";
+
+  const input = (type, value, onchange, extra = {}) =>
+    h("input", { type, value: value || "", ...extra, oninput: e => { onchange(e.target.value); markDirty(); } });
+
+  // 1 venue
+  const tzList = h("datalist", { id: "tzList" },
+    [...new Set([...COMMON_TZ, ...(Intl.supportedValuesOf ? Intl.supportedValuesOf("timeZone") : [])])].map(z => h("option", { value: z })));
+  const tzPreview = h("span", { class: "note" });
+  const showTz = () => {
+    try {
+      const now = new Intl.DateTimeFormat("en-US", { timeZone: ev.hostTz, month: "short", day: "numeric", weekday: "short", hour: "numeric", minute: "2-digit", timeZoneName: "short" }).format(new Date());
+      tzPreview.textContent = `Time there now: ${now}`; tzPreview.style.color = "";
+    } catch (e) { tzPreview.textContent = "Not a valid time zone name. Pick one from the list."; tzPreview.style.color = "var(--error)"; }
+  };
+  form.append(h("section", { class: "card" },
+    h("h2", {}, h("span", { class: "step" }, "1"), "Venue"),
+    trField(ev.place, "Place (small line at the top of the page)", { placeholder: "Pakkret, Thailand" }),
+    h("div", { class: "row" },
+      h("div", { class: "field" }, h("label", { for: "hostTz" }, "Host time zone"),
+        input("text", ev.hostTz, v => { ev.hostTz = v.trim(); showTz(); }, { id: "hostTz", list: "tzList", autocomplete: "off" }), tzList),
+      h("div", { class: "field" }, h("label", { for: "hostAbbr" }, "Time zone abbreviation (optional)"),
+        input("text", ev.hostAbbr, v => ev.hostAbbr = v.trim(), { id: "hostAbbr", placeholder: "ICT" }))),
+    tzPreview,
+    h("p", { class: "hint" }, "Enter session times in this time zone. Visitors elsewhere see them converted to their own time.")));
+  showTz();
+
+  // 2 title
+  form.append(h("section", { class: "card" },
+    h("h2", {}, h("span", { class: "step" }, "2"), "Main title"),
+    h("div", { class: "field" },
+      input("text", ev.title, v => ev.title = v, { id: "title", placeholder: "2026 Weekend Fellowship in Pakkret" })),
+    h("p", { class: "hint" }, "This is the event name, so it is shown exactly like this in every language.")));
+
+  // 3 dates
+  form.append(h("section", { class: "card" },
+    h("h2", {}, h("span", { class: "step" }, "3"), "Dates"),
+    h("div", { class: "row" },
+      h("div", { class: "field" }, h("label", { for: "dStart" }, "Start date"), input("date", ev.dates.start, v => ev.dates.start = v, { id: "dStart" })),
+      h("div", { class: "field" }, h("label", { for: "dEnd" }, "End date"), input("date", ev.dates.end, v => ev.dates.end = v, { id: "dEnd" }))),
+    h("p", { class: "hint" }, isNew
+      ? `The address stays …/${eventId}, set when the meeting was created. Changing the start date does not change it.`
+      : "If left empty, the first and last session dates are shown. Changing the dates does not change this meeting’s address.")));
+
+  // 4 theme
+  const themeBox = trField(ev.theme, "Theme", { multiline: true, noneLabel: "None" });
+  const subBox = trField(ev.themeSub, "Subtitle", { multiline: true, noneLabel: "None" });
+  form.append(h("section", { class: "card" },
+    h("h2", {}, h("span", { class: "step" }, "4"), "Theme and subtitle"),
+    themeBox, subBox));
+
+  // 5 sessions
+  const list = h("div", { class: "sessions" });
+  const drawSessions = () => {
+    fields = fields.filter(f => !f.session);
+    list.innerHTML = "";
+    let n = 0;
+    ev.sessions.forEach((s, i) => {
+      const label = s.numbered ? `Session ${++n}` : "Unnumbered";
+      const titleBox = trField(s.title, "Title", { noneLabel: "No title" });
+      const topicBox = trField(s.topic, "Subtitle (optional)", { multiline: true });
+      fields.slice(-2).forEach(f => f.session = true);
+      const numbered = h("input", { type: "checkbox", checked: s.numbered, onchange: e => { s.numbered = e.target.checked; markDirty(); drawSessions(); } });
+      list.append(h("div", { class: "session" },
+        h("div", { class: "session-head" },
+          h("b", {}, label),
+          h("div", { class: "actions" },
+            h("label", { class: "check" }, numbered, "Numbered"),
+            h("button", { class: "btn danger", type: "button", onclick: () => {
+              if (!confirm(`Delete ${label}${s.title.en ? ` (${s.title.en})` : ""}?`)) return;
+              ev.sessions.splice(i, 1); markDirty(); drawSessions();
+            } }, "Delete"))),
+        h("div", { class: "row" },
+          h("div", { class: "field" }, h("label", {}, "Date"),
+            h("input", { type: "date", value: s.date, oninput: e => { s.date = e.target.value; markDirty(); }, onchange: () => { sortSessions(); drawSessions(); } })),
+          h("div", { class: "field" }, h("label", {}, "Time"),
+            h("input", { type: "time", value: s.time, oninput: e => { s.time = e.target.value; markDirty(); }, onchange: () => { sortSessions(); drawSessions(); } })),
+          h("div", { class: "field" }, h("label", {}, "Length (minutes)"),
+            h("input", { type: "number", min: "15", step: "15", inputmode: "numeric", placeholder: "120", value: s.duration || "",
+              oninput: e => { const v = parseInt(e.target.value, 10); if (v > 0) s.duration = v; else delete s.duration; markDirty(); } }))),
+        titleBox, topicBox));
+    });
+  };
+  drawSessions();
+  form.append(h("section", { class: "card" },
+    h("h2", {}, h("span", { class: "step" }, "5"), "Sessions"),
+    h("p", { class: "hint" }, "Sessions are sorted by date and time. Untick “Numbered” for items like Q&A or the Lord’s Table, which are shown without a number. A numbered session with no title is shown as “Session 3”. If the length is empty it counts as 2 hours, shown as “in progress” during that time."),
+    list,
+    h("div", { class: "actions" }, h("button", { class: "btn", type: "button", onclick: () => {
+      const last = ev.sessions[ev.sessions.length - 1];
+      ev.sessions.push({ date: last ? last.date : ev.dates.start || "", time: "19:00", numbered: true, title: {}, topic: {} });
+      markDirty(); drawSessions();
+      list.lastElementChild.scrollIntoView({ behavior: "smooth", block: "center" });
+    } }, "+ Add session"))));
+
+  // 6 zoom
+  form.append(h("section", { class: "card" },
+    h("h2", {}, h("span", { class: "step" }, "6"), "Zoom meeting"),
+    h("div", { class: "row" },
+      h("div", { class: "field" }, h("label", { for: "zid" }, "Meeting ID"), input("text", ev.zoom.id, v => ev.zoom.id = v.trim(), { id: "zid", placeholder: "818 7686 2531", inputmode: "numeric" })),
+      h("div", { class: "field" }, h("label", { for: "zpw" }, "Passcode"), input("text", ev.zoom.passcode, v => ev.zoom.passcode = v.trim(), { id: "zpw" }))),
+    h("div", { class: "field" }, h("label", { for: "zlink" }, "Invite link (optional)"),
+      input("url", ev.zoom.link, v => ev.zoom.link = v.trim(), { id: "zlink", placeholder: "https://us02web.zoom.us/j/…?pwd=…" })),
+    h("p", { class: "hint" }, "Empty fields show as “To be decided” on the page. With an invite link (including ?pwd=), the join button opens the meeting without typing the passcode.")));
+}
+
+// ---------- validation + save ----------
+function validate() {
+  document.querySelectorAll(".invalid").forEach(el => el.classList.remove("invalid"));
+  const problems = [];
+  const flag = (el, msg) => { if (el) el.classList.add("invalid"); problems.push(msg); };
+  if (!ev.title.trim()) flag(document.getElementById("title"), "Enter the main title.");
+  try { new Intl.DateTimeFormat("en", { timeZone: ev.hostTz }); } catch (e) { flag(document.getElementById("hostTz"), "The host time zone is not valid."); }
+  if (!ev.sessions.length) problems.push("Add at least one session.");
+  if (!firstLast(ev).start) flag(document.getElementById("dStart"), "Enter the start date.");
+  ev.sessions.forEach((s, i) => { if (!s.date || !s.time) problems.push(`Enter the date and time of session ${i + 1}.`); });
+  // A field with translations but no English would show blank to English readers
+  fields.forEach(({ obj, box }) => {
+    if (!obj.en && LANGS.some(([l]) => obj[l])) flag(box.enInput, "A field has translations but no English. Enter the English text.");
+  });
+  if (ev.dates.start && ev.dates.end && ev.dates.end < ev.dates.start) flag(document.getElementById("dEnd"), "The end date is before the start date.");
+  return [...new Set(problems)];
+}
+
+document.getElementById("saveBtn").addEventListener("click", async () => {
+  if (!ev) return;
+  const problems = validate();
+  if (problems.length) { setStatus(problems[0], "error"); document.querySelector(".invalid")?.scrollIntoView({ behavior: "smooth", block: "center" }); return; }
+  sortSessions();
+  const btn = document.getElementById("saveBtn"); btn.disabled = true;
+  setStatus("Saving…", "busy");
+  try {
+    // The gate checks that nobody changed this meeting (or took this address) since it was opened,
+    // writes event.json, the page's index.html and events.json as one commit, and returns the new list
+    const j = await api("save", { id: eventId, isNew, baseSha: sha, event: ev });
+    sha = j.sha;
+    const created = isNew;
+    isNew = false; dirty = false; events = j.events;
+    fillEventSelect();
+    history.replaceState(null, "", "?e=" + eventId);
+    document.getElementById("newBanner").hidden = true;
+    setStatus(created
+      ? `Meeting created. It will open at ${SITE}${eventId} in about a minute.`
+      : "Saved. The public page updates in about a minute.", "ok");
+  } catch (e) {
+    setStatus(e.message, "error");
+  } finally {
+    btn.disabled = false;
+  }
+});
+
+// ---------- AI translation (Claude, run by the gate with its own key; one request per language in parallel) ----------
+document.getElementById("translateBtn").addEventListener("click", async () => {
+  if (!ev) return;
+  if (!aiEnabled) { setStatus("AI translation is not set up on this site.", "error"); return; }
+  const overwrite = document.getElementById("overwrite").checked;
+  const todo = fields
+    .filter(({ obj }) => obj.en && (overwrite || stale.has(obj) || LANGS.some(([l]) => !obj[l])))
+    .map((f, i) => ({ ...f, id: String(i + 1) }));
+  if (!todo.length) { setStatus("Nothing to translate: every field is already translated. (Tick “Redo existing translations” to translate again.)", "ok"); return; }
+
+  const btn = document.getElementById("translateBtn"); btn.disabled = true;
+  setStatus(`Translating ${todo.length} items… (this can take up to a minute)`, "busy");
+  try {
+    const { results, failed } = await api("translate", { items: todo.map(({ obj, id }) => ({ id, text: obj.en })) });
+    let filled = 0;
+    todo.forEach(({ obj, box, id }) => {
+      const redo = overwrite || stale.has(obj);
+      let all = true;
+      LANGS.forEach(([l]) => {
+        const t = results[l]?.[id]?.trim();
+        if (!t) { all = false; return; }
+        if (redo || !obj[l]) { obj[l] = t; filled++; }
+      });
+      if (all) stale.delete(obj);
+      box.refresh();
+    });
+    markDirty();
+    const names = Object.fromEntries(LANGS);
+    setStatus(failed.length
+      ? `Filled ${filled} translations, but ${failed.map(f => names[f.lang] || f.lang).join(", ")} failed (${failed[0].message}). Try again.`
+      : `Filled ${filled} translations. Open “Other languages” to check them, then save.`, failed.length ? "error" : "ok");
+  } catch (e) {
+    setStatus(e.message || "Something went wrong while translating.", "error");
+  } finally {
+    btn.disabled = !aiEnabled;
+  }
+});
+
+function fillEventSelect() {
+  const sel = document.getElementById("eventSelect"), from = document.getElementById("newFrom");
+  sel.innerHTML = ""; from.innerHTML = "";
+  events.forEach(e => sel.add(new Option(`${e.id} · ${e.title}`, e.id)));
+  if (isNew) sel.add(new Option(`${eventId} · (new, not saved yet)`, eventId));
+  sel.value = eventId;
+  from.add(new Option("Start blank", ""));
+  [...events].reverse().forEach(e => from.add(new Option(`${e.id} · ${e.title}`, e.id)));
+  const link = document.getElementById("eventLink");
+  link.hidden = isNew;
+  link.href = `${eventId}/`; link.textContent = `Open public page: …/${eventId}`;
+}
+
+async function pickEvent() {
+  events = (await api("list")).events.sort((a, b) => a.start.localeCompare(b.start));
+  const asked = new URLSearchParams(location.search).get("e");
+  const pick = events.find(e => e.id === asked) || events.find(e => e.end >= today()) || events[events.length - 1];
+  eventId = pick ? pick.id : null;
+  fillEventSelect();
+  document.getElementById("eventSelect").addEventListener("change", e => {
+    if (dirty && !confirm("You have unsaved changes. Switch meetings anyway?")) { e.target.value = eventId; return; }
+    dirty = false;
+    location.search = "?e=" + e.target.value;
+  });
+}
+
+// New meeting: the start date sets the address; optionally copy an earlier meeting
+const newBox = document.getElementById("newBox"), newStart = document.getElementById("newStart");
+document.getElementById("newBtn").addEventListener("click", () => {
+  newBox.hidden = !newBox.hidden;
+  if (!newBox.hidden && !newStart.value) newStart.value = today();
+  showNewUrl();
+});
+document.getElementById("cancelNew").addEventListener("click", () => { newBox.hidden = true; });
+newStart.addEventListener("input", showNewUrl);
+function showNewUrl() {
+  const el = document.getElementById("newUrl");
+  if (!newStart.value) { el.textContent = "Pick a start date to set the address."; return; }
+  const id = idFor(newStart.value);
+  el.innerHTML = `New address: <b>${SITE}${id}</b>` + (id.includes("-") ? " (numbered because another meeting starts the same day)" : "");
+}
+document.getElementById("createBtn").addEventListener("click", async () => {
+  const start = newStart.value;
+  if (!start) { newStart.classList.add("invalid"); return; }
+  if (dirty && !confirm("You have unsaved changes. Discard them and create a new meeting?")) return;
+  const fromId = document.getElementById("newFrom").value;
+  let fresh;
+  try {
+    if (fromId) {
+      const f = await readEvent(fromId);
+      if (!f) throw new Error(`Could not find meeting ${fromId}.`);
+      fresh = JSON.parse(f.text);
+      normalizeShape(fresh);
+      const shift = daysBetween(firstLast(fresh).start, start);
+      fresh.sessions.forEach(s => { if (s.date) s.date = addDays(s.date, shift); });
+      fresh.dates = { start, end: fresh.dates.end ? addDays(fresh.dates.end, shift) : "" };
+    } else {
+      fresh = { title: "", place: {}, hostTz: "Asia/Bangkok", hostAbbr: "", dates: { start, end: start }, theme: {}, themeSub: {},
+        sessions: [{ date: start, time: "19:00", numbered: true, title: {}, topic: {} }] };
+    }
+  } catch (e) { setStatus(e.message || "Could not copy that meeting.", "error"); return; }
+  fresh.zoom = { id: "", passcode: "", link: "" };
+  eventId = idFor(start); isNew = true; sha = null;
+  ev = fresh; normalize(ev); renderForm();
+  newBox.hidden = true;
+  fillEventSelect();
+  const banner = document.getElementById("newBanner");
+  banner.hidden = false;
+  banner.textContent = `New meeting · saving creates ${SITE}${eventId}. Nothing is published until you save.`;
+  markDirty();
+  document.getElementById("title").focus();
+});
+
+// Start: with a remembered password go straight in (the gate re-checks it), else show the login form
+if (pass.get()) {
+  api("login").then(enter).catch(e => showLogin(e.code === "badpass" ? "" : e.message));
+} else {
+  showLogin();
+}
+</script>
 </body>
 </html>

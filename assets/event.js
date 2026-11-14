@@ -36,6 +36,7 @@ document.body.insertAdjacentHTML("afterbegin", `
 
   <section class="zoom">
     <h2 data-t="zoom">Zoom meeting</h2>
+    <p class="zoom-ended" id="zended" data-t="zoomEnded" hidden></p>
     <div class="cred">
       <div><div class="lbl" data-t="meetingId">Meeting ID</div><div class="val" id="zid"></div></div>
       <button class="copy" type="button" data-target="zid" data-t="copy" hidden>Copy</button>
@@ -86,7 +87,7 @@ const TEXT = {
     allHost: "All times in {host} time ({hostAbbr}).",
     shownIn: "Times shown in {zone} time ({abbr}). {host} time is listed under each meeting.",
     lateNight: "Late night", zoom: "Zoom meeting", meetingId: "Meeting ID", passcode: "Passcode",
-    tbd: "To be decided", copy: "Copy", copied: "Copied", selected: "Selected", join: "Open in Zoom",
+    tbd: "To be decided", zoomEnded: "The gathering has ended, so the Zoom details are no longer shown.", copy: "Copy", copied: "Copied", selected: "Selected", join: "Open in Zoom",
     footer: "Meeting times are set in {host} time ({hostAbbr}). Times in other zones are converted automatically.",
     zones: { th: "Thailand", mm: "Myanmar", vn: "Vietnam", ph: "Philippines", kr: "Korea", eu: "Europe", ca: "California", to: "Canada" },
   },
@@ -102,7 +103,7 @@ const TEXT = {
     allHost: "เวลาทั้งหมดเป็นเวลา{host} ({hostAbbr})",
     shownIn: "แสดงตามเวลา{zone} ({abbr}) และระบุเวลา{host}ไว้ใต้แต่ละรายการ",
     lateNight: "ดึก", zoom: "ประชุม Zoom", meetingId: "Meeting ID", passcode: "รหัสผ่าน",
-    tbd: "รอประกาศ", copy: "คัดลอก", copied: "คัดลอกแล้ว", selected: "เลือกแล้ว", join: "เปิดใน Zoom",
+    tbd: "รอประกาศ", zoomEnded: "การประชุมสิ้นสุดแล้ว จึงไม่แสดงข้อมูล Zoom อีกต่อไป", copy: "คัดลอก", copied: "คัดลอกแล้ว", selected: "เลือกแล้ว", join: "เปิดใน Zoom",
     footer: "เวลาประชุมกำหนดตามเวลา{host} ({hostAbbr}) เวลาในเขตอื่นจะแปลงให้อัตโนมัติ",
     zones: { th: "ไทย", mm: "เมียนมา", vn: "เวียดนาม", ph: "ฟิลิปปินส์", kr: "เกาหลี", eu: "ยุโรป", ca: "แคลิฟอร์เนีย", to: "แคนาดา" },
   },
@@ -118,7 +119,7 @@ const TEXT = {
     allHost: "အချိန်အားလုံးသည် {host} အချိန် ({hostAbbr}) ဖြစ်သည်။",
     shownIn: "{zone} အချိန် ({abbr}) ဖြင့် ပြထားသည်။ အစည်းအဝေးတစ်ခုချင်းအောက်တွင် {host} အချိန်ကို ဖော်ပြထားသည်။",
     lateNight: "ညနက်", zoom: "Zoom အစည်းအဝေး", meetingId: "Meeting ID", passcode: "စကားဝှက်",
-    tbd: "နောက်မှ အကြောင်းကြားပါမည်", copy: "ကူးယူ", copied: "ကူးယူပြီး", selected: "ရွေးပြီး", join: "Zoom တွင် ဖွင့်ရန်",
+    tbd: "နောက်မှ အကြောင်းကြားပါမည်", zoomEnded: "အစည်းအဝေး ပြီးဆုံးသွားသဖြင့် Zoom အချက်အလက်များကို မပြတော့ပါ။", copy: "ကူးယူ", copied: "ကူးယူပြီး", selected: "ရွေးပြီး", join: "Zoom တွင် ဖွင့်ရန်",
     footer: "အစည်းအဝေးအချိန်များကို {host} အချိန် ({hostAbbr}) ဖြင့် သတ်မှတ်ထားပြီး အခြားဒေသအချိန်များကို အလိုအလျောက် ပြောင်းပေးသည်။",
     zones: { th: "ထိုင်း", mm: "မြန်မာ", vn: "ဗီယက်နမ်", ph: "ဖိလစ်ပိုင်", kr: "ကိုရီးယား", eu: "ဥရောပ", ca: "ကယ်လီဖိုးနီးယား", to: "ကနေဒါ" },
   },
@@ -134,7 +135,7 @@ const TEXT = {
     allHost: "Tất cả thời gian theo giờ {host} ({hostAbbr}).",
     shownIn: "Hiển thị theo giờ {zone} ({abbr}). Giờ {host} được ghi dưới mỗi buổi.",
     lateNight: "Đêm khuya", zoom: "Họp Zoom", meetingId: "Meeting ID", passcode: "Mật mã",
-    tbd: "Sẽ thông báo sau", copy: "Sao chép", copied: "Đã sao chép", selected: "Đã chọn", join: "Mở trong Zoom",
+    tbd: "Sẽ thông báo sau", zoomEnded: "Kỳ nhóm đã kết thúc nên thông tin Zoom không còn được hiển thị.", copy: "Sao chép", copied: "Đã sao chép", selected: "Đã chọn", join: "Mở trong Zoom",
     footer: "Thời gian các buổi nhóm theo giờ {host} ({hostAbbr}). Giờ ở khu vực khác được tự động chuyển đổi.",
     zones: { th: "Thái Lan", mm: "Myanmar", vn: "Việt Nam", ph: "Philippines", kr: "Hàn Quốc", eu: "Châu Âu", ca: "California", to: "Canada" },
   },
@@ -150,7 +151,7 @@ const TEXT = {
     allHost: "Lahat ng oras ay sa oras ng {host} ({hostAbbr}).",
     shownIn: "Ipinapakita sa oras ng {zone} ({abbr}). Nakalista sa ilalim ng bawat pulong ang oras sa {host}.",
     lateNight: "Hatinggabi", zoom: "Zoom meeting", meetingId: "Meeting ID", passcode: "Passcode",
-    tbd: "Iaanunsyo pa", copy: "Kopyahin", copied: "Nakopya", selected: "Napili", join: "Buksan sa Zoom",
+    tbd: "Iaanunsyo pa", zoomEnded: "Tapos na ang pagtitipon, kaya hindi na ipinapakita ang mga detalye ng Zoom.", copy: "Kopyahin", copied: "Nakopya", selected: "Napili", join: "Buksan sa Zoom",
     footer: "Ang mga oras ng pulong ay nakatakda sa oras ng {host} ({hostAbbr}). Awtomatikong kino-convert ang oras sa ibang lugar.",
     zones: { th: "Thailand", mm: "Myanmar", vn: "Vietnam", ph: "Pilipinas", kr: "Korea", eu: "Europa", ca: "California", to: "Canada" },
   },
@@ -166,7 +167,7 @@ const TEXT = {
     allHost: "所有时间均为{host}时间（{hostAbbr}）。",
     shownIn: "按{zone}时间（{abbr}）显示，每场聚会下方另附{host}时间。",
     lateNight: "深夜", zoom: "Zoom 会议", meetingId: "会议号", passcode: "密码",
-    tbd: "待定", copy: "复制", copied: "已复制", selected: "已选中", join: "在 Zoom 中打开",
+    tbd: "待定", zoomEnded: "聚会已结束，不再显示 Zoom 会议信息。", copy: "复制", copied: "已复制", selected: "已选中", join: "在 Zoom 中打开",
     footer: "聚会时间以{host}时间（{hostAbbr}）为准，其他地区时间会自动换算。",
     zones: { th: "泰国", mm: "缅甸", vn: "越南", ph: "菲律宾", kr: "韩国", eu: "欧洲", ca: "加利福尼亚", to: "加拿大" },
   },
@@ -182,7 +183,7 @@ const TEXT = {
     allHost: "모든 시간은 {host} 시간({hostAbbr}) 기준입니다.",
     shownIn: "{zone} 시간({abbr}) 기준입니다. 각 집회 아래에 {host} 시간을 함께 표시합니다.",
     lateNight: "심야", zoom: "Zoom 회의", meetingId: "회의 ID", passcode: "암호",
-    tbd: "추후 공지", copy: "복사", copied: "복사됨", selected: "선택됨", join: "Zoom으로 열기",
+    tbd: "추후 공지", zoomEnded: "집회가 끝나 Zoom 접속 정보는 더 이상 표시하지 않습니다.", copy: "복사", copied: "복사됨", selected: "선택됨", join: "Zoom으로 열기",
     footer: "집회 시간은 {host} 시간({hostAbbr}) 기준이며, 다른 지역 시간은 자동으로 변환됩니다.",
     zones: { th: "태국", mm: "미얀마", vn: "베트남", ph: "필리핀", kr: "한국", eu: "유럽", ca: "캘리포니아", to: "캐나다" },
   },
@@ -198,7 +199,7 @@ const TEXT = {
     allHost: "Alle Zeiten in Ortszeit {host} ({hostAbbr}).",
     shownIn: "Zeiten für {zone} ({abbr}). Die Ortszeit {host} steht unter jedem Treffen.",
     lateNight: "Spät nachts", zoom: "Zoom-Meeting", meetingId: "Meeting-ID", passcode: "Kenncode",
-    tbd: "Wird noch bekannt gegeben", copy: "Kopieren", copied: "Kopiert", selected: "Markiert", join: "In Zoom öffnen",
+    tbd: "Wird noch bekannt gegeben", zoomEnded: "Die Konferenz ist beendet, daher werden die Zoom-Daten nicht mehr angezeigt.", copy: "Kopieren", copied: "Kopiert", selected: "Markiert", join: "In Zoom öffnen",
     footer: "Die Zeiten richten sich nach Ortszeit {host} ({hostAbbr}). Zeiten in anderen Zonen werden automatisch umgerechnet.",
     zones: { th: "Thailand", mm: "Myanmar", vn: "Vietnam", ph: "Philippinen", kr: "Korea", eu: "Europa", ca: "Kalifornien", to: "Kanada" },
   },
@@ -305,8 +306,13 @@ function renderEvent() {
 
 const hostVars = () => ({ host: zoneName(HOST), hostAbbr: abbrOf(HOST, SESSIONS[0] ? SESSIONS[0].start : new Date()) });
 
+// Once the last session is over, the meeting ID, passcode and link are taken off the page
+const gatheringOver = () => SESSIONS.length > 0 && SESSIONS.every(s => s.end <= new Date());
+
 function renderZoom() {
-  const zoom = EVENT.zoom || {};
+  const zoom = EVENT.zoom || {}, over = gatheringOver();
+  document.getElementById("zended").hidden = !over;
+  document.querySelectorAll(".zoom .cred").forEach(el => { el.hidden = over; });
   [["zid", zoom.id || ""], ["zpw", zoom.passcode || ""]].forEach(([id, v]) => {
     const el = document.getElementById(id), btn = document.querySelector(`.copy[data-target="${id}"]`);
     el.textContent = v || t("tbd");
@@ -315,7 +321,7 @@ function renderZoom() {
     btn.dataset.copy = v.replace(/\s/g, "");
   });
   const join = document.getElementById("zjoin");
-  join.hidden = !zoom.id;
+  join.hidden = !zoom.id || over;
   if (zoom.id) join.href = zoom.link || "https://zoom.us/j/" + zoom.id.replace(/\s/g, "");
 }
 
@@ -383,6 +389,7 @@ function countdown(ms) {
 }
 
 function render() {
+  renderZoom();
   const z = current, now = new Date(), name = zoneName(z);
 
   document.getElementById("now").innerHTML =
