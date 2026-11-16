@@ -97,6 +97,14 @@ button { font: 600 14px var(--font); cursor: pointer; border-radius: 10px; }
 .actions { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
 
 .saved-key { font-size: 13px; color: var(--ok); }
+/* Artwork: preview of the photo behind the page title, darkened like on the public page */
+.art {
+  aspect-ratio: 16 / 7; border-radius: 14px; overflow: hidden; border: 1px solid var(--line);
+  background: var(--field) center 55% / cover no-repeat; display: grid; align-content: end; gap: 2px; padding: 14px 16px; color: #fff;
+}
+.art b { font-size: clamp(18px, 4.5vw, 26px); font-weight: 800; letter-spacing: -.03em; line-height: 1.1; text-shadow: 0 1px 12px rgba(0, 0, 0, .45); }
+.art small { font-size: 11px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: #bfe6ff; text-shadow: 0 1px 8px rgba(0, 0, 0, .5); }
+.art.empty { align-content: center; justify-items: center; color: var(--muted); border-style: dashed; font-size: 14px; }
 .newbox { border: 1px dashed var(--brand); border-radius: 14px; padding: 14px; display: grid; gap: 12px; }
 .url-preview { font-size: 14px; color: var(--muted); }
 .url-preview b { color: var(--ink); font-weight: 700; word-break: break-all; }
@@ -208,6 +216,9 @@ const pass = {
 };
 
 let ev = null, sha = null, dirty = false;
+// Artwork picked but not saved yet (a JPEG data: URL, already shrunk), and a local copy of the last one
+// shown so the preview doesn't wait for the public site to update
+let coverUpload = null, coverPreview = null;
 
 // One call to the gate. A wrong/expired password sends us back to the login screen.
 async function api(action, data = {}, password = pass.get()) {
@@ -321,6 +332,7 @@ async function load() {
     setStatus(e.message, "error"); return;
   }
   normalize(ev);
+  coverUpload = null; coverPreview = null;
   renderForm();
   dirty = false;
   setStatus("Loaded the latest version.", "ok");
@@ -448,12 +460,15 @@ function renderForm() {
   form.append(h("section", { class: "card" },
     h("h2", {}, h("span", { class: "step" }, "2"), "Main title"),
     h("div", { class: "field" },
-      input("text", ev.title, v => ev.title = v, { id: "title", placeholder: "2026 Weekend Fellowship in Pakkret" })),
+      input("text", ev.title, v => { ev.title = v; artworkCard.redraw?.(); }, { id: "title", placeholder: "2026 Weekend Fellowship in Pakkret" })),
     h("p", { class: "hint" }, "This is the event name, so it is shown exactly like this in every language.")));
 
-  // 3 dates
+  // 3 artwork
+  form.append(artworkCard());
+
+  // 4 dates
   form.append(h("section", { class: "card" },
-    h("h2", {}, h("span", { class: "step" }, "3"), "Dates"),
+    h("h2", {}, h("span", { class: "step" }, "4"), "Dates"),
     h("div", { class: "row" },
       h("div", { class: "field" }, h("label", { for: "dStart" }, "Start date"), input("date", ev.dates.start, v => ev.dates.start = v, { id: "dStart" })),
       h("div", { class: "field" }, h("label", { for: "dEnd" }, "End date"), input("date", ev.dates.end, v => ev.dates.end = v, { id: "dEnd" }))),
@@ -461,14 +476,14 @@ function renderForm() {
       ? `The address stays …/${eventId}, set when the meeting was created. Changing the start date does not change it.`
       : "If left empty, the first and last session dates are shown. Changing the dates does not change this meeting’s address.")));
 
-  // 4 theme
+  // 5 theme
   const themeBox = trField(ev.theme, "Theme", { multiline: true, noneLabel: "None" });
   const subBox = trField(ev.themeSub, "Subtitle", { multiline: true, noneLabel: "None" });
   form.append(h("section", { class: "card" },
-    h("h2", {}, h("span", { class: "step" }, "4"), "Theme and subtitle"),
+    h("h2", {}, h("span", { class: "step" }, "5"), "Theme and subtitle"),
     themeBox, subBox));
 
-  // 5 sessions
+  // 6 sessions
   const list = h("div", { class: "sessions" });
   const drawSessions = () => {
     fields = fields.filter(f => !f.session);
@@ -506,7 +521,7 @@ function renderForm() {
   };
   drawSessions();
   form.append(h("section", { class: "card" },
-    h("h2", {}, h("span", { class: "step" }, "5"), "Sessions"),
+    h("h2", {}, h("span", { class: "step" }, "6"), "Sessions"),
     h("p", { class: "hint" }, "Sessions are sorted by date and time. Untick “Numbered” for items like Q&A or the Lord’s Table, which are shown without a number. A numbered session with no title is shown as “Session 3”. If the length is empty it counts as 2 hours, shown as “in progress” during that time."),
     list,
     h("div", { class: "actions" }, h("button", { class: "btn", type: "button", onclick: () => {
@@ -516,15 +531,80 @@ function renderForm() {
       list.lastElementChild.scrollIntoView({ behavior: "smooth", block: "center" });
     } }, "+ Add session"))));
 
-  // 6 zoom
+  // 7 zoom
   form.append(h("section", { class: "card" },
-    h("h2", {}, h("span", { class: "step" }, "6"), "Zoom meeting"),
+    h("h2", {}, h("span", { class: "step" }, "7"), "Zoom meeting"),
     h("div", { class: "row" },
       h("div", { class: "field" }, h("label", { for: "zid" }, "Meeting ID"), input("text", ev.zoom.id, v => ev.zoom.id = v.trim(), { id: "zid", placeholder: "818 7686 2531", inputmode: "numeric" })),
       h("div", { class: "field" }, h("label", { for: "zpw" }, "Passcode"), input("text", ev.zoom.passcode, v => ev.zoom.passcode = v.trim(), { id: "zpw" }))),
     h("div", { class: "field" }, h("label", { for: "zlink" }, "Invite link (optional)"),
       input("url", ev.zoom.link, v => ev.zoom.link = v.trim(), { id: "zlink", placeholder: "https://us02web.zoom.us/j/…?pwd=…" })),
     h("p", { class: "hint" }, "Empty fields show as “To be decided” on the page. With an invite link (including ?pwd=), the join button opens the meeting without typing the passcode.")));
+}
+
+// ---------- artwork (photo behind the page title) ----------
+function artworkCard() {
+  const preview = h("div", { class: "art" });
+  const file = h("input", { type: "file", accept: "image/*", hidden: true, id: "artFile" });
+  const pickBtn = h("button", { class: "btn outline", type: "button", onclick: () => file.click() });
+  const removeBtn = h("button", { class: "btn danger", type: "button" }, "Remove artwork");
+  const note = h("span", { class: "note" });
+  const draw = () => {
+    const src = coverUpload || coverPreview || (ev.cover && !isNew ? `${SITE}${eventId}/${ev.cover}` : "");
+    preview.innerHTML = "";
+    preview.className = "art" + (src ? "" : " empty");
+    preview.style.backgroundImage = src
+      ? `linear-gradient(180deg, rgba(6,12,26,.10), rgba(6,12,26,.30) 35%, rgba(6,12,26,.86)), url("${src}")` : "";
+    if (src) preview.append(h("small", {}, ev.place.en || ""), h("b", {}, ev.title || "Main title"));
+    else preview.append("No artwork. The title is shown on the plain background.");
+    pickBtn.textContent = src ? "Change image…" : "Choose image…";
+    removeBtn.hidden = !src;
+  };
+  file.addEventListener("change", async () => {
+    const f = file.files[0]; file.value = "";
+    if (!f) return;
+    note.textContent = "Preparing the image…";
+    try {
+      coverUpload = await shrinkImage(f);
+      note.textContent = "New image. It is uploaded when you press “Save & publish”.";
+      markDirty(); draw();
+    } catch (e) {
+      note.textContent = "Could not read this image. Please use a JPG or PNG photo.";
+    }
+  });
+  removeBtn.addEventListener("click", () => {
+    coverUpload = null; coverPreview = null; delete ev.cover;
+    note.textContent = "Artwork removed. Press “Save & publish” to apply.";
+    markDirty(); draw();
+  });
+  draw();
+  artworkCard.redraw = draw;
+  return h("section", { class: "card" },
+    h("h2", {}, h("span", { class: "step" }, "3"), "Artwork"),
+    h("p", { class: "hint" }, "Optional photo behind the title at the top of the page. A wide (landscape) photo works best; the middle of it is shown and the bottom is darkened so the text stays readable. Large photos are made smaller automatically."),
+    preview,
+    h("div", { class: "actions" }, pickBtn, removeBtn, file),
+    note);
+}
+
+// Resize to at most 2000×1600 and save as JPEG, so uploads stay small (usually 200–600 KB)
+async function shrinkImage(blob) {
+  const url = URL.createObjectURL(blob);
+  try {
+    const img = await new Promise((ok, no) => { const i = new Image(); i.onload = () => ok(i); i.onerror = no; i.src = url; });
+    const scale = Math.min(1, 2000 / img.naturalWidth, 1600 / img.naturalHeight);
+    const c = document.createElement("canvas");
+    c.width = Math.max(1, Math.round(img.naturalWidth * scale));
+    c.height = Math.max(1, Math.round(img.naturalHeight * scale));
+    const g = c.getContext("2d");
+    g.fillStyle = "#0f1322"; g.fillRect(0, 0, c.width, c.height);   // transparent PNGs get the page's dark background
+    g.drawImage(img, 0, 0, c.width, c.height);
+    let q = 0.85, out;
+    do { out = c.toDataURL("image/jpeg", q); q -= 0.1; } while (out.length > 2.8e6 && q > 0.4);
+    return out;
+  } finally {
+    URL.revokeObjectURL(url);
+  }
 }
 
 // ---------- validation + save ----------
@@ -552,13 +632,21 @@ document.getElementById("saveBtn").addEventListener("click", async () => {
   try {
     // The gate checks that nobody changed this meeting (or took this address) since it was opened,
     // writes event.json, the page's index.html and events.json as one commit, and returns the new list
-    const j = await api("save", { id: eventId, isNew, baseSha: sha, event: ev });
+    const sentCover = coverUpload;
+    const j = await api("save", { id: eventId, isNew, baseSha: sha, event: ev,
+      ...(sentCover ? { cover: { data: sentCover.split(",")[1] } } : {}) });
     sha = j.sha;
+    // The gate names the uploaded photo (cover-<time>.jpg). An older gate without artwork support says nothing.
+    const coverLost = sentCover && !j.cover;
+    if ("cover" in j) { if (j.cover) ev.cover = j.cover; else delete ev.cover; }
+    if (sentCover && j.cover) coverPreview = sentCover;
+    coverUpload = null;
     const created = isNew;
     isNew = false; dirty = false; events = j.events;
     fillEventSelect();
     history.replaceState(null, "", "?e=" + eventId);
     document.getElementById("newBanner").hidden = true;
+    if (coverLost) { setStatus("Saved, but the artwork was not uploaded: the Apps Script needs the latest code.", "error"); return; }
     setStatus(created
       ? `Meeting created. It will open at ${SITE}${eventId} in about a minute.`
       : "Saved. The public page updates in about a minute.", "ok");
@@ -618,6 +706,7 @@ document.getElementById("createBtn").addEventListener("click", async () => {
   fresh.zoom = { id: "", passcode: "", link: "" };
   eventId = idFor(start); isNew = true; sha = null;
   ev = fresh; normalize(ev);
+  coverUpload = null; coverPreview = null;
   // Empty here means "not filled in yet", not "None", so leave these fields open for typing
   [ev.theme, ev.themeSub, ...ev.sessions.map(s => s.title)].forEach(o => markedNone.delete(o));
   renderForm();
