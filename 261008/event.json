@@ -1,5 +1,5 @@
 {
-  "title": "Gathering in Autumn",
+  "title": "2026 Autumn Gathering in South Korea",
   "place": {
     "en": "YangPyoung, South Korea",
     "th": "ยางพยอง เกาหลีใต้",
@@ -11,7 +11,6 @@
     "de": "YangPyoung, Südkorea"
   },
   "hostTz": "Asia/Seoul",
-  "hostAbbr": "KST",
   "dates": {
     "start": "2026-10-08",
     "end": "2026-10-11"
@@ -168,5 +167,6 @@
     "id": "864 4145 9436",
     "passcode": "1234",
     "link": "https://zoom.us/j/86441459436"
-  }
+  },
+  "cover": "cover-20261116225208.jpg"
 }
