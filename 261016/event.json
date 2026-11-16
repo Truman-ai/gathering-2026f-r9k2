@@ -11,7 +11,6 @@
     "de": "Pakkret, Thailand"
   },
   "hostTz": "Asia/Bangkok",
-  "hostAbbr": "ICT",
   "dates": {
     "start": "2026-10-16",
     "end": "2026-10-18"
@@ -224,5 +223,6 @@
     "id": "818 7686 2531",
     "passcode": "144000",
     "link": "https://us02web.zoom.us/j/81876862531?pwd=0NTO9ruymsoJJDT9QIg4zV6wEDUa0J.1"
-  }
+  },
+  "cover": "cover-20261116225100.jpg"
 }
