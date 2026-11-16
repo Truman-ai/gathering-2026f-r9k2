@@ -11,7 +11,6 @@
     "de": "Quezon City, Philippinen"
   },
   "hostTz": "Asia/Manila",
-  "hostAbbr": "PHT",
   "dates": {
     "start": "2026-10-30",
     "end": "2026-11-02"
@@ -121,5 +120,6 @@
     "id": "831 7673 8609",
     "passcode": "firstfruit",
     "link": "https://us02web.zoom.us/j/83176738609?pwd=SVR1c3VkaFl4U05iUXM5cVNDbmxaUT09"
-  }
+  },
+  "cover": "cover-20261116225027.jpg"
 }
