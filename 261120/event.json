@@ -1,0 +1,84 @@
+{
+  "title": "2026 Special Meetings in Toronto",
+  "place": {
+    "en": "Toronto, Canada",
+    "th": "โทรอนโต แคนาดา",
+    "my": "တိုရွန်တို၊ ကနေဒါ",
+    "vi": "Toronto, Canada",
+    "fil": "Toronto, Canada",
+    "zh": "加拿大 多伦多",
+    "ko": "캐나다 토론토",
+    "de": "Toronto, Kanada"
+  },
+  "hostTz": "America/Toronto",
+  "dates": {
+    "start": "2026-11-20",
+    "end": "2026-11-21"
+  },
+  "theme": {
+    "en": "Christ — the Fulfillment of the Word of God",
+    "th": "พระคริสต์ — ความสำเร็จครบถ้วนแห่งพระวจนะของพระเจ้า",
+    "my": "ခရစ်တော် — ဘုရားသခင်၏ နှုတ်ကပတ်တော် ပြည့်စုံခြင်း",
+    "vi": "Đấng Christ — Sự ứng nghiệm của Lời Đức Chúa Trời",
+    "fil": "Si Cristo — ang Katuparan ng Salita ng Diyos",
+    "zh": "基督——神话语的应验",
+    "ko": "그리스도 — 하나님 말씀의 성취",
+    "de": "Christus – die Erfüllung des Wortes Gottes"
+  },
+  "themeSub": {},
+  "sessions": [
+    {
+      "date": "2026-11-20",
+      "time": "19:30",
+      "numbered": true,
+      "title": {
+        "en": "Evening meeting",
+        "th": "การประชุมช่วงค่ำ",
+        "my": "ညပိုင်း အစည်းအဝေး",
+        "vi": "Buổi nhóm tối",
+        "fil": "Pulong sa gabi",
+        "zh": "晚上聚会",
+        "ko": "저녁 집회",
+        "de": "Abendversammlung"
+      },
+      "topic": {}
+    },
+    {
+      "date": "2026-11-21",
+      "time": "16:00",
+      "numbered": true,
+      "title": {
+        "en": "Afternoon meeting",
+        "th": "การประชุมช่วงบ่าย",
+        "my": "နေ့လယ်ပိုင်း အစည်းအဝေး",
+        "vi": "Buổi nhóm chiều",
+        "fil": "Pulong sa hapon",
+        "zh": "下午聚会",
+        "ko": "오후 집회",
+        "de": "Nachmittagsversammlung"
+      },
+      "topic": {}
+    },
+    {
+      "date": "2026-11-21",
+      "time": "19:30",
+      "numbered": true,
+      "title": {
+        "en": "Evening meeting",
+        "th": "การประชุมช่วงค่ำ",
+        "my": "ညပိုင်း အစည်းအဝေး",
+        "vi": "Buổi nhóm tối",
+        "fil": "Pulong sa gabi",
+        "zh": "晚上聚会",
+        "ko": "저녁 집회",
+        "de": "Abendversammlung"
+      },
+      "topic": {}
+    }
+  ],
+  "zoom": {
+    "id": "819 8003 8535",
+    "passcode": "priest",
+    "link": "https://us02web.zoom.us/j/81980038535?pwd=VHlJeWtMVWN2ZDJMSlRrVWdocDE5QT09"
+  }
+}
