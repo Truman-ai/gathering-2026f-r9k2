@@ -1,11 +1,10 @@
 {
   "title": "2026 Year End Conference",
-  "cover": "cover.jpg",
+  "cover": "cover-20261123040121.jpg",
   "place": {
     "en": "Fountain Valley, CA, USA"
   },
   "hostTz": "America/Los_Angeles",
-  "hostAbbr": "PST",
   "dates": {
     "start": "2026-12-24",
     "end": "2026-12-27"
